@@ -40,10 +40,14 @@ export default function  Navbar(){
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
+        <Link href="/order-status">
            <MdOutlineEditLocation/> 
+           </Link>
         </TooltipTrigger>
         <TooltipContent>
+          <Link href="/order-status">
           <p>order-status</p>
+          </Link>
         </TooltipContent>
       </Tooltip>
       <Tooltip>
@@ -61,12 +65,14 @@ export default function  Navbar(){
         </TooltipContent>
       </Tooltip>
       <Tooltip>
+        <Link href="/add-cart">
         <TooltipTrigger asChild>
           <FaCartArrowDown/> 
         </TooltipTrigger>
         <TooltipContent>
           <p>add to cart</p>
         </TooltipContent>
+        </Link>
       </Tooltip>
     </TooltipProvider>
     </div>
