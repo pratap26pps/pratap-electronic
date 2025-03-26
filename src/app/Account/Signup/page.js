@@ -1,15 +1,52 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import Link from "next/link"; 
-
+import { useRouter } from "next/navigation";
+import axios from "axios";
 export default function SignupFormDemo() {
-  const handleSubmit = (e) => {
+  const router = useRouter()
+
+ const [user,setUser] = useState({
+  firstname:"",
+  lastname:"",
+  email:"",password:"",confirmpassword:"",phonenumber:"",state:"",
+    country:"" ,city:"",
+ })
+ console.log("user",user);
+
+ const [error, setError] = useState(null);
+ const [loading, setLoading] = useState(false);
+
+  const handleSubmit =async (e) => {
     e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const response = await axios.post("/api/users/signup", JSON.stringify(user), {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("Signup Success:", response.data);
+
+      // Redirect to login after successful signup
+      router.push("/Account/Login");
+    } catch (err) {
+      console.error("Signup Error:", err.response?.data?.error || err.message);
+      setError(err.response?.data?.error || "Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+
     console.log("Form submitted");
+   console.log("user",user);
+
   };
+
   return (
     <div
       className="shadow-input mt-36 mx-auto w-[61%] rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
@@ -26,67 +63,94 @@ export default function SignupFormDemo() {
           className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
           <LabelInputContainer>
             <Label htmlFor="firstname">First name</Label>
-            <Input id="firstname" placeholder="Tyler" type="text" />
+            <Input id="firstname" placeholder="Tyler" type="text"
+            onChange={(e)=>setUser({...user,firstname:e.target.value})}
+            value={user.firstname} required/>
           </LabelInputContainer>
           <LabelInputContainer>
             <Label htmlFor="lastname">Last name</Label>
-            <Input id="lastname" placeholder="Durden" type="text" />
+            <Input id="lastname" placeholder="Durden" type="text"
+             onChange={(e)=>setUser({...user,lastname:e.target.value})}
+             value={user.lastname}
+            required/>
           </LabelInputContainer>
         </div>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="projectmayhem@fc.com" type="email" />
+          <Input id="email" placeholder="projectmayhem@fc.com" type="email"
+               onChange={(e)=>setUser({...user,email:e.target.value})}
+               value={user.email}
+           required/>
+
         </LabelInputContainer>
         <div
           className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" placeholder="••••••••" type="password" />
+          <Input id="password" placeholder="••••••••" type="password"
+               onChange={(e)=>setUser({...user,password:e.target.value})}
+               value={user.password}
+          required/>
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Confirm Password</Label>
-          <Input id="password" placeholder="••••••••" type="password" />
+          <Input id="confirmpassword" placeholder="••••••••" type="password"
+               onChange={(e)=>setUser({...user,confirmpassword:e.target.value})}
+               value={user.confirmpassword}
+          required/>
         </LabelInputContainer>
         </div>
         <div
           className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Phone No</Label>
-          <Input id="password" placeholder="91+....." type="number" />
+          <Input id="phonenumber" placeholder="91+....." type="number"
+               onChange={(e)=>setUser({...user,phonenumber:e.target.value})}
+               value={user.phonenumber} />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">city</Label>
-          <Input id="password" placeholder="city" type="text" />
+          <Input id="city" placeholder="city" type="text"
+               onChange={(e)=>setUser({...user,city:e.target.value})}
+               value={user.city}
+          />
         </LabelInputContainer>
         </div>
         <div
           className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Country</Label>
-          <Input id="password" placeholder="country name" type="text" />
+          <Input id="country" placeholder="country name" type="text"
+               onChange={(e)=>setUser({...user,country:e.target.value})}
+               value={user.country}
+          />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">State</Label>
-          <Input id="password" placeholder="state" type="text" />
+          <Input id="state" placeholder="state" type="text" 
+               onChange={(e)=>setUser({...user,state:e.target.value})}
+               value={user.state}
+          />
         </LabelInputContainer>
         </div>
 
         <button
           className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
           type="submit">
-          Sign up &rarr;
+            {loading ? "Signing up..." : "Sign up →"}
           <BottomGradient />
         </button>
-        <div className="flex">
-          <p>Already an account ?</p>
-          <Link href='/Account/Login' className="ml-3">Login</Link>
+        <div className="flex mt-3">
+          <p>Already have an account?</p>
+          <Link href="/Account/Login" className="ml-3 text-blue-600">
+            Login
+          </Link>
         </div>
         <Link href='/' className="mt-3">Back</Link>
         
-        <div
-          className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" 
-          />
-
+        <Link href="/" className="mt-3 text-gray-600">
+          Back
+        </Link>
       
       </form>
     </div>

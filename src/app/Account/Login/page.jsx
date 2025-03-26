@@ -1,13 +1,31 @@
 "use client";
-import React from "react";
+import React,{useState} from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import Link from "next/link"; 
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function SignupFormDemo() {
-  const handleSubmit = (e) => {
+
+  const router = useRouter();
+ const [user,setUser] = useState({
+  email:"",password:"" 
+   
+ })
+
+  const handleSubmit =async (e) => {
     e.preventDefault();
+  const res=  await axios.post("/api/users/login", JSON.stringify(user),
+    {        headers: {
+      "Content-Type": "application/json",
+    },});
+  console.log("res of login",res.data)
+    router.push('/Account/profile')
+    toast.success("login successfully");
+
     console.log("Form submitted");
   };
   return (
@@ -24,11 +42,17 @@ export default function SignupFormDemo() {
      
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="projectmayhem@fc.com" type="email" />
+          <Input id="email" placeholder="projectmayhem@fc.com" type="email"
+           onChange={(e)=>setUser({...user,email:e.target.value})}
+           value={user.email} 
+          />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" placeholder="••••••••" type="password" />
+          <Input id="password" placeholder="••••••••" type="password"
+           onChange={(e)=>setUser({...user,password:e.target.value})}
+           value={user.password} 
+          />
         </LabelInputContainer>
    
 
