@@ -18,11 +18,12 @@ export default function SignupFormDemo() {
 
   const handleSubmit =async (e) => {
     e.preventDefault();
-  const res=  await axios.post("/api/users/login", JSON.stringify(user),
+  const res=await axios.post("/api/users/login", JSON.stringify(user),
     {        headers: {
       "Content-Type": "application/json",
     },});
   console.log("res of login",res.data)
+
     router.push('/Account/profile')
     toast.success("login successfully");
 

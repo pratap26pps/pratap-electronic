@@ -1,340 +1,211 @@
-// import React, { useState,useEffect } from 'react'
-// import { useForm } from 'react-hook-form'; 
-// import { useDispatch, useSelector } from 'react-redux';
-// import { HiOutlineCurrencyRupee } from 'react-icons/hi';
-// import Requirementfield from './Requirementfield';
-// import { setCourse, setStep } from '../../slices/courseSlice';
-// import Iconbutton from '../../components/common/Iconbutton'
-// import { toast } from 'react-toastify';
-// import { apiConnector } from '../../services/apiconnector';
-// import { categories } from '../../services/apis';
-// import {addcoursedetails} from '../../services/opration/coursedetailsapi'
-// import { handleEditCourse } from '../../services/opration/coursedetailsapi';
-// import { addCourseToCategory } from '../../services/opration/catalogdata';
-// const Coursesinfoform = () => {
-//  const {  register,setValue,handleSubmit,getValues,formState: { errors }} = useForm();
-//  const dispatch = useDispatch();
-//  const {course,editcourse} = useSelector((state)=>state.course || {});
-//  console.log("course",course);
-//  const [loading,setloading] = useState(false);
-//  const [coursecategory, setcoursecategory] = useState([]);
-//  const [reqiurelist,setrequiredlist]=useState([]);
-// const  {token} = useSelector((state)=>state.auth);
-// const [addcatcou,setaddcatcou]=useState(null);  
-//  const [thumbnailPreview, setThumbnailPreview] = useState(null);
-//    const [thumbnailFile, setThumbnailFile] = useState(null);
-// console.log("addcatcou",addcatcou);
-// console.log("token",token);
-// useEffect(() => {
-//     const getCotegory=async() => {
-//      setloading(true);
-//       const result =await apiConnector("GET",categories.CATEGORIES_API);
-//     // console.log("setcoursecategory",result);
-//      if(result.data.getallcategory.length > 0 ) setcoursecategory(result.data.getallcategory) 
-//       console.log("setcoursecategory",result.data.getallcategory);
-   
+"use client";
+import React, { useState } from "react";
+import Link from "next/link";
+import { MdStyle } from "react-icons/md";
+import { HiOutlineCurrencyRupee } from "react-icons/hi";
+import { IconGolfFilled } from "@tabler/icons-react";
 
-//      setloading(false);
-//    }
+export default function ProductInfoForm() {
+  const [formData, setFormData] = useState({
+    ProductTitle: "",
+    ProductShortDescription: "",
+    ProductPrice: "",
+    BenefitsOfProduct: "",
+    ProductImage: null,
+  });
 
-//    if(editcourse){
-//          setValue("coursetitle",course.coursename);
-//          setValue("courseshortdesc",course.coursedetailse);
-//          setValue("courseprice",course.price);
-     
-//          setValue("coursebenefit",course.whatyouwilllearn);
-//          setValue("coursecategory",course.category);
-//          setValue("courserequirement",course.instruction);
-//          setValue("courseimage",course.courseimage);
-//    }
-//    getCotegory();
-//  }, [editcourse, course, setValue])
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
-//   console.log("coursecategory",coursecategory);
+  // Handle Input Change
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
 
+  // Handle File Upload
+  const handleFileChange = (e) => {
+    setFormData((prev) => ({ ...prev, ProductImage: e.target.files[0] }));
+  };
 
-// const isformupdated =()=>{
-//     const currentvalue =getValues();
-//     if(currentvalue.coursetitle !== course.coursename ||
-//       currentvalue.courseshortdesc !== course.coursedetailse ||
-//       currentvalue.courseprice !== course.price ||
-       
-//       currentvalue.coursebenefit !== course.whatwillyoulearn ||
-//       currentvalue.coursecategory._id !== course.category._id ||
-//       currentvalue.courserequirement.toString() !== course.instruction.toString()||
-//       currentvalue.courseimage !== course.courseimage
-//       )
-//      return true;
-//     else
-//     return false;
-// }
-
-// // handle next button click
-//  const onSubmit =async(data)=>{ 
+  // Handle Form Submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setSuccessMessage(null);
   
-//    try{
-//      setloading(true);
-//     if(editcourse){
-//       if(isformupdated()){
-//         const currentvalue = getValues();
-//         const formdata = new FormData();
- 
-//         formdata.append("courseid",course._id);
- 
-//         if(currentvalue.coursetitle !== course.coursename){
-//          formdata.append("coursename",data.coursetitle)
-//         }
-//         if(currentvalue.courseshortdesc !== course.coursedetailse){
-//          formdata.append("coursedetailse",data.courseshortdesc)
-//         }
-//         if(currentvalue.coursebenefit !== course.whatyouwilllearn){
-//          formdata.append("whatyouwilllearn",data.coursebenefit)
-//         }
-//         if(currentvalue.coursecategory._id !== course.category._id){
-//          formdata.append("category",data.coursecategory)
-//         }
-//         if(currentvalue.courseprice !== course.price){
-//          formdata.append("price",data.courseprice)
-//         }
- 
-//         if(currentvalue.courserequirement !== course.instruction){
-//          formdata.append("instructon",data.courserequirement)
-//         }
-//         if(currentvalue.courseimage !== course.courseimage){
-//           formdata.append("courseimage",data.courseimage)
-//          }
-//          console.log('Uploaded File:', data.courseimage); //
-//          console.log('Form submitted successfully:', data);
-//         setloading(true);
-//         const result = await  handleEditCourse(formdata,token);
-//         conole.log("result of course",result);
-//         setloading(false);
-//         if(result){
-//         dispatch(setStep(2));
-//          dispatch(setCourse(result));
-//         }
-//       }
-//       else{
-//      toast.error("no changes made to form data");
-//         }
-//         return; 
-//    }
-//   // create new course
-//   if(addcatcou !==null && !editcourse){
-//     const {category, _id}=addcatcou;
-//     console.log("category",category);
-//     console.log("_id",_id);
-//     const result2 = await addCourseToCategory({
-//       categoryid: category,
-//       courseid: _id,
-//     });         
-//     if (result2?.success) {
-//       toast.success("Course added to category successfully!");
-//       dispatch(setStep(2));
-//     } else {
-//       toast.error(result2?.message || "Failed to add course to category");
-//     }
-//   }
-//    if(addcatcou == null  && !editcourse){
-//   const formdata = new FormData();
-//   formdata.append("coursename",data.coursetitle);
-//   formdata.append("coursedetailse",data.courseshortdesc);
-//   formdata.append("price",data.courseprice);
-//   formdata.append("category",data.coursecategory);
-//   formdata.append("instructor",data.courserequirement);
-//   formdata.append("whatyouwilllearn",data.coursebenefit);
-//   formdata.append("courseimage",thumbnailFile);
-//   //  formdata.append("status",COURSE_STATUS.DRAFT);
-//   setloading(true);
-//    const result  = await addcoursedetails(formdata,token);
-//    console.log("result of create course",result);
-
-//   if(result){
-   
-//     dispatch(setCourse(result.data));
-//      }
-//     if (result.data.data._id && result.data.data.category) {
-//       setaddcatcou({
-//         category: result.data.data.category,
-//          _id: result.data.data._id,
-//       });
-//       toast.success("courseid and catwegory idsuccessfullliy")
-//     } else {
-//       console.log("Missing data in result.data:", result.data.data);
-//       toast.error("Missing data in result.data:")
-//     }
-//   } 
+    const newFormData = new FormData();
+    newFormData.append("ProductTitle", formData.ProductTitle);
+    newFormData.append("ProductShortDescription", formData.ProductShortDescription);
+    newFormData.append("ProductPrice", formData.ProductPrice);
+    newFormData.append("BenefitsOfProduct", formData.BenefitsOfProduct);
   
-//    }catch(error){
-//     console.error("Error submitting form:", error);
-//     toast.error("Failed to submit form");
-//     setloading(false);
-//    }     
-//  }  
+    if (formData.ProductImage) {
+      newFormData.append("ProductImage", formData.ProductImage);
+    } else {
+      console.error("No file selected!");
+    }
+  
+    console.log("FormData Entries:", [...newFormData.entries()]);
 
-//    const handleThumbnailChange = (event) => {
-//      const file = event.target.files[0];
-//      if (file) {
-//       setThumbnailFile(file);
-//        const fileURL = URL.createObjectURL(file);
-//        setThumbnailPreview(fileURL);
- 
-//        // Set the file value to react-hook-form
-//        setValue(courseimage[0], file);
-   
-//      }
-//    };
+    try {
+      const response = await fetch("/api/product", {
+        method: "POST",
+        body: newFormData,
+      });
 
- 
+      console.log("Response received:", response.status);
 
-//   return (
-//     <div className='scale-75 lg:scale-100'>
-//       {
-//          !loading ?
-//           (
-//             <form onSubmit={handleSubmit(onSubmit)}
-//             className='bg-slate-700 p-6 text-black rounded-md space-y-5'>
-//               <div>
-//                   <label>Course title<sup>*</sup></label>
-//                   <input id='coursetitle'
-//                   placeholder='enter the coures title'
-//                   {...register("coursetitle",{required:true})}
-//                   className="w-full p-1 rounded-md font-semibold"
-//                    />
-      
-//                    {
-//                       errors.coursetitle && (<span>course title is required</span>)
-//                    }
-//               </div>
-      
-//               <div>
-//                   <label>Course short description<sup>*</sup></label>
-//                   <textarea id='courseshortdesc'
-//                   placeholder='enter description'
-//                   {...register("courseshortdesc",{required:true})}
-//                   className="w-full min-h-[120px] p-1 rounded-md font-semibold"
-//                    />
-      
-//                    {
-//                       errors.courseshortdesc && (<span>course description is required</span>)
-//                    }
-//               </div >
-      
-//               <div className='relative'>
-//                   <label>Course Price<sup>*</sup></label>
-//                   <input id='courseprice'
-//                   placeholder='enter the course price'
-//                   {...register("courseprice",{required:true,valueAsNumber:true})}
-//                   className="w-full p-1 rounded-md font-semibold"
-//                    />
-//                   <HiOutlineCurrencyRupee className='abslute'/>
-//                    {
-//                       errors.courseprice && (<span>course price is required</span>)
-//                    }
-       
-//               </div>
-      
-//               <div>
-//               <label>Course Category<sup>*</sup></label>
-//               <select
-//                 id="coursecategory"
-//                 defaultValue=""
-//                 {...register("coursecategory", { required: true })}
-//                 className="w-full p-1 rounded-md font-semibold"
-//               >
-//                 <option value="" disabled>
-//                   {loading ? "Loading categories..." : "Choose a category"}
-//                 </option>
-//                 {coursecategory.map((category) => (
-//                   <option value={category._id} key={category._id}>
-//                     {category.name}
-//                   </option>
-//                 ))}
-//               </select>
-//               {errors.coursecategory && <span>Course category is required</span>}
-//             </div>
-             
-//               {/* upload thumbnnail */}
-//               <div>
-//             <div className="course-thumbnail-uploader">
-//               <label   className="block font-medium mb-2">
-//                 Upload Course Thumbnail
-//               </label>
-            
-//               <input
-//                 type="file"
-//                 id='courseimage'
-//                 {...register("courseimage", { required:true })}
-//                 accept=".jpg, .jpeg, .png, .gif" // Limit accepted formats
-//                 onChange={handleThumbnailChange}
-//                 className="font-bold p-3  rounded-md  "
-//               />
-//               {errors.courseimage && <span className="text-red-500">thumnail is required</span>}
-      
-//               {/* Display the thumbnail preview */}
-//               {thumbnailPreview && (
-//                 <div className="thumbnail-preview mb-4">
-//                   <img
-//                     src={thumbnailPreview}
-//                     alt="Course Thumbnail Preview"
-//                     className="w-52 h-32 ml-5 p-1 rounded-md font-semibold"
-//                   />
-//                 </div>
-//               )}
-//             </div>
-//           </div>
-      
-//               {/* benefits of course */}
-      
-//               <div>
-//                   <label>Benifits of Course <sup>*</sup></label>
-//                   <textarea id='coursebenefit'
-//                   placeholder='enter course benefit'
-//                   {...register("coursebenefit",{required:true})}
-//                   className="w-full h-[190px] p-1 rounded-md font-semibold"
-//                    />
-      
-//                    {
-//                       errors.coursebenefit && (<span>course benefit is required</span>)
-//                    }
-//               </div >
-//               <Requirementfield
-//                 errors={errors}
-//                 label="courserequirement"
-//                 name="courserequirement"
-//                 reqiurelist={reqiurelist}
-//                 setrequiredlist={setrequiredlist}   
-//                 register={register}
-//                 setValue={setValue}
-//               />
-      
-//          <div>
-//           {
-//             editcourse  && (
-//               <button
-//               onClick={()=>dispatch(setStep(2))}
-//               className='bg-yellow-400 flex justify-center font-bold p-2 
-//     hover:scale-90 cursor-pointer hover:bg-green-400 transition-all duration-150'
-//               >
-//                  Continue without Saving
-//               </button>
-//             )
-//           }
-//           <Iconbutton
-   
-//           text={!addcatcou?"Next":editcourse? "save changes":"course add to category"}
-//           disabled={loading}
-//           />
-      
-//          </div>
-      
-//             </form>
-//           ):
-//           (<div className='mt-28 text-white text-3xl'>submiting</div>)
-//       }
-   
-//     </div>
-//   )
-// }
+      const data = await response.json();
 
-// export default Coursesinfoform
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
+      setSuccessMessage("Product added successfully!");
+      setFormData({
+        ProductTitle: "",
+        ProductShortDescription: "",
+        ProductPrice: "",
+        BenefitsOfProduct: "",
+        ProductImage: null,
+      });
+    } catch (error) {
+      console.error("Error adding product:", error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="scale-75 flex justify-evenly lg:scale-100">
+      <form onSubmit={handleSubmit} className="mt-36 p-6 rounded-md space-y-5">
+        <div>
+          <label htmlFor="ProductTitle">
+            Product Title <sup>*</sup>
+          </label>
+          <input
+            id="ProductTitle"
+            value={formData.ProductTitle}
+            onChange={handleChange}
+            placeholder="Enter the Product title"
+            className="w-full border p-1 rounded-md font-semibold"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="ProductShortDescription">
+            Product Short Description <sup>*</sup>
+          </label>
+          <textarea
+            id="ProductShortDescription"
+            value={formData.ProductShortDescription}
+            onChange={handleChange}
+            placeholder="Enter description"
+            className="w-full min-h-[120px] border p-1 rounded-md font-semibold"
+          />
+        </div>
+
+        <div className="relative">
+          <label htmlFor="ProductPrice">
+            Product Price <sup>*</sup>
+          </label>
+          <div className="flex items-center border p-1 rounded-md font-semibold">
+            <HiOutlineCurrencyRupee className="mr-2 text-lg" />
+            <input
+              id="ProductPrice"
+              type="number"
+              value={formData.ProductPrice}
+              onChange={handleChange}
+              placeholder="Enter the Product price"
+              className="w-full outline-none"
+            />
+          </div>
+        </div>
+
+        {/* Upload Thumbnail */}
+        <div>
+          <label className="block font-medium mb-2">Upload Product Thumbnail</label>
+          <input
+            type="file"
+            id="ProductImage"
+            accept=".jpg, .jpeg, .png, .gif"
+            onChange={handleFileChange}
+            className="font-bold p-3 cursor-pointer rounded-md"
+          />
+        </div>
+
+        {/* Benefits of Product */}
+        <div>
+          <label htmlFor="BenefitsOfProduct">
+            Benefits of Product <sup>*</sup>
+          </label>
+          <textarea
+            id="BenefitsOfProduct"
+            value={formData.BenefitsOfProduct}
+            onChange={handleChange}
+            placeholder="Enter Product benefits"
+            className="w-full h-[190px] border p-1 rounded-md font-semibold"
+          />
+        </div>
+
+        {/* Error and Success Messages */}
+        {error && <p className="text-red-500">{error}</p>}
+        {successMessage && <p className="text-green-500">{successMessage}</p>}
+
+        <div className="flex gap-6">
+          <Link href="/Account/profile">
+            <button type="button" className="cursor-pointer rounded-2xl p-2 border">
+              Back
+            </button>
+          </Link>
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-blue-700 cursor-pointer text-amber-50 rounded-2xl p-2 hover:bg-blue-950"
+          >
+            {loading ? "Submitting..." : "Submit"}
+          </button>
+        </div>
+      </form>
+
+      {/* Product Upload Tips */}
+      <div className="scale-75 p-8 mt-36 rounded-md h-96 w-[100vw] lg:w-[34vw]">
+        <div className="flex gap-6">
+          <MdStyle className="text-blue-400 mt-7 scale-[243%]" />
+          <p className="my-5 lg:text-3xl text-xl text-yellow-600">Product Upload Tips</p>
+        </div>
+
+        <ul className="my-4 w-96 space-y-2">
+          <li className="flex gap-2">
+            <IconGolfFilled /> Set the Course Price option or make it free.
+          </li>
+          <li className="flex gap-2">
+            <IconGolfFilled /> Standard size for the course thumbnail is 1024x576.
+          </li>
+          <li className="flex gap-2">
+            <IconGolfFilled /> Video section controls the course overview video.
+          </li>
+          <li className="flex gap-2">
+            <IconGolfFilled /> Course Builder is where you create & organize a course.
+          </li>
+          <li className="flex gap-2">
+            <IconGolfFilled /> Add Topics in the Course Builder section.
+          </li>
+          <li className="flex gap-2">
+            <IconGolfFilled /> Information from the Additional Data section.
+          </li>
+          <li className="flex gap-2">
+            <IconGolfFilled /> Make Announcements to notify any important updates.
+          </li>
+          <li className="flex gap-2">
+            <IconGolfFilled /> Notes to all enrolled students at once.
+          </li>
+        </ul>
+      </div>
+    </div>
+  );
+}

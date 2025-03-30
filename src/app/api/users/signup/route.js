@@ -2,12 +2,12 @@ import connectDB from "@/dbconfig/dbconfig";
 import User from "@/models/userModel";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-
+import { cookies } from "next/headers";
 connectDB(); // Ensure database connection
 
 export async function POST(req) {
   try {
-    // Parse request body
+    // Parse request bodya
     const reqBody = await req.json();
     const { firstname, lastname, email, password, confirmpassword, phonenumber, state, country, city } = reqBody;
  
@@ -27,6 +27,10 @@ export async function POST(req) {
       return NextResponse.json({ error: "User already exists." }, { status: 400 });
     }
 
+    const existingOwner = await User.findOne({ role: "owner" });
+
+   
+    const role = existingOwner ? "seller" : "owner";
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -37,12 +41,16 @@ export async function POST(req) {
       email,
       password: hashedPassword,
       phonenumber,
+      role,
       state,
       country,
       city,
     });
 
     await newUser.save();
+
+    cookies().set("token", "your-jwt-token", { httpOnly: true, secure: true });
+    cookies().set("role", newUser.role, { httpOnly: true, secure: true });
 
     return NextResponse.json(
       { message: "User registered successfully!" },

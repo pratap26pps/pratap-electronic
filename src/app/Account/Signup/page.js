@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link"; 
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import Cookies from "js-cookie";
 export default function SignupFormDemo() {
   const router = useRouter()
 
@@ -32,9 +33,14 @@ export default function SignupFormDemo() {
         },
       });
       console.log("Signup Success:", response.data);
-
+      Cookies.set("role", res.data.role);
       // Redirect to login after successful signup
-      router.push("/Account/Login");
+      if (res.data.role === "owner") {
+        router.push("/Account/profile"); // Owner goes to admin panel
+      } else {
+        router.push("/Account/Login");
+
+      }
     } catch (err) {
       console.error("Signup Error:", err.response?.data?.error || err.message);
       setError(err.response?.data?.error || "Something went wrong.");
