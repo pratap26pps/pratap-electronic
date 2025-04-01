@@ -6,7 +6,8 @@ import { FaSearch } from "react-icons/fa";
 import { MdOutlineEditLocation } from "react-icons/md";
 import { FaCartArrowDown } from "react-icons/fa";
 import { NavigationMenuDemo } from '../dropdownmenu';
- 
+import Image from 'next/image'; 
+
 import Cookies from "js-cookie";
 import Link from 'next/link';
 import {
@@ -69,9 +70,14 @@ export default function  Navbar(){
     <div className="flex justify-between items-center ">
         <div className='flex gap-4'>
           <Link href='/'>
-          <div>
-                <img src="https://cdn11.bigcommerce.com/s-3fd3md1ghs/images/stencil/200x138/flat-logo-website_1667210842__00934.original.png"
-                 alt="company logo" />
+          <div> EmbProto
+          {/* <Image
+        src="/ep.jpg"
+        alt="Local Image"
+        width={110}
+        height={80}
+      /> */}
+               
             </div> 
           </Link>
 

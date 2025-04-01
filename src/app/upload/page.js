@@ -4,7 +4,7 @@ import Link from "next/link";
 import { MdStyle } from "react-icons/md";
 import { HiOutlineCurrencyRupee } from "react-icons/hi";
 import { IconGolfFilled } from "@tabler/icons-react";
-
+import { NextResponse } from "next/server";
 export default function ProductInfoForm() {
   const [formData, setFormData] = useState({
     ProductTitle: "",
@@ -59,19 +59,26 @@ export default function ProductInfoForm() {
       console.log("Response received:", response.status);
 
       const data = await response.json();
-
+       console.log("data od product",data); 
       if (!response.ok) {
         throw new Error(data.message || "Something went wrong");
       }
-
+    
       setSuccessMessage("Product added successfully!");
       setFormData({
         ProductTitle: "",
         ProductShortDescription: "",
         ProductPrice: "",
         BenefitsOfProduct: "",
-        ProductImage: null,
+        ProductImage: "",
       });
+
+     return NextResponse.json({
+         success:true,
+         message:"product added successfully",
+         data
+     })
+
     } catch (error) {
       console.error("Error adding product:", error);
       setError(error.message);

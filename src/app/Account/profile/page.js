@@ -81,10 +81,19 @@ const router= useRouter();
     <h1>your dashboard</h1>
 
     {user?.role === "owner" ?(
+      <div>
+        <div>Owner</div>
+        <div className='flex  gap-36'>
+        <Link href="/ShowProduct">
+          <button className="bg-blue-500 px-4 py-2 rounded">Show All Product</button>
+        </Link>
         <Link href="/upload">
-          <div>Owner</div>
           <button className="bg-blue-500 px-4 py-2 rounded">Upload Product</button>
         </Link>
+        </div>
+
+      </div>
+         
       ):
 
       // sheller

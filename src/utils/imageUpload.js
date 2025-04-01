@@ -14,7 +14,10 @@ exports.imageuploadcloudanary= async (file,folder,height,quality)=>{
         options.quality=quality
     }
     options.resource_type= "auto";
+    
+ const buffer = await file.arrayBuffer();
+const base64Image = Buffer.from(buffer).toString("base64");
+return await cloudinary.uploader.upload(`data:image/png;base64,${base64Image}`, options);
 
-    return await cloudinary.uploader.upload(file.tempFilePath,options)
 
 }

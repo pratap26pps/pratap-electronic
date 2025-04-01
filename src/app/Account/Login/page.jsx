@@ -15,19 +15,28 @@ export default function SignupFormDemo() {
   email:"",password:"" 
    
  })
+ const [loading,setLoading] = useState(false);
 
   const handleSubmit =async (e) => {
     e.preventDefault();
+    setLoading(true);
+   try{
   const res=await axios.post("/api/users/login", JSON.stringify(user),
     {        headers: {
       "Content-Type": "application/json",
     },});
   console.log("res of login",res.data)
-
+    setLoading(false);
     router.push('/Account/profile')
     toast.success("login successfully");
-
     console.log("Form submitted");
+   }catch(error){
+    toast.error(error.message)
+    console.log(error.message);
+    setLoading(false);
+     
+   }
+
   };
   return (
     <div
@@ -46,6 +55,7 @@ export default function SignupFormDemo() {
           <Input id="email" placeholder="projectmayhem@fc.com" type="email"
            onChange={(e)=>setUser({...user,email:e.target.value})}
            value={user.email} 
+           required
           />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
@@ -53,6 +63,7 @@ export default function SignupFormDemo() {
           <Input id="password" placeholder="••••••••" type="password"
            onChange={(e)=>setUser({...user,password:e.target.value})}
            value={user.password} 
+           required
           />
         </LabelInputContainer>
    
@@ -60,8 +71,12 @@ export default function SignupFormDemo() {
         <button
           className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
           type="submit">
-          Login &rarr;
-          <BottomGradient />
+       {
+        loading?"Loading....":<div> 
+           Login &rarr;
+          <BottomGradient /></div>
+       }
+    
         </button>
         <div className="flex">
           <p>Not An Account ?</p>

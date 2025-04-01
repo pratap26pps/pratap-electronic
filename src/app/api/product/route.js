@@ -16,6 +16,7 @@ export async function POST(req) {
 
     const formData = await req.formData();
     console.log("fomdata in serverr",formData)
+
     const ProductTitle = formData.get("ProductTitle");
     const ProductShortDescription = formData.get("ProductShortDescription");
     const ProductPrice = formData.get("ProductPrice");
@@ -25,7 +26,7 @@ export async function POST(req) {
     if (!ProductTitle || !ProductImage || !ProductShortDescription || !ProductPrice || !BenefitsOfProduct) {
       return NextResponse.json({ success: false, message: "All fields are required" }, { status: 400 });
     }
-
+    console.log("ProductImage:", ProductImage);
     // Upload image to Cloudinary
     const thumbnailImage = await imageuploadcloudanary(ProductImage, "pankajphoto",500, 80);
    console.log("thumbnailImage",thumbnailImage);
@@ -33,7 +34,7 @@ export async function POST(req) {
     const newProduct = await Product.create({
       ProductTitle,
       ProductPrice,
-      thumbnailImage:thumbnailImage.secure._url,
+      ProductImage: thumbnailImage.secure_url,
       BenefitsOfProduct,
       ProductShortDescription,
       
@@ -67,26 +68,51 @@ export async function GET(req) {
 //  Update Product
 export async function PUT(req) {
   try {
-    const user = await verifySeller(req);
-    if (!user) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
+ 
 
-    const { id, ProductTitle, ProductPrice, ProductShortDescription, BenefitsOfProduct } = await req.json();
+    const formData = await req.formData();  
+
+    const id = formData.get("id");
+    const ProductTitle = formData.get("ProductTitle");
+    const ProductPrice = formData.get("ProductPrice");
+    const ProductShortDescription = formData.get("ProductShortDescription");
+    const BenefitsOfProduct = formData.get("BenefitsOfProduct");
 
     if (!id || !ProductTitle || !ProductPrice || !ProductShortDescription || !BenefitsOfProduct) {
       return NextResponse.json({ success: false, message: "All fields are required" }, { status: 400 });
     }
 
-    const updatedProduct = await Product.findByIdAndUpdate(
-      id,
-      { ProductTitle, ProductPrice, ProductShortDescription, BenefitsOfProduct },
-      { new: true }
-    );
-
-    if (!updatedProduct) {
+    const product = await Product.findById(id);
+    if (!product) {
       return NextResponse.json({ success: false, message: "Product not found" }, { status: 404 });
     }
+
+    let ProductImage = product.ProductImage; // Keep old image if no new image is provided
+    const file = formData.get("ProductImage");
+
+    if (file && file.size > 0) {
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      const uploadPromise = new Promise((resolve, reject) => {
+        const stream =  imageuploadcloudanary.uploader.upload_stream(
+          { folder: "products", resource_type: "image" },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result.secure_url);
+          }
+        );
+        stream.end(buffer);
+      });
+
+      ProductImage = await uploadPromise; // Wait for image upload
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      { ProductTitle, ProductPrice, ProductShortDescription, BenefitsOfProduct, ProductImage },
+      { new: true }
+    );
 
     return NextResponse.json({
       success: true,
