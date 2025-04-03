@@ -68,10 +68,7 @@ export async function GET(req) {
 //  Update Product
 export async function PUT(req) {
   try {
- 
-
     const formData = await req.formData();  
-
     const id = formData.get("id");
     const ProductTitle = formData.get("ProductTitle");
     const ProductPrice = formData.get("ProductPrice");
@@ -87,25 +84,12 @@ export async function PUT(req) {
       return NextResponse.json({ success: false, message: "Product not found" }, { status: 404 });
     }
 
-    let ProductImage = product.ProductImage; // Keep old image if no new image is provided
+    let ProductImage = product.ProductImage; 
     const file = formData.get("ProductImage");
 
     if (file && file.size > 0) {
-      const arrayBuffer = await file.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-
-      const uploadPromise = new Promise((resolve, reject) => {
-        const stream =  imageuploadcloudanary.uploader.upload_stream(
-          { folder: "products", resource_type: "image" },
-          (error, result) => {
-            if (error) reject(error);
-            else resolve(result.secure_url);
-          }
-        );
-        stream.end(buffer);
-      });
-
-      ProductImage = await uploadPromise; // Wait for image upload
+      const ProductImageData = await imageuploadcloudanary(file, "pankajphoto", 500, 80);
+      ProductImage = ProductImageData.secure_url;
     }
 
     const updatedProduct = await Product.findByIdAndUpdate(

@@ -7,7 +7,7 @@ import { MdOutlineEditLocation } from "react-icons/md";
 import { FaCartArrowDown } from "react-icons/fa";
 import { NavigationMenuDemo } from '../dropdownmenu';
 import Image from 'next/image'; 
-
+import toast from 'react-hot-toast';
 import Cookies from "js-cookie";
 import Link from 'next/link';
 import {
