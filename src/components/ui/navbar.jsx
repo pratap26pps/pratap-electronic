@@ -70,15 +70,17 @@ export default function  Navbar(){
 
   return  (
     <div className='p-4 fixed w-full top-0 z-50 bg-white dark:bg-gray-900 shadow-md'>
-      <div className='flex justify-between items-center max-w-7xl mx-auto px-4 md:px-8'>
-        {/* Logo & Search Bar */}
-        <div className='flex items-center gap-4 w-full'>
+      <div className='flex justify-between px-4 md:px-8 '>
+        {/* Logo  */}
+        <div className=''>
           <Link href='/'>
             <div className='text-lg font-semibold cursor-pointer'>EmbProto</div>
           </Link>
 
-          {/* Search Bar (Hidden on Small Screens) */}
-          <div className='hidden md:flex items-center gap-2 p-2 w-full border rounded-full bg-gray-100 shadow-sm focus-within:shadow-md transition-shadow duration-300'>
+          
+        </div>
+        {/* Search Bar (Hidden on Small Screens) */}
+        <div className='hidden md:flex items-center gap-2 p-2 w-[60%] border rounded-full bg-gray-100 shadow-sm focus-within:shadow-md transition-shadow duration-300'>
             <FaSearch className='text-gray-500 ml-4' />
             <input 
               type='search' 
@@ -86,7 +88,6 @@ export default function  Navbar(){
               className='w-full bg-gray-100 outline-none text-gray-700 placeholder-gray-500 rounded-full px-2'
             />
           </div>
-        </div>
 
         {/* Icons & Theme Toggle */}
         <div className='flex items-center gap-4 md:gap-8'>
@@ -141,19 +142,11 @@ export default function  Navbar(){
             <Moon className='h-5 w-5 hidden dark:block' />
           </div>
         </div>
+      
       </div>
       
-      {/* Mobile Search Bar */}
-      <div className='md:hidden px-4 mt-2'>
-        <div className='flex items-center gap-2 p-2 w-full border rounded-full bg-gray-100 shadow-sm focus-within:shadow-md'>
-          <FaSearch className='text-gray-500 ml-2' />
-          <input 
-            type='search' 
-            placeholder='Search for product...'
-            className='w-full bg-gray-100 outline-none text-gray-700 placeholder-gray-500 rounded-full px-2'
-          />
-        </div>
-      </div>
+     
+      
 
       {/* Navigation Menu */}
       <NavigationMenuDemo />
@@ -269,15 +262,4 @@ export default function  Navbar(){
 //   </div>
 
 // )
-
-
-
-
-
-
-
-
-
-
-
-
+// }
