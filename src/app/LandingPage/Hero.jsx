@@ -1,5 +1,5 @@
 import React from 'react';
-import { CarouselSpacing } from '@/components/carouseSpacing';
+import { CarouselSize } from '@/components/carouseSpacing';
 import Footer from '@/components/Footer';
 
 
@@ -50,7 +50,7 @@ export default function Hero() {
       {['Featured', 'New', 'Most Popular'].map((category) => (
         <div key={category} className="mt-12">
           <h2 className="text-center text-2xl font-bold">{category} Products</h2>
-          <CarouselSpacing />
+          <CarouselSize/>
         </div>
       ))}
 
