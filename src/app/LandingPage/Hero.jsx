@@ -2,6 +2,7 @@ import React from 'react';
 import { CarouselSpacing } from '@/components/carouseSpacing';
 import Footer from '@/components/Footer';
 
+
 export default function Hero() {
   return (
     <div>
