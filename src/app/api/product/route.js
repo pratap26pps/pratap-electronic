@@ -1,4 +1,4 @@
-import { verifySeller } from "@/middleware/middleware";
+import { verifySeller } from "@/middleware";
 import Product from "@/models/productDetails";
 import { imageuploadcloudanary } from "@/utils/imageUpload";
 import { NextResponse } from "next/server";

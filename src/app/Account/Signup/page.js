@@ -25,7 +25,7 @@ export default function SignupFormDemo() {
     e.preventDefault();
     setError(null);
     setLoading(true);
-
+    router.push('/OtpPage')
     try {
       const response = await axios.post("/api/users/signup", JSON.stringify(user), {
         headers: {

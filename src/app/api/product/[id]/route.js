@@ -1,4 +1,4 @@
-import { verifySeller } from "@/middleware/middleware";
+import { verifySeller } from "@/middleware";
 import Product from "@/models/productDetails";
 import { NextResponse } from "next/server";
 import connectDB from "@/dbconfig/dbconfig";
