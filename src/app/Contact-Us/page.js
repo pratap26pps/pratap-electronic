@@ -18,7 +18,7 @@ export default function ContactUs() {
 
   return (
     <div className="mt-36">
-    <div className="p-6 border rounded-lg shadow-md max-w-lg mx-auto space-y-4">
+    <div className="p-6 border rounded-lg shadow-md max-w-lg mx-auto space-y-4 mb-9 mt-40">
       <h2 className="text-lg font-semibold">Contact Us</h2>
       <p className="text-sm text-gray-600">Please fill out the form below and we will revert within 24-48 hours.</p>
       <p className="text-sm text-gray-600">You can also contact us on WhatsApp or Email:</p>

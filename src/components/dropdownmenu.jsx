@@ -167,15 +167,16 @@ export function NavigationMenuDemo() {
       </div>
       {/* Mobile Menu Content */}
       {isMenuOpen && (
-        <div className="absolute lg:hidden block top-14 left-0 w-full bg-white dark:bg-gray-900 shadow-lg p-4 transition-all duration-300">
+        <div className="absolute top-14 left-0 w-full bg-white dark:bg-gray-900 shadow-lg p-4 transition-all duration-300 lg:hidden block">
           {/* <NavigationMenuDemo /> */}
 
           <NavigationMenuList className="w-full">
-            <div className="flex flex-col">
+
+            <div className="flex flex-col ">
               <NavigationMenuItem>
                 <NavigationMenuTrigger>All Categories</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="h-72 relative overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 p-1 z-20 md:w-[200px] lg:w-[250px] shadow-lg rounded-md">
+                  <ul className="h-72  relative overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 p-1 z-20 md:w-[200px] lg:w-[250px] shadow-lg rounded-md">
                     <ListItem href="/featured-brands" title="Shop by Brands" />
                     <ListItem href="/latest-products" title="New Arrivals" />
 
@@ -195,7 +196,7 @@ export function NavigationMenuDemo() {
                 {/* Submenu Panel */}
                 {hoveredCategory && (
                   <div
-                    className="absolute bg-gray-700 text-amber-50 h-[43vh] top-12 left-[260px] border shadow-lg rounded-md w-[200px] p-3 transition-all duration-300 opacity-100 overflow-y-auto"
+                    className="absolute bg-gray-700 text-amber-50 h-[43vh] top-66 right-[0px] z-[999] border shadow-lg rounded-md w-[200px] p-3 transition-all duration-300 opacity-100 overflow-y-auto"
                     style={{
                       scrollbarGutter: "stable both-edges",
                       textAlign: "left",
@@ -264,9 +265,10 @@ export function NavigationMenuDemo() {
           </NavigationMenuList>
         </div>
       )}
-
+      {/* navList for large screen */}
       <NavigationMenuList className="lg:block hidden">
-        <div className="flex">
+
+        <div className="flex gap-2">
           <NavigationMenuItem>
             <NavigationMenuTrigger>All Categories</NavigationMenuTrigger>
             <NavigationMenuContent>
@@ -319,9 +321,8 @@ export function NavigationMenuDemo() {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuTrigger>TOP Manufacturers</NavigationMenuTrigger>
-
             <NavigationMenuContent>
-              <ul className="w-[200px] gap-2 p-1">
+              <ul className=" w-[200px] gap-2 p-1">
                 {components.map((component) => (
                   <ListItem
                     key={component.title}
@@ -333,19 +334,24 @@ export function NavigationMenuDemo() {
                 ))}
               </ul>
             </NavigationMenuContent>
+
+
           </NavigationMenuItem>
           <NavigationMenuItem>
             <Link href="/rfq" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()} >
                 RFQ
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <Link href="/quick-order" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Quick Order
-              </NavigationMenuLink>
+             
+                <NavigationMenuLink className={navigationMenuTriggerStyle()} >
+                  Quick Order
+                </NavigationMenuLink>
+             
+
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
