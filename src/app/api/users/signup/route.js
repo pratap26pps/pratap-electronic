@@ -30,7 +30,7 @@ export async function POST(req) {
     const existingOwner = await User.findOne({ role: "owner" });
 
    
-    const role = existingOwner ? "seller" : "owner";
+    const role = existingOwner ? "customer" : "owner";
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -49,8 +49,8 @@ export async function POST(req) {
 
     await newUser.save();
 
-    cookies().set("token", "your-jwt-token", { httpOnly: true, secure: true });
-    cookies().set("role", newUser.role, { httpOnly: true, secure: true });
+ 
+    // cookies().set("role", newUser.role, { httpOnly: true, secure: true });
 
     return NextResponse.json(
       { message: "User registered successfully!" },

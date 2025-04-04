@@ -4,7 +4,8 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState={
     signupdata:null,
     loading:false,
-    token:  null
+    token:  null,
+    receivedOtp:[]
 } ;
 
 const authSlice=createSlice({
@@ -19,10 +20,15 @@ const authSlice=createSlice({
         },
         setToken(state,action){
             state.token = action.payload;
-        }
+        },
+        setreceivedOtp(state,action){
+            state.receivedOtp = action.payload;
+        },
+
     },
 });
 
 
-export const {setLoading,setSignupdata, setToken} = authSlice.actions;
+export const {setLoading,setSignupdata, setToken,setreceivedOtp} = authSlice.actions;
 export const authReducer = authSlice.reducer;
+

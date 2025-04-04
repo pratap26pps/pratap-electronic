@@ -2,54 +2,66 @@
 
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
- 
+import axios from "axios"; 
 import OTPInput from "react-otp-input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
  
 import { BiArrowFromRight } from "react-icons/bi";
+import toast from "react-hot-toast";
 
 const OtpPage = () => {
-  const { loading, signupdata } = useSelector((state) => state.auth);
+  const { signupdata,receivedOtp } = useSelector((state) => state.auth);
+  console.log("signudata during otp",signupdata);
   const [otp, setotp] = useState("");
   const router = useRouter();
   const dispatch = useDispatch();
+ const [loading, setLoading] = useState(false);
 
-  // const email = signupdata?.email;
-  // useEffect(() => {
-  //   if (!signupdata) {
-  //     router.push("Account/Signup");
-  //   }
-  // }, [signupdata]);
+  const email = signupdata?.email;
+  useEffect(() => {
+    if (!signupdata) {
+      router.push("Account/Signup");
+    }
+  }, [signupdata]);
 
-  const handleonsubmit = (e) => {
-    const {
-        firstname,
-        lastname,
-        password,
-        email,
-        role,
-        country,
-        state,
-        otp,
-        phonenumber,
-      
-    } = signupdata;
+  const handleonsubmit =async (e) => {
+//  validation otp
+if(otp ===receivedOtp){
+
+  toast.success("otp-verified successfully");
+
+  // api call signup
     console.log("signupdata", signupdata);
     e.preventDefault();
-    // dispatch(
-    //   signup(
-    //     firstname,
-    //     lastname,
-    //     password,
-    //     email,
-    //     role,
-    //     country,
-    //     state,
-    //     otp,
-    //     phonenumber,
-    //   )
-    // );
+     try {
+      const response = await axios.post("/api/users/signup", JSON.stringify(signupdata), {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("Signup Success:", response.data);
+      Cookies.set("role", response.data.role);
+      // Redirect to login after successful signup
+      if (response.data.role === "owner") {
+        router.push("/Account/profile"); // Owner goes to admin panel
+      } else {
+        router.push("/Account/Login");
+
+      }
+    } catch (err) {
+      console.error("Signup Error:", err.response?.data?.error || err.message);
+  
+    } finally {
+      setLoading(false);
+    }
+
+
+}else{
+  toast.error("invalid otp aagya");
+}
+
   };
 
   return (

@@ -7,40 +7,38 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useDispatch ,useSelector} from "react-redux";
+import { setSignupdata } from "@/redux/slices/userSlice";
+import { setreceivedOtp } from "@/redux/slices/userSlice";
+
 export default function SignupFormDemo() {
   const router = useRouter()
-
+  const dispatch = useDispatch();
+   
+  
  const [user,setUser] = useState({
   firstname:"",
   lastname:"",
   email:"",password:"",confirmpassword:"",phonenumber:"",state:"",
     country:"" ,city:"",
  })
- console.log("user",user);
 
+ const email= user.email;
+ console.log("useremail",email);
  const [error, setError] = useState(null);
  const [loading, setLoading] = useState(false);
-
   const handleSubmit =async (e) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
-    router.push('/OtpPage')
-    try {
-      const response = await axios.post("/api/users/signup", JSON.stringify(user), {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      console.log("Signup Success:", response.data);
-      Cookies.set("role", res.data.role);
-      // Redirect to login after successful signup
-      if (res.data.role === "owner") {
-        router.push("/Account/profile"); // Owner goes to admin panel
-      } else {
-        router.push("/Account/Login");
+    dispatch(setSignupdata(user));
 
-      }
+    try {
+      const response = await axios.post("/api/users/sendotp",{ email: user.email });
+      console.log("Otp Send Successfully:", response.data);
+      const otp = response.data.otp;
+      dispatch(setreceivedOtp(otp));
+
     } catch (err) {
       console.error("Signup Error:", err.response?.data?.error || err.message);
       setError(err.response?.data?.error || "Something went wrong.");
@@ -48,8 +46,11 @@ export default function SignupFormDemo() {
       setLoading(false);
     }
 
+      router.push('/OtpPage');
+   
+
     console.log("Form submitted");
-   console.log("user",user);
+     console.log("user",user);
 
   };
 
