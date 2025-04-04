@@ -68,7 +68,7 @@ export default function Page({ params } ){
           <p className="text-md font-semibold mt-2">{product.description}</p>
           <p className="text-lg font-bold text-green-600 mt-2">₹{product.price.toFixed(2)} <span className="text-sm text-gray-500">ex. GST</span></p>
           <p className="text-sm text-gray-600">{product.delivery}</p>
-          <p className="text-sm text-red-500 mt-1">{product.stock} in stock</p>
+          <p className="text-sm font-semibold text-red-500 mt-1">{product.stock} in stock</p>
           
           <div className="mt-4 flex items-center space-x-2">
             <input type="number" min="1" defaultValue="1" className="border p-2 w-16 rounded" />
@@ -81,7 +81,7 @@ export default function Page({ params } ){
         </div>
         {/* cart review */}
         
-        <div className="fixed left-[76%] p-6 bottom-64 rounded-lg shadow">
+        <div className="fixed left-[76%] p-6 bottom-64 rounded-lg shadow hidden sm:block">
         <h2 className="text-xl font-bold mb-4">Your Cart</h2>
         <div className="space-y-2">
           <p className="flex justify-between"><span>Subtotal:</span> <span>₹</span></p>
