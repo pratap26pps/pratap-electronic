@@ -43,17 +43,19 @@ export function CarouselSize() {
 
                   <div className='shadow shadow-neutral-300 border border-b-gray-200 flex flex-col' key={item._id}>
 
-                    <img src={item.ProductImage} alt="productimage" />
+                    <div className="h-56 w-44 p-4  mx-auto">
+                      <img src={item.ProductImage} alt="productimage" />
+                    </div>
 
                     <div className='text-neutral-400 ml-5 '>{item.ProductTitle}</div>
 
                     <div className='font-semibold hover:text-neutral-500 cursor-pointer ml-5'>{item.ProductShortDescription}</div>
 
-                    <div className='text-lg font-semibold text-red-400 ml-5 '>{item.ProductPrice}<span className="text-gray-500 text-sm">ex. GST</span></div>
+                    <div className='text-lg font-semibold text-red-400 ml-5 '>₹ {item.ProductPrice}<span className="text-gray-500 text-sm"> ex. GST</span></div>
 
-                    <div className="w-60 h-px p-[1px] bg-gray-100  mb-3 mt-4 flex mx-auto"></div>
-                    <div className='font-semibold ml-5'>Shipped in 24 Hours from Mumbai Warehouse</div>
-                    <h1 className='font-semibold text-green-600 ml-5'>{item.__v}in Stock</h1>
+                    <div className=" w-full h-px p-[1/2px] bg-gray-100  mb-3 mt-4 flex mx-auto"></div>
+                    <div className='font-semibold mb-2 ml-5'>Shipped in 24 Hours from Mumbai Warehouse</div>
+                    <h1 className='font-semibold text-green-600 mb-5 ml-5'>{item.__v}in Stock</h1>
                   </div>
                   <div className='flex flex-col gap-2 p-4'>
                     <button className='bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-300 shadow-md font-semibold text-white cursor-pointer '>ADD TO Cart</button>
@@ -69,5 +71,5 @@ export function CarouselSize() {
       <CarouselPrevious />
       <CarouselNext />
     </Carousel>
-    )
+  )
 };
