@@ -74,7 +74,15 @@ export default function  Navbar(){
         {/* Logo  */}
         <div className=''>
           <Link href='/'>
-            <div className='text-lg font-semibold cursor-pointer'>EmbProto</div>
+          <div> EmbProto
+          {/* <Image
+        src="/ep.jpg"
+        alt="Local Image"
+        width={110}
+        height={80}
+      /> */}
+               
+            </div> 
           </Link>
 
           
@@ -151,7 +159,8 @@ export default function  Navbar(){
       {/* Navigation Menu */}
       <NavigationMenuDemo />
     </div>
-  );
+
+  )
 }
 
  

@@ -3,10 +3,8 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { RiArrowDropRightFill } from "react-icons/ri";
 import { cn } from "@/lib/utils";
-import { FaBars, FaTimes } from "react-icons/fa";  //add
+import { FaBars, FaTimes } from "react-icons/fa"; //add
 import { FaSearch } from "react-icons/fa";
-
-
 
 import {
   NavigationMenu,
@@ -27,28 +25,23 @@ const components = [
   {
     title: "Texas Instrument",
     href: "/TexasInstrument",
-
   },
   {
     title: "Yageo",
     href: "/Yageo",
-
   },
   {
     title: "Quectel",
     href: "/Quectel",
-
   },
   {
     title: "WaveShare",
     href: "/WaveShare",
-
   },
   {
     title: "spark fun",
     href: "/spark-fun ",
   },
-
 ];
 const categories = [
   {
@@ -135,8 +128,6 @@ const categories = [
   },
 ];
 
-
-
 export function NavigationMenuDemo() {
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -149,7 +140,7 @@ export function NavigationMenuDemo() {
     }
   }, [isMenuOpen]);
   return (
-    <NavigationMenu className='mt-6'>
+    <NavigationMenu className="mt-6">
       {/* Hamburger Menu Button */}
       <div className="flex justify-between items-center md:hidden">
         {/* <h1 className="text-lg font-bold">Menu</h1> */}
@@ -157,16 +148,19 @@ export function NavigationMenuDemo() {
           className="text-xl p-2 focus:outline-none"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          {isMenuOpen ? <FaTimes className="text-2xl" /> : <FaBars className="text-2xl" />}
+          {isMenuOpen ? (
+            <FaTimes className="text-2xl" />
+          ) : (
+            <FaBars className="text-2xl" />
+          )}
         </button>
-        <div className='md:hidden px-4 mt-2'>
-
-          <div className='flex items-center gap-2 p-2 border rounded-full bg-gray-100 shadow-sm focus-within:shadow-md'>
-            <FaSearch className='text-gray-500 ml-2' />
+        <div className="md:hidden px-4 mt-2">
+          <div className="flex items-center gap-2 p-2 border rounded-full bg-gray-100 shadow-sm focus-within:shadow-md">
+            <FaSearch className="text-gray-500 ml-2" />
             <input
-              type='search'
-              placeholder='Search for product...'
-              className='w-full bg-gray-100 outline-none text-gray-700 placeholder-gray-500 rounded-full px-2'
+              type="search"
+              placeholder="Search for product..."
+              className="w-full bg-gray-100 outline-none text-gray-700 placeholder-gray-500 rounded-full px-2"
             />
           </div>
         </div>
@@ -210,12 +204,18 @@ export function NavigationMenuDemo() {
                     onMouseEnter={() => setHoveredCategory(hoveredCategory)}
                     onMouseLeave={() => setHoveredCategory(null)}
                   >
-                    <h3 className="text-lg font-semibold border-b pb-2">{hoveredCategory}</h3>
+                    <h3 className="text-lg font-semibold border-b pb-2">
+                      {hoveredCategory}
+                    </h3>
                     <ul className="mt-2 space-y-2">
                       {categories
                         .find((cat) => cat.title === hoveredCategory)
                         ?.subItems.map((sub, i) => (
-                          <ListItem key={i} href={sub.href} className="hover:text-blue-600 cursor-pointer">
+                          <ListItem
+                            key={i}
+                            href={sub.href}
+                            className="hover:text-blue-600 cursor-pointer"
+                          >
                             {sub.title}
                           </ListItem>
                         ))}
@@ -226,10 +226,14 @@ export function NavigationMenuDemo() {
               <NavigationMenuItem>
                 <NavigationMenuTrigger>TOP Manufacturers</NavigationMenuTrigger>
 
-                <NavigationMenuContent >
+                <NavigationMenuContent>
                   <ul className="w-[200px] gap-2 p-1">
                     {components.map((component) => (
-                      <ListItem key={component.title} title={component.title} href={component.href}>
+                      <ListItem
+                        key={component.title}
+                        title={component.title}
+                        href={component.href}
+                      >
                         {/* {component.description} */}
                       </ListItem>
                     ))}
@@ -241,7 +245,6 @@ export function NavigationMenuDemo() {
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                     RFQ
                   </NavigationMenuLink>
-
                 </Link>
               </NavigationMenuItem>
               <NavigationMenuItem>
@@ -249,7 +252,6 @@ export function NavigationMenuDemo() {
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                     Quick Order
                   </NavigationMenuLink>
-
                 </Link>
               </NavigationMenuItem>
               <NavigationMenuItem>
@@ -257,7 +259,6 @@ export function NavigationMenuDemo() {
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                     Contact Us
                   </NavigationMenuLink>
-
                 </Link>
               </NavigationMenuItem>
             </div>
@@ -299,12 +300,18 @@ export function NavigationMenuDemo() {
                 onMouseEnter={() => setHoveredCategory(hoveredCategory)}
                 onMouseLeave={() => setHoveredCategory(null)}
               >
-                <h3 className="text-lg font-semibold border-b pb-2">{hoveredCategory}</h3>
+                <h3 className="text-lg font-semibold border-b pb-2">
+                  {hoveredCategory}
+                </h3>
                 <ul className="mt-2 space-y-2">
                   {categories
                     .find((cat) => cat.title === hoveredCategory)
                     ?.subItems.map((sub, i) => (
-                      <ListItem key={i} href={sub.href} className="hover:text-blue-600 cursor-pointer">
+                      <ListItem
+                        key={i}
+                        href={sub.href}
+                        className="hover:text-blue-600 cursor-pointer"
+                      >
                         {sub.title}
                       </ListItem>
                     ))}
@@ -335,7 +342,6 @@ export function NavigationMenuDemo() {
               <NavigationMenuLink className={navigationMenuTriggerStyle()} >
                 RFQ
               </NavigationMenuLink>
-
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
@@ -353,7 +359,6 @@ export function NavigationMenuDemo() {
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Contact Us
               </NavigationMenuLink>
-
             </Link>
           </NavigationMenuItem>
         </div>
@@ -362,39 +367,28 @@ export function NavigationMenuDemo() {
   );
 }
 
-const ListItem = React.forwardRef(({ className, title, children, ...props }, ref) => {
-  return (
-    <li>
-      <NavigationMenuLink asChild>
-        <a
-          ref={ref}
-          className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
-          )}
-          {...props}
-        >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-            {children}
-          </p>
-        </a>
-      </NavigationMenuLink>
-    </li>
-  );
-});
+const ListItem = React.forwardRef(
+  ({ className, title, children, ...props }, ref) => {
+    return (
+      <li>
+        <NavigationMenuLink asChild>
+          <a
+            ref={ref}
+            className={cn(
+              "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+              className
+            )}
+            {...props}
+          >
+            <div className="text-sm font-medium leading-none">{title}</div>
+            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+              {children}
+            </p>
+          </a>
+        </NavigationMenuLink>
+      </li>
+    );
+  }
+);
 
 ListItem.displayName = "ListItem";
-
-
-
-
-
-
-
-
-
-
-
-
-
