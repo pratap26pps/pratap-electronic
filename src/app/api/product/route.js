@@ -20,10 +20,11 @@ export async function POST(req) {
     const ProductTitle = formData.get("ProductTitle");
     const ProductShortDescription = formData.get("ProductShortDescription");
     const ProductPrice = formData.get("ProductPrice");
+    const productItems = formData.get("productItems");
     const BenefitsOfProduct = formData.get("BenefitsOfProduct");
     const ProductImage = formData.get("ProductImage");
 
-    if (!ProductTitle || !ProductImage || !ProductShortDescription || !ProductPrice || !BenefitsOfProduct) {
+    if (!ProductTitle || !productItems || !ProductImage || !ProductShortDescription || !ProductPrice || !BenefitsOfProduct) {
       return NextResponse.json({ success: false, message: "All fields are required" }, { status: 400 });
     }
     console.log("ProductImage:", ProductImage);
@@ -34,6 +35,7 @@ export async function POST(req) {
     const newProduct = await Product.create({
       ProductTitle,
       ProductPrice,
+      productItems,
       ProductImage: thumbnailImage.secure_url,
       BenefitsOfProduct,
       ProductShortDescription,

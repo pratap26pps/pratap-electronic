@@ -87,7 +87,7 @@ const router= useRouter();
         <Link href="/ShowProduct">
           <button className="bg-blue-500 px-4 py-2 rounded">Show All Product</button>
         </Link>
-        <Link href="/upload">
+        <Link href="/upload/category">
           <button className="bg-blue-500 px-4 py-2 rounded">Upload Product</button>
         </Link>
         </div>

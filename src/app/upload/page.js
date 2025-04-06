@@ -11,6 +11,7 @@ export default function ProductInfoForm() {
     ProductShortDescription: "",
     ProductPrice: "",
     BenefitsOfProduct: "",
+    productItems:"",
     ProductImage: null,
   });
 
@@ -41,7 +42,8 @@ export default function ProductInfoForm() {
     newFormData.append("ProductShortDescription", formData.ProductShortDescription);
     newFormData.append("ProductPrice", formData.ProductPrice);
     newFormData.append("BenefitsOfProduct", formData.BenefitsOfProduct);
-  
+    newFormData.append("productItems", formData.productItems);
+    
     if (formData.ProductImage) {
       newFormData.append("ProductImage", formData.ProductImage);
     } else {
@@ -71,6 +73,7 @@ export default function ProductInfoForm() {
         ProductPrice: "",
         BenefitsOfProduct: "",
         ProductImage: "",
+        productItems:""
       });
 
      return NextResponse.json({
@@ -100,6 +103,7 @@ export default function ProductInfoForm() {
             onChange={handleChange}
             placeholder="Enter the Product title"
             className="w-full border p-1 rounded-md font-semibold"
+            required
           />
         </div>
 
@@ -113,11 +117,13 @@ export default function ProductInfoForm() {
             onChange={handleChange}
             placeholder="Enter description"
             className="w-full min-h-[120px] border p-1 rounded-md font-semibold"
+            required
           />
         </div>
 
-        <div className="relative">
-          <label htmlFor="ProductPrice">
+        <div className="relative flex gap-3">
+        <div>
+        <label htmlFor="ProductPrice">
             Product Price <sup>*</sup>
           </label>
           <div className="flex items-center border p-1 rounded-md font-semibold">
@@ -129,8 +135,27 @@ export default function ProductInfoForm() {
               onChange={handleChange}
               placeholder="Enter the Product price"
               className="w-full outline-none"
+              required
             />
           </div>
+        </div>
+        <div>
+        <label htmlFor="ProductPrice">
+            Product items <sup>*</sup>
+          </label>
+          <div className="flex items-center border p-1 rounded-md font-semibold">
+            <HiOutlineCurrencyRupee className="mr-2 text-lg" />
+            <input
+              id="productItems"
+              type="number"
+              value={formData.productItems}
+              onChange={handleChange}
+              placeholder="Enter the Product items"
+              className="w-full outline-none"
+              required
+            />
+          </div>
+        </div>
         </div>
 
         {/* Upload Thumbnail */}
@@ -142,6 +167,7 @@ export default function ProductInfoForm() {
             accept=".jpg, .jpeg, .png, .gif"
             onChange={handleFileChange}
             className="font-bold p-3 cursor-pointer rounded-md"
+            required
           />
         </div>
 
@@ -156,6 +182,7 @@ export default function ProductInfoForm() {
             onChange={handleChange}
             placeholder="Enter Product benefits"
             className="w-full h-[190px] border p-1 rounded-md font-semibold"
+            required
           />
         </div>
 

@@ -1,4 +1,3 @@
-import { verifySeller } from "@/middleware";
 import Product from "@/models/productDetails";
 import { NextResponse } from "next/server";
 import connectDB from "@/dbconfig/dbconfig";
@@ -7,13 +6,12 @@ connectDB();
 
 export async function GET(req, context) {
   try {
-    console.log("Full context object:", context); // Debugging
+    console.log("Full context object:", context);
 
-    // ✅ Await `params` before using it
     const params = await context.params;
     const id = params?.id;
 
-    console.log("Extracted ID:", id); // Debugging
+    console.log("Extracted ID:", id); 
 
     if (!id) {
       return NextResponse.json({ success: false, message: "Product ID is required" }, { status: 400 });

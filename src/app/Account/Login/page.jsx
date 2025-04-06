@@ -78,6 +78,8 @@ export default function SignupFormDemo() {
        }
     
         </button>
+
+        <Link href='/Account/forgotpassword' className="mt-3 cursor-pointer">Forgot Password</Link>
         <div className="flex">
           <p>Not An Account ?</p>
           <Link href='/Account/Signup' className="ml-3">SignUp</Link>
