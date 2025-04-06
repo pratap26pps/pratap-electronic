@@ -6,7 +6,7 @@ import Link from 'next/link'
 
 // import { getpasswordresettoken } from '../services/opration/authapi'
 const Forgotpassword = () => {
-   const [emailsend,setemailsend]=useState(false)
+   const [emailsend,setemailsend]=useState(true)
    const [email,setemail]=useState("")
    
     const {loading} = useSelector((state)=>state.auth);
@@ -68,7 +68,7 @@ const Forgotpassword = () => {
               </button>
                 
                  
-             <Link href={'/Account/login'}>
+             <Link href={'/Account/Login'}>
              <div className='flex lg:mt-3'>
                                <BiArrowFromRight className='mt-1'/>
                                <p>back to login</p>
