@@ -4,9 +4,14 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
-const page = () => {
+import { useDispatch } from "react-redux";
+import { setBrandid } from "@/redux/slices/productSlice";
+const Page = () => {
   const [step, setStep] = useState(1);
   const router = useRouter();
+  const dispatch = useDispatch();
+ 
+ 
   const [cat, setCat] = useState({
     CategoryName: "",
     CategoryDescription: "",
@@ -21,6 +26,11 @@ const page = () => {
   });
 
   const [Loading, setLoading] = useState(false);
+  const [categoryid, setcategoryid] = useState("");
+ console.log("catid agya",categoryid);
+ const [subcategoryid, setsubcategoryid] = useState("");
+ console.log("subcatid agya",subcategoryid);
+
 
   const handleBack = () => setStep((prev) => prev - 1);
 
@@ -29,7 +39,7 @@ const page = () => {
     setLoading(true);
 
     console.log("categry", cat);
-    await fetch("/api/category", {
+  const result=  await fetch("/api/category", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -37,21 +47,24 @@ const page = () => {
         description: cat.CategoryDescription,
       }),
     });
+    
+    const  categories= await result.json();
+console.log("result aa gya",categories);
+
+const newCategoryId = categories?._id;
+console.log("categoryid aa gya",categoryid);
+setcategoryid(newCategoryId);
+
+
+ 
     setLoading(false)
     setStep((prev) => prev + 1);
   };
   const handleNext2 = async (e) => {
     e.preventDefault();
     setLoading(true);
-   const categorydetails= await fetch("/api/category",{
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-    
-  });
- const  categoryid= await categorydetails._id;
 
-    console.log("subcategry", subcat);
-    await fetch("/api/subCategory", {
+   const result2 = await fetch("/api/subCategory", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -60,22 +73,20 @@ const page = () => {
         categoryid
       }),
     });
+    const subcatdetails = await result2.json();
+    console.log("subcatdetails",subcatdetails);
+    const subcatid = subcatdetails?._id;
+    setsubcategoryid(subcatid);
     setLoading(false)
     setStep((prev) => prev + 1);
   };
   const handleNext3 = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    const subcategorydetails= await fetch("/api/subCategory",{
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-      
-    });
-   const  subcategoryid= await subcategorydetails._id; 
-
+ 
     console.log("brand", brand);
-    await fetch("/api/brandProduct", {
+    console.log("subcategoryid", subcategoryid);
+  const result3 =  await fetch("/api/brandProduct", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -84,8 +95,19 @@ const page = () => {
         description: brand.BrandCategoryDescription,
       }),
     });
+    console.log("RAW response", result3);
+    if (!result3.ok) {
+      const errorText = await result3.text();
+      console.error("API error response:", errorText);
+      setLoading(false);
+      return;
+    }
+    const brandcatdetails = await result3.json();
+    console.log(" brandcatdetails", brandcatdetails);
+    const  brandcatdetailsid =  brandcatdetails?._id;
+     dispatch(setBrandid(brandcatdetailsid));
     setLoading(false)
-     router.push('/upload');
+   router.push('/upload');
   };
  
 
@@ -230,4 +252,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

@@ -20,7 +20,7 @@ export async function POST(req) {
       name,
       description,
     });
-
+    console.log("category",category)
     return NextResponse.json(category, 
         { status: 201,message:"category added successfully" });
   } catch (error) {
@@ -36,7 +36,17 @@ export async function GET() {
     try {
       await connectDB();
   
-      const categories = await Category.find().populate('Subcategory');
+      const categories = await Category.find().populate({
+        path: "subcategories",
+        populate: {
+          path: "brandProducts",
+          populate: {
+            path: "product"
+          }
+        }
+      });
+      
+ 
       return NextResponse.json(categories, { status: 200 });
     } catch (error) {
       return NextResponse.json({ error: 'Failed to fetch categories' }, { status: 500 });

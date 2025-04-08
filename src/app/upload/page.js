@@ -5,6 +5,7 @@ import { MdStyle } from "react-icons/md";
 import { HiOutlineCurrencyRupee } from "react-icons/hi";
 import { IconGolfFilled } from "@tabler/icons-react";
 import { NextResponse } from "next/server";
+import { useSelector } from "react-redux";
 export default function ProductInfoForm() {
   const [formData, setFormData] = useState({
     ProductTitle: "",
@@ -18,7 +19,8 @@ export default function ProductInfoForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
-
+  const {brandid} = useSelector((state)=>state.Product || {} )
+  console.log("brandid during product form",brandid);
   // Handle Input Change
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -53,9 +55,11 @@ export default function ProductInfoForm() {
     console.log("FormData Entries:", [...newFormData.entries()]);
 
     try {
+
       const response = await fetch("/api/product", {
         method: "POST",
         body: newFormData,
+        brandid:brandid
       });
 
       console.log("Response received:", response.status);

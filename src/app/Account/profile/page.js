@@ -96,7 +96,7 @@ const router= useRouter();
          
       ):
 
-      // sheller
+      // costumer
       (<div className='flex gap-3 scale-75 cursor-pointer'>
         {
           dashboardList.map((list)=>{
@@ -112,7 +112,7 @@ const router= useRouter();
              >{list.name}</div> </Link>
           })
         }
-
+        
       </div>)}
  
 

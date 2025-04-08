@@ -7,7 +7,9 @@ export async function POST(req) {
   try {
     await connectDB();
     const body = await req.json();
+    console.log("body",body)
     const { name, description, categoryid } = body;
+    console.log("abhishek",name)
 
     if (!name || !description || !categoryid) {
       return NextResponse.json(
@@ -15,22 +17,17 @@ export async function POST(req) {
         { status: 400 }
       );
     }
-    const category = await Category.findById(categoryid);
-    if (!category) {
-      return NextResponse.json(
-        { error: "category details are missing" },
-        { status: 400 }
-      );
-    }
 
     const subcategory = await Subcategory.create({
       name,
       description,
-      category,
+      category: categoryid
+       
     });
+    console.log("subcategory",subcategory)
 
     const updatecategory = await Category.findByIdAndUpdate(
-      { _id: categoryid },
+      categoryid,
       {
         $push: {
           subcategory: subcategory._id,
@@ -39,7 +36,8 @@ export async function POST(req) {
       { new: true }
     ).populate("subcategory");
 
-    return NextResponse.json(updatecategory, {
+    return NextResponse.json(
+      updatecategory, {
       status: 201,
       message: "Subcategory added successfully",
     });
@@ -56,11 +54,11 @@ export async function GET() {
   try {
     await connectDB();
 
-    const categories = await Subcategory.find().populate("BrandProduct");
-    return NextResponse.json(categories, { status: 200 });
+    const subcategories = await Subcategory.find().populate("BrandProduct").populate("category");;
+    return NextResponse.json(subcategories, { status: 200 });
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to fetch categories" },
+      { error: "Failed to fetch subcategories" },
       { status: 500 }
     );
   }

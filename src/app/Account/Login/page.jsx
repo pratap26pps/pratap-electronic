@@ -26,10 +26,11 @@ export default function SignupFormDemo() {
       "Content-Type": "application/json",
     },});
   console.log("res of login",res.data)
-    setLoading(false);
+   
     router.push('/Account/profile')
     toast.success("login successfully");
     console.log("Form submitted");
+    setLoading(false);
    }catch(error){
     toast.error(error.message)
     console.log(error.message);

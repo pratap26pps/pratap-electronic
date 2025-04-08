@@ -1,7 +1,7 @@
 import mongoose from "mongoose"; 
  
 const BrandProductschemma=new mongoose.Schema({
-   BrandName:{
+   name:{
         type:String,
     },
     description:{

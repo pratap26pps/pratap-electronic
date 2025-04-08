@@ -1,46 +1,38 @@
-import { NextResponse } from "next/server";
 import connectDB from "@/dbconfig/dbconfig";
 import BrandProduct from "@/models/BrandProduct";
 import Subcategory from "@/models/subCategory";
-export async function POST(req) {
+
+export async function POST(req,res) {
   try {
     await connectDB();
 
     const body = await req.json();
     const { name, description, subcategoryid } = body;
-
+   console.log("body",body)
     if (!name || !description || !subcategoryid) {
-      return NextResponse.json(
+      return res.json(
         { error: "All fields are required." },
         { status: 400 }
       );
     }
-    const subcategorydetails = await Subcategory.findById({
-      _id: subcategoryid,
-    });
-    if (!subcategorydetails) {
-      return NextResponse.json(
-        { error: "subcategorydetails are required." },
-        { status: 400 }
-      );
-    }
+ 
     const brandproduct = await BrandProduct.create({
       name,
       description,
-      subcategorydetails,
+      // product: [],
     });
-
+console.log("brandproduct during route success",brandproduct);
     const updatebrandproduct = await Subcategory.findByIdAndUpdate(
-      { _id: subcategoryid },
+      subcategoryid,
       {
         $push: {
-          brandproduct: brandproduct._id,
+          brandProduct: brandproduct._id,
         },
       },
       { new: true }
-    ).populate("brandproduct");
+    ).populate("BrandProduct");
 
-    return NextResponse.json(brandproduct, updatebrandproduct, {
+    return res.json( updatebrandproduct, {
       status: 201,
       message: "BrandProduct added successfully",
     });
@@ -53,14 +45,14 @@ export async function POST(req) {
   }
 }
 
-export async function GET() {
+export async function GET(res) {
   try {
     await connectDB();
 
-    const categories = await BrandProduct.find().populate("Product");
-    return NextResponse.json(categories, { status: 200 });
+    const categories = await BrandProduct.find().populate("product");
+    return res.json(categories, { status: 200 });
   } catch (error) {
-    return NextResponse.json(
+    return res.json(
       { error: "Failed to fetch categories" },
       { status: 500 }
     );

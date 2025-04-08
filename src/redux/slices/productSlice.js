@@ -4,7 +4,8 @@ const initialState={
     step:1,
     Product:[],
     editProduct:false,
-    paymentLoading:false
+    paymentLoading:false,
+    brandid:null,
     
 } ;
 
@@ -21,6 +22,9 @@ const productSlice=createSlice({
         setEditProduct(state,action){
             state.editProduct = action.payload;
         },
+        setBrandid(state,action){
+            state.brandid = action.payload;
+        },
         setPaymentLoading(state,action){
             state.paymentLoading = action.payload;
         },
@@ -32,7 +36,7 @@ const productSlice=createSlice({
     },
 });
 
- export const {setStep, setProduct, setEditProduct, setPaymentLoading,resetProductState} =
+ export const {setStep, setProduct,setBrandid, setEditProduct, setPaymentLoading,resetProductState} =
   productSlice.actions;
 export const productReducer = productSlice.reducer;
 

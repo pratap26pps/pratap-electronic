@@ -15,6 +15,8 @@ export async function POST(req) {
     }
 
     const formData = await req.formData();
+    const {brandid} = await req.body;
+    console.log("brandid",brandid);
     console.log("fomdata in serverr",formData)
 
     const ProductTitle = formData.get("ProductTitle");
@@ -24,7 +26,7 @@ export async function POST(req) {
     const BenefitsOfProduct = formData.get("BenefitsOfProduct");
     const ProductImage = formData.get("ProductImage");
 
-    if (!ProductTitle || !productItems || !ProductImage || !ProductShortDescription || !ProductPrice || !BenefitsOfProduct) {
+    if (!ProductTitle || !brandid || !productItems || !ProductImage || !ProductShortDescription || !ProductPrice || !BenefitsOfProduct) {
       return NextResponse.json({ success: false, message: "All fields are required" }, { status: 400 });
     }
     console.log("ProductImage:", ProductImage);

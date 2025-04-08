@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { RiArrowDropRightFill } from "react-icons/ri";
 import { cn } from "@/lib/utils";
-import { FaBars, FaTimes } from "react-icons/fa"; //add
+import { FaBars, FaTimes } from "react-icons/fa"; 
 import { FaSearch } from "react-icons/fa";
 
 import {
@@ -167,7 +167,7 @@ export function NavigationMenuDemo() {
       </div>
       {/* Mobile Menu Content */}
       {isMenuOpen && (
-        <div className="absolute top-14 left-0 w-full bg-white dark:bg-gray-900 shadow-lg p-4 transition-all duration-300 lg:hidden block">
+        <div className="absolute top-14 left-0 w-full bg-white dark:bg-neutral-950 shadow-lg p-4 transition-all duration-300 lg:hidden block">
           {/* <NavigationMenuDemo /> */}
 
           <NavigationMenuList className="w-full">

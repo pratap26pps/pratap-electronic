@@ -3,14 +3,16 @@ import jwt from 'jsonwebtoken';
 // This function can be marked `async` if using `await` inside
 export function middleware(request) {
   const path = request.nextUrl.pathname;
-  const ispublicpath=path==='/' || path ==='/Account/Login' || path==='/Account/signup'
+  const ispublicpath= path ==='/Account/Login' || path==='/Account/Signup'
   
  const token = request.cookies.get('token')?.value || ''
  
- if(token && ispublicpath){
-  return NextResponse.redirect(new URL('/Account/profile',request.nextUrl) )
- }
- if(!token && !ispublicpath){
+ if (token && ispublicpath) {
+  return NextResponse.redirect(new URL('/Account/profile', request.nextUrl));
+}
+
+const isProtectedPath = path === '/upload' || path === '/upload/category' || path==='/Account/profile';
+ if(!token && isProtectedPath){
   return NextResponse.redirect(new URL('/Account/Login',request.nextUrl) )
  }
  return NextResponse.next();
@@ -22,11 +24,12 @@ export const config = {
     '/',
     '/Account/profile',
     '/Account/Login',
-    '/Account/signup',
+    '/Account/Signup',
+    '/upload',
+    '/upload/category'
   ]
 }
 
- 
 export async function verifySeller(req) {
   const token = req.headers.get('authorization')?.split(' ')[1];
   if (!token) return Response.json({ message: 'Unauthorized' }, { status: 401 });
