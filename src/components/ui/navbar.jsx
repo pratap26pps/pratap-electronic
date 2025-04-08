@@ -91,15 +91,15 @@ export default function  Navbar(){
           </div>
 
         {/* Icons & Theme Toggle */}
-        <div className='flex items-center gap-4 md:gap-8'>
+        <div className='flex relative items-center gap-4 md:gap-8'>
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger asChild>
+              <TooltipTrigger asChild className='text-xl lg:-ml-3 lg:absolute cursor-pointer'>
                 <Link href='/order-status'>
-                  <MdOutlineEditLocation className='text-xl cursor-pointer' />
+                  <MdOutlineEditLocation  />
                 </Link>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent  >
                 <p>Order Status</p>
               </TooltipContent>
             </Tooltip>
