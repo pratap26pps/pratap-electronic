@@ -70,13 +70,13 @@ export default function SignupFormDemo() {
           className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
           <LabelInputContainer>
             <Label htmlFor="firstname">First name</Label>
-            <Input id="firstname" placeholder="Tyler" type="text"
+            <Input id="firstname" placeholder="first name" type="text"
             onChange={(e)=>setUser({...user,firstname:e.target.value})}
             value={user.firstname} required/>
           </LabelInputContainer>
           <LabelInputContainer>
             <Label htmlFor="lastname">Last name</Label>
-            <Input id="lastname" placeholder="Durden" type="text"
+            <Input id="lastname" placeholder="Last name" type="text"
              onChange={(e)=>setUser({...user,lastname:e.target.value})}
              value={user.lastname}
             required/>
@@ -84,7 +84,7 @@ export default function SignupFormDemo() {
         </div>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="projectmayhem@fc.com" type="email"
+          <Input id="email" placeholder="yourmail@gmail.com" type="email"
                onChange={(e)=>setUser({...user,email:e.target.value})}
                value={user.email}
            required/>

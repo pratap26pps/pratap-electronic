@@ -53,7 +53,7 @@ export default function SignupFormDemo() {
      
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="projectmayhem@fc.com" type="email"
+          <Input id="email" placeholder="yourmail@gmail.com" type="email"
            onChange={(e)=>setUser({...user,email:e.target.value})}
            value={user.email} 
            required

@@ -29,89 +29,89 @@ const Footer = () => {
           <h2 className="text-xl font-bold mb-4">Categories</h2>
           <ul>
             <li>
-              <Link href="/product-category/drone-parts" className="text-gray-400 hover:text-white">
+              <div className="text-gray-400 hover:text-white">
                 Integrated Circuits
-              </Link>
+              </div>
             </li>
             <li>
-              <Link href="/product-category/dc-motors" className="text-gray-400 hover:text-white">
+              <div className="text-gray-400 hover:text-white">
                 Development Boards and Kits
-              </Link>
+              </div>
             </li>
             <li>
-              <Link href="/product-category/drone-parts" className="text-gray-400 hover:text-white">
+              <div className="text-gray-400 hover:text-white">
                 Drone Parts
-              </Link>
+              </div>
             </li>
             <li>
-              <Link href="/product-category/drone-parts" className="text-gray-400 hover:text-white">
+              <div className="text-gray-400 hover:text-white">
                 Breakout Boards
-              </Link>
+              </div>
             </li>
             <li>
-              <Link href="/product-category/drone-parts" className="text-gray-400 hover:text-white">
+              <div className="text-gray-400 hover:text-white">
                 Communication
-              </Link>
+              </div>
             </li>
             <li>
-              <Link href="/product-category/drone-parts" className="text-gray-400 hover:text-white">
+              <div className="text-gray-400 hover:text-white">
                 Passive Components
-              </Link>
+              </div>
             </li>
             <li>
-              <Link href="/product-category/drone-parts" className="text-gray-400 hover:text-white">
+              <div className="text-gray-400 hover:text-white">
                 Sensors
-              </Link>
+              </div>
             </li>
             <li>
-              <Link href="/product-category/drone-parts" className="text-gray-400 hover:text-white">
+              <div className="text-gray-400 hover:text-white">
                 Connectors
-              </Link>
+              </div>
             </li>
             <li>
-              <Link href="/product-category/drone-parts" className="text-gray-400 hover:text-white">
+              <div className="text-gray-400 hover:text-white">
                 Optoelectronics
-              </Link>
+              </div>
             </li>
             <li>
-              <Link href="/product-category/drone-parts" className="text-gray-400 hover:text-white">
+              <div className="text-gray-400 hover:text-white">
                 Electromechanical
-              </Link>
+              </div>
             </li>
             <li>
-              <Link href="/product-category/drone-parts" className="text-gray-400 hover:text-white">
+              <div className="text-gray-400 hover:text-white">
                 Discrete Semiconductors
-              </Link>
+              </div>
             </li>
             <li>
-              <Link href="/product-category/drone-parts" className="text-gray-400 hover:text-white">
+              <div className="text-gray-400 hover:text-white">
                 3D Printers and Filaments
-              </Link>
+              </div>
             </li>
             <li>
-              <Link href="/product-category/drone-parts" className="text-gray-400 hover:text-white">
+              <div className="text-gray-400 hover:text-white">
                 Wire and Cable Management
-              </Link>
+              </div>
             </li>
             <li>
-              <Link href="/product-category/drone-parts" className="text-gray-400 hover:text-white">
+              <div className="text-gray-400 hover:text-white">
                 Circuit Protection
-              </Link>
+              </div>
             </li>
             <li>
-              <Link href="/product-category/drone-parts" className="text-gray-400 hover:text-white">
+              <div className="text-gray-400 hover:text-white">
                 Power Supplies
-              </Link>
+              </div>
             </li>
             <li>
-              <Link href="/product-category/drone-parts" className="text-gray-400 hover:text-white">
+              <div className="text-gray-400 hover:text-white">
                 Test and Measurement
-              </Link>
+              </div>
             </li>
             <li>
-              <Link href="/product-category/drone-parts" className="text-gray-400 hover:text-white">
+              <div className="text-gray-400 hover:text-white">
                 Tools and Supplies
-              </Link>
+              </div>
             </li>
 
             {/* Add more categories as needed */}
@@ -123,57 +123,57 @@ const Footer = () => {
           <h2 className="text-xl font-bold mb-4">Popular Brands</h2>
           <ul>
             <li>
-              <Link href="/support/contact-us" className="text-gray-400 hover:text-white">
+              <Link href="" className="text-gray-400 hover:text-white">
                 Royal Ohm
               </Link>
             </li>
             <li>
-              <Link href="/support/faq" className="text-gray-400 hover:text-white">
+              <Link href="" className="text-gray-400 hover:text-white">
                 Yageo
               </Link>
             </li>
             <li>
-              <Link href="/support/faq" className="text-gray-400 hover:text-white">
+              <Link href="" className="text-gray-400 hover:text-white">
                 CNLINKO
               </Link>
             </li>
             <li>
-              <Link href="/support/faq" className="text-gray-400 hover:text-white">
+              <Link href="" className="text-gray-400 hover:text-white">
                 Waveshare
               </Link>
             </li>
             <li>
-              <Link href="/support/faq" className="text-gray-400 hover:text-white">
+              <Link href="" className="text-gray-400 hover:text-white">
                 7Semi
               </Link>
             </li>
             <li>
-              <Link href="/support/faq" className="text-gray-400 hover:text-white">
+              <Link href="" className="text-gray-400 hover:text-white">
                 JD
               </Link>
             </li>
             <li>
-              <Link href="/support/faq" className="text-gray-400 hover:text-white">
+              <Link href="" className="text-gray-400 hover:text-white">
                 DFRobot
               </Link>
             </li>
             <li>
-              <Link href="/support/faq" className="text-gray-400 hover:text-white">
+              <Link href="" className="text-gray-400 hover:text-white">
                 Generic
               </Link>
             </li>
             <li>
-              <Link href="/support/faq" className="text-gray-400 hover:text-white">
+              <Link href="" className="text-gray-400 hover:text-white">
                 Shenzhen Sunlord
               </Link>
             </li>
             <li>
-              <Link href="/support/faq" className="text-gray-400 hover:text-white">
+              <Link href="" className="text-gray-400 hover:text-white">
                 SparkFun
               </Link>
             </li>
             <li>
-              <Link href="/support/faq" className="text-gray-400 hover:text-white">
+              <Link href="" className="text-gray-400 hover:text-white">
                 View All
               </Link>
             </li>
