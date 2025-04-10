@@ -56,13 +56,25 @@ export async function GET(req) {
 
     const searchParams = req.nextUrl.searchParams;
     const categoryId = searchParams.get("categoryId");
-
+    const specificId = searchParams.get("id");
+    
     let subcategories;
 
-    if (categoryId) {
-      subcategories =await Category.find()
-      .populate({path:"subcategory"})
-      .exec(); 
+    if (specificId) {
+      // Return only the specific subcategory with the provided ID
+      subcategories = await Subcategory.findById(specificId);
+      
+      // If no subcategory is found with the ID, return an empty array
+      if (!subcategories) {
+        return NextResponse.json([], { status: 200 });
+      }
+      
+      // Wrap single result in array to maintain consistent response format
+      subcategories = [subcategories];
+    } else if (categoryId) {
+      subcategories = await Category.find()
+        .populate({path: "subcategory"})
+        .exec();
     } else {
       subcategories = await Subcategory.find();
     }
@@ -76,4 +88,3 @@ export async function GET(req) {
     );
   }
 }
- 
