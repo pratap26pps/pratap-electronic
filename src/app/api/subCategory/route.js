@@ -7,9 +7,8 @@ export async function POST(req) {
   try {
     await connectDB();
     const body = await req.json();
-    console.log("body",body)
+    console.log("body", body);
     const { name, description, selectedCategoryId } = body;
-     
 
     if (!name || !description || !selectedCategoryId) {
       return NextResponse.json(
@@ -21,9 +20,9 @@ export async function POST(req) {
     const subcategory = await Subcategory.create({
       name,
       description,
-      parentCategory: selectedCategoryId    
+      parentCategory: selectedCategoryId,
     });
-    console.log("subcategory",subcategory)
+    console.log("subcategory", subcategory);
 
     const updatecategory = await Category.findByIdAndUpdate(
       selectedCategoryId,
@@ -35,8 +34,7 @@ export async function POST(req) {
       { new: true }
     ).populate("subcategory");
 
-    return NextResponse.json(
-      updatecategory, {
+    return NextResponse.json(updatecategory, {
       status: 201,
       message: "Subcategory added successfully",
     });
@@ -49,25 +47,31 @@ export async function POST(req) {
   }
 }
 
-
 export async function GET(req) {
   try {
     await connectDB();
+    const categoryId = req.nextUrl.searchParams.get("categoryId");
 
-    const searchParams = req.nextUrl.searchParams;
-    const categoryId = searchParams.get("categoryId");
-
-    let subcategories;
-
-    if (categoryId) {
-      subcategories =await Category.find()
-      .populate({path:"subcategory"})
-      .exec(); 
-    } else {
-      subcategories = await Subcategory.find();
+    if (!categoryId) {
+      return NextResponse.json(
+        { error: "Category ID is required" },
+        { status: 400 }
+      );
     }
 
-    return NextResponse.json(subcategories, { status: 200 });
+    const category = await Category.findById(categoryId)
+      .populate("subcategory")
+      .exec();
+
+    if (!category) {
+      return NextResponse.json(
+        { error: "Category not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(category.subcategory, { status: 200 });
+    
   } catch (error) {
     console.error("Error fetching subcategories:", error);
     return NextResponse.json(
@@ -76,4 +80,3 @@ export async function GET(req) {
     );
   }
 }
- 

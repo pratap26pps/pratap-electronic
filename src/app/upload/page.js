@@ -6,8 +6,11 @@ import { HiOutlineCurrencyRupee } from "react-icons/hi";
 import { IconGolfFilled } from "@tabler/icons-react";
 import { NextResponse } from "next/server";
  import axios from "axios";
+import { useSelector } from "react-redux";
+
 export default function ProductInfoForm() {
-  
+  const SubCategoryId = useSelector((state)=>state.product.SubCategoryId)
+
   const [formData, setFormData] = useState({
     ProductTitle: "",
     BrandName: "",
@@ -16,6 +19,7 @@ export default function ProductInfoForm() {
     BenefitsOfProduct: "",
     productItems:"",
     ProductImage: null,
+ 
   });
 
   const [loading, setLoading] = useState(false);
@@ -24,10 +28,12 @@ export default function ProductInfoForm() {
   const [successMessage, setSuccessMessage] = useState(null);
  
    const [productSubcategory, setproductSubcategory] = useState("");
+   const [LocalBrandId, setLocalBrandId] = useState("");
+   console.log("LocalBrandId",LocalBrandId);
  
      const getCotegory = async () => {
        setLoading(true);
-       const result = await axios("/api/brandProduct", { method: "GET" });
+       const result = await axios.get(`/api/brandProduct?subcategoryId=${SubCategoryId}`);
        console.log("setbrandcategory", result);
        if (result.data.length > 0) setproductSubcategory(result.data);
        setLoading(false);
@@ -65,13 +71,14 @@ export default function ProductInfoForm() {
     setSuccessMessage(null);
   
     const newFormData = new FormData();
+
     newFormData.append("ProductTitle", formData.ProductTitle);
     newFormData.append("ProductShortDescription", formData.ProductShortDescription);
     newFormData.append("ProductPrice", formData.ProductPrice);
     newFormData.append("BenefitsOfProduct", formData.BenefitsOfProduct);
     newFormData.append("productItems", formData.productItems);
-    newFormData.append("BrandName", formData.BrandName);
-    
+    newFormData.append("LocalBrandId",LocalBrandId);
+ 
     if (formData.ProductImage) {
       newFormData.append("ProductImage", formData.ProductImage);
     } else {
@@ -85,6 +92,7 @@ export default function ProductInfoForm() {
       const response = await fetch("/api/product", {
         method: "POST",
         body: newFormData,
+     
       });
 
       console.log("Response received:", response.status);
@@ -131,12 +139,7 @@ export default function ProductInfoForm() {
             </label>
             <select
               id="productSubcategory"
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  BrandName: e.target.value,
-                }))
-              }
+              onChange={(e) => setLocalBrandId(e.target.value)}
               className="w-full p-2 border bg-gray-500 mb-2 rounded-md font-semibold"
             >
               <option value="" disabled>

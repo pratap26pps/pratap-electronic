@@ -1,7 +1,9 @@
 import { NextResponse} from "next/server";
+
 import jwt from 'jsonwebtoken';
-// This function can be marked `async` if using `await` inside
+ 
 export function middleware(request) {
+  
   const path = request.nextUrl.pathname;
   const ispublicpath= path ==='/Account/Login' || path==='/Account/Signup'
   

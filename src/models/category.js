@@ -14,7 +14,7 @@ const categoryschemma=new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"Subcategory"
     }],
-});
+},{ timestamps: true });
 
 const Category = mongoose.models.Category || mongoose.model("Category",categoryschemma);
 

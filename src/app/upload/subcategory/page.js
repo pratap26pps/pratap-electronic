@@ -19,7 +19,7 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [productCategories, setProductCategories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
-
+  console.log("selectedCategoryId",selectedCategoryId);
   useEffect(() => {
     const getCategory = async () => {
       try {
@@ -38,19 +38,15 @@ const Page = () => {
 
     getCategory();
   }, []);
-
-  useEffect(() => {
-    if (selectedCategoryId) {
-      dispatch(setselectedCategoryId(selectedCategoryId));
-    }
-  }, [selectedCategoryId, dispatch]);
+ 
+  
+  const handleNext = (selectedCategoryId) => {
+    dispatch(setselectedCategoryId(selectedCategoryId));
+    router.push("/upload/brandcategory");
+  };
 
   const handleBack = () => {
     router.push("/upload/category");
-  };
-
-  const handleNext = () => {
-    router.push("/upload/brandcategory");
   };
 
   const handleNext2 = async (e) => {
@@ -156,7 +152,7 @@ const Page = () => {
               {loading ? "Saving..." : "Save"}
             </Button>
             <Button
-              onClick={handleNext}
+              onClick={() => handleNext(selectedCategoryId)}
               className="w-32 ml-2 bg-blue-600 hover:bg-blue-700 text-white"
             >
               Next

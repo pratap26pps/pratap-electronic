@@ -3,7 +3,7 @@ import Product from "@/models/productDetails";
 import { imageuploadcloudanary } from "@/utils/imageUpload";
 import { NextResponse } from "next/server";
 import connectDB from "@/dbconfig/dbconfig";
-
+import BrandProduct from "@/models/BrandProduct";
 connectDB();
 
  
@@ -15,8 +15,8 @@ export async function POST(req) {
     }
 
     const formData = await req.formData();
-    const {brandid} = await req.body;
-    console.log("brandid",brandid);
+    
+    
     console.log("fomdata in serverr",formData)
 
     const ProductTitle = formData.get("ProductTitle");
@@ -25,8 +25,9 @@ export async function POST(req) {
     const productItems = formData.get("productItems");
     const BenefitsOfProduct = formData.get("BenefitsOfProduct");
     const ProductImage = formData.get("ProductImage");
+    const LocalBrandId = formData.get("LocalBrandId");
 
-    if (!ProductTitle || !brandid || !productItems || !ProductImage || !ProductShortDescription || !ProductPrice || !BenefitsOfProduct) {
+    if (!ProductTitle || !LocalBrandId || !productItems || !ProductImage || !ProductShortDescription || !ProductPrice || !BenefitsOfProduct) {
       return NextResponse.json({ success: false, message: "All fields are required" }, { status: 400 });
     }
     console.log("ProductImage:", ProductImage);
@@ -41,13 +42,25 @@ export async function POST(req) {
       ProductImage: thumbnailImage.secure_url,
       BenefitsOfProduct,
       ProductShortDescription,
-      
+      brandcategory:LocalBrandId,
     });
+ 
+
+        const updatedproduct = await BrandProduct.findByIdAndUpdate(
+          LocalBrandId,
+          {
+            $push: {
+              product: newProduct._id,
+            },
+          },
+          { new: true }
+        ).populate("product");
+    
 
     return NextResponse.json({
       success: true,
       message: "Product created successfully",
-      product: newProduct,
+      product: updatedproduct,
     });
   } catch (error) {
     console.error("Error adding product:", error);

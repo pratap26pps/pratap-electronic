@@ -5,27 +5,30 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { setSubCategoryId} from "@/redux/slices/productSlice";
 
 const Page = () => {
   const router = useRouter();
-  const selectedCategoryId  = useSelector((state) => state.Product);
-
+  const dispatch= useDispatch();
+  const selectedCategoryId  = useSelector((state) => state.product.selectedCategoryId);
+  console.log("selectectedcatedid in brandcategory",selectedCategoryId)
   const [brand, setBrandcat] = useState({
     BrandName: "",
-    SubcategoryName: "",
     BrandCategoryDescription: "",
   });
 
   const [loading, setLoading] = useState(false);
   const [productSubcategories, setProductSubcategories] = useState([]);
+  const [SubCategoryId,setLocalSubCategoryId] = useState("");
+
+  console.log("SubCategoryId",SubCategoryId);
 
   const getSubCategories = async () => {
     try {
       setLoading(true);
-      const result = await axios.get("/api/subCategory", {
-        params: { categoryId: selectedCategoryId },
-      });
-      console.log("Fetched Subcategories:", result);
+      const result =await axios.get(`/api/subCategory?categoryId=${selectedCategoryId}`)
+      console.log("Fetched Subcategories:", result.data);
       if (result.data.length > 0) {
         setProductSubcategories(result.data);
       }
@@ -35,18 +38,20 @@ const Page = () => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
+ 
+   useEffect(() => {
     if (selectedCategoryId) {
       getSubCategories();
     }
   }, [selectedCategoryId]);
+ 
 
   const handleBack = () => {
     router.push("/upload/subcategory");
   };
 
-  const handleNext = () => {
+  const handleNext = (SubCategoryId) => {
+    dispatch(setSubCategoryId(SubCategoryId));
     router.push("/upload");
   };
 
@@ -59,7 +64,7 @@ const Page = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          SubcategoryName: brand.SubcategoryName,
+          SubCategoryId,
           name: brand.BrandName,
           description: brand.BrandCategoryDescription,
         }),
@@ -77,7 +82,6 @@ const Page = () => {
       // Optionally reset the form
       setBrandcat({
         BrandName: "",
-        SubcategoryName: "",
         BrandCategoryDescription: "",
       });
     } catch (error) {
@@ -98,12 +102,9 @@ const Page = () => {
             <select
               id="productSubcategory"
               defaultValue=""
-              onChange={(e) =>
-                setBrandcat((prev) => ({
-                  ...prev,
-                  SubcategoryName: e.target.value,
-                }))
-              }
+ 
+              onChange={(e) => setLocalSubCategoryId(e.target.value)}
+
               className="w-full p-2 border bg-gray-500 mb-2 rounded-md font-semibold"
             >
               <option value="" disabled>
@@ -163,7 +164,7 @@ const Page = () => {
               {loading ? "Saving..." : "Save"}
             </Button>
             <Button
-              onClick={handleNext}
+              onClick={() => handleNext(SubCategoryId)}
               className="w-32 ml-2 bg-blue-600 hover:bg-blue-700 text-white"
             >
               Next

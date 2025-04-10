@@ -8,11 +8,11 @@ export async function POST(req) {
     await connectDB();
 
     const body = await req.json();
-    const { name, description, subcategoryid } = body;
+    const { name, description, SubCategoryId } = body;
 
     console.log("body", body);
 
-    if (!name || !description || !subcategoryid) {
+    if (!name || !description || !SubCategoryId) {
       return NextResponse.json(
         { error: "All fields are required." },
         { status: 400 }
@@ -22,20 +22,20 @@ export async function POST(req) {
     const brandproduct = await BrandProduct.create({
       name,
       description,
-      subcategory: subcategoryid,
+      subcategory: SubCategoryId,
     });
 
     console.log("brandproduct during route success", brandproduct);
 
     const updatebrandproduct = await Subcategory.findByIdAndUpdate(
-      subcategoryid,
+      SubCategoryId,
       {
         $push: {
           brandProduct: brandproduct._id,
         },
       },
       { new: true }
-    ).populate("brandProduct"); // Make sure field name matches your model
+    ).populate("brandProduct"); 
 
     return NextResponse.json(
       {
@@ -70,22 +70,28 @@ export async function GET(req) {
   try {
     await connectDB();
 
-    const searchParams = req.nextUrl.searchParams;
-    const subcategoryId = searchParams.get("subcategoryId");
-
-    let brandProducts;
-
-    if (subcategoryId) {
-      // Get Subcategory with populated brandProducts
-      brandProducts = await Subcategory.findById(subcategoryId)
+    const subcategoryId = req.nextUrl.searchParams.get("subcategoryId");
+   
+        if (!subcategoryId) {
+          return NextResponse.json(
+            { error: "Category ID is required" },
+            { status: 400 }
+          );
+        }
+ 
+        const subcatDetails = await Subcategory.findById(subcategoryId)
         .populate("brandProduct")
         .exec();
-    } else {
-      // Get all BrandProducts if no subcategoryId specified
-      brandProducts = await BrandProduct.find();
-    }
-
-    return NextResponse.json(brandProducts, { status: 200 });
+  
+      if (!subcatDetails) {
+        return NextResponse.json(
+          { error: "subcatDetails not found" },
+          { status: 404 }
+        );
+      }
+  
+    return NextResponse.json(subcatDetails.brandProduct, { status: 200 });
+ 
   } catch (error) {
     console.error("Error fetching brand products:", error);
     return NextResponse.json(

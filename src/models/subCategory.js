@@ -19,7 +19,7 @@ const Subcategoryschemma = new mongoose.Schema({
       ref: "BrandProduct",
     },
   ],
-});
+}, { timestamps: true });
 
 const Subcategory =
   mongoose.models.Subcategory ||

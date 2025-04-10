@@ -25,6 +25,11 @@ const productDetailsSchema= new mongoose.Schema({
         required:true,
         type:String
     },
+    brandcategory: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "BrandProduct",
+        required: true,
+      },
 
 });
 
