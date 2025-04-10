@@ -8,10 +8,10 @@ export async function POST(req) {
     await connectDB();
     const body = await req.json();
     console.log("body",body)
-    const { name, description, categoryid } = body;
-    console.log("abhishek",name)
+    const { name, description, selectedCategoryId } = body;
+     
 
-    if (!name || !description || !categoryid) {
+    if (!name || !description || !selectedCategoryId) {
       return NextResponse.json(
         { error: "All fields are required." },
         { status: 400 }
@@ -21,13 +21,12 @@ export async function POST(req) {
     const subcategory = await Subcategory.create({
       name,
       description,
-      category: categoryid
-       
+      parentCategory: selectedCategoryId    
     });
     console.log("subcategory",subcategory)
 
     const updatecategory = await Category.findByIdAndUpdate(
-      categoryid,
+      selectedCategoryId,
       {
         $push: {
           subcategory: subcategory._id,
@@ -50,16 +49,31 @@ export async function POST(req) {
   }
 }
 
-export async function GET() {
+
+export async function GET(req) {
   try {
     await connectDB();
 
-    const subcategories = await Subcategory.find().populate("BrandProduct").populate("category");;
+    const searchParams = req.nextUrl.searchParams;
+    const categoryId = searchParams.get("categoryId");
+
+    let subcategories;
+
+    if (categoryId) {
+      subcategories =await Category.find()
+      .populate({path:"subcategory"})
+      .exec(); 
+    } else {
+      subcategories = await Subcategory.find();
+    }
+
     return NextResponse.json(subcategories, { status: 200 });
   } catch (error) {
+    console.error("Error fetching subcategories:", error);
     return NextResponse.json(
       { error: "Failed to fetch subcategories" },
       { status: 500 }
     );
   }
 }
+ 

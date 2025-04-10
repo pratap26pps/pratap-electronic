@@ -1,14 +1,16 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState,useEffect} from "react";
 import Link from "next/link";
 import { MdStyle } from "react-icons/md";
 import { HiOutlineCurrencyRupee } from "react-icons/hi";
 import { IconGolfFilled } from "@tabler/icons-react";
 import { NextResponse } from "next/server";
-import { useSelector } from "react-redux";
+ import axios from "axios";
 export default function ProductInfoForm() {
+  
   const [formData, setFormData] = useState({
     ProductTitle: "",
+    BrandName: "",
     ProductShortDescription: "",
     ProductPrice: "",
     BenefitsOfProduct: "",
@@ -18,18 +20,41 @@ export default function ProductInfoForm() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
-  const {brandid} = useSelector((state)=>state.Product || {} )
-  console.log("brandid during product form",brandid);
-  // Handle Input Change
+ 
+   const [productSubcategory, setproductSubcategory] = useState("");
+ 
+     const getCotegory = async () => {
+       setLoading(true);
+       const result = await axios("/api/brandProduct", { method: "GET" });
+       console.log("setbrandcategory", result);
+       if (result.data.length > 0) setproductSubcategory(result.data);
+       setLoading(false);
+     };
+ 
+   useEffect(() => {
+     getCotegory();
+   }, []);
+
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
   // Handle File Upload
-  const handleFileChange = (e) => {
-    setFormData((prev) => ({ ...prev, ProductImage: e.target.files[0] }));
+  // const handleFileChange = (e) => {
+  //   setFormData((prev) => ({ ...prev, ProductImage: e.target.files[0] }));
+  // };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setFormData((prev) => ({ ...prev, ProductImage:file}));
+      const fileURL = URL.createObjectURL(file);
+      setThumbnailPreview(fileURL);
+ 
+    }
   };
 
   // Handle Form Submission
@@ -45,6 +70,7 @@ export default function ProductInfoForm() {
     newFormData.append("ProductPrice", formData.ProductPrice);
     newFormData.append("BenefitsOfProduct", formData.BenefitsOfProduct);
     newFormData.append("productItems", formData.productItems);
+    newFormData.append("BrandName", formData.BrandName);
     
     if (formData.ProductImage) {
       newFormData.append("ProductImage", formData.ProductImage);
@@ -59,7 +85,6 @@ export default function ProductInfoForm() {
       const response = await fetch("/api/product", {
         method: "POST",
         body: newFormData,
-        brandid:brandid
       });
 
       console.log("Response received:", response.status);
@@ -94,9 +119,37 @@ export default function ProductInfoForm() {
     }
   };
 
+
   return (
     <div className="scale-75 flex justify-evenly lg:scale-100">
       <form onSubmit={handleSubmit} className="mt-36 p-6 rounded-md space-y-5">
+      {
+            productSubcategory?
+            <div>
+            <label>
+              Brand Name<sup>*</sup>
+            </label>
+            <select
+              id="productSubcategory"
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  BrandName: e.target.value,
+                }))
+              }
+              className="w-full p-2 border bg-gray-500 mb-2 rounded-md font-semibold"
+            >
+              <option value="" disabled>
+                {loading ? "Loading categories..." : "Choose a Subcategory"}
+              </option>
+              {productSubcategory?.map((category) => (
+                <option value={category?._id} key={category?._id}>
+                  {category?.name}
+                </option>
+              ))}
+            </select>
+          </div>:<div>loading..</div>
+        }
         <div>
           <label htmlFor="ProductTitle">
             Product Title <sup>*</sup>
@@ -174,7 +227,15 @@ export default function ProductInfoForm() {
             required
           />
         </div>
-
+        {thumbnailPreview && (
+                <div className="thumbnail-preview mb-4">
+                  <img
+                    src={thumbnailPreview}
+                    alt="Course Thumbnail Preview"
+                    className="w-52 h-32 ml-5 p-1 rounded-md font-semibold"
+                  />
+                </div>
+              )}
         {/* Benefits of Product */}
         <div>
           <label htmlFor="BenefitsOfProduct">

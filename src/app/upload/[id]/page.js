@@ -15,6 +15,7 @@ export default function EditProduct() {
     ProductImage: null,
   });
   const [loading, setLoading] = useState(false);
+  const [ThumbnailPreview, setThumbnailPreview] = useState();
 
   useEffect(() => {
     if (!id) return;
@@ -76,7 +77,15 @@ export default function EditProduct() {
       console.error('Error updating product:', error.response?.data || error);
     }
   };
-  
+    
+
+  const handleThumbnailChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const fileURL = URL.createObjectURL(file);
+      setThumbnailPreview(fileURL);
+    }
+  };
   
 
   return (
@@ -134,12 +143,24 @@ export default function EditProduct() {
             type="file"
             id="ProductImage"
             accept=".jpg, .jpeg, .png, .gif"
-            onChange={(e) =>
-              setFormData({ ...formData, ProductImage: e.target.files[0] })
-            }
+            onChange={handleThumbnailChange}
             className="font-bold p-3 cursor-pointer rounded-md"
           />
         </div>
+
+        <div >
+ 
+              {/* Display the thumbnail preview */}
+              {ThumbnailPreview && (
+                <div className="thumbnail-preview mb-4">
+                  <img
+                    src={ThumbnailPreview}
+                    alt="Course Thumbnail Preview"
+                    className="w-52 h-32 ml-5 p-1 rounded-md font-semibold"
+                  />
+                </div>
+              )}
+            </div>
 
         {/* Benefits of Product */}
         <div>
