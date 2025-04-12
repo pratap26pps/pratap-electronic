@@ -67,6 +67,8 @@ export default function  Navbar(){
 
     const [isOpen, setIsOpen] = useState(false);  
 
+  
+
 
   return  (
     <div className='p-4 fixed w-full top-0 z-50 bg-white dark:bg-gray-900 shadow-md'>

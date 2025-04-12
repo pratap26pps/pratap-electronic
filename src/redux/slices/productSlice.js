@@ -1,7 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit"
 
 const initialState={
-    
+    Productdetails:[],
     paymentLoading:false,
     selectedCategoryId:null,
     SubCategoryId:null,
@@ -19,6 +19,9 @@ const productSlice=createSlice({
         setSubCategoryId(state,action){
             state.SubCategoryId = action.payload;
         },
+        setProductdetails(state,action){
+            state.Productdetails = action.payload;
+        },
         setPaymentLoading(state,action){
             state.paymentLoading = action.payload;
         },
@@ -26,7 +29,7 @@ const productSlice=createSlice({
     },
 });
 
- export const { setselectedCategoryId,setSubCategoryId, setPaymentLoading } =
+ export const { setselectedCategoryId,setProductdetails,setSubCategoryId, setPaymentLoading } =
   productSlice.actions;
 export const productReducer = productSlice.reducer;
 

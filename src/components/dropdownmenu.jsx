@@ -5,7 +5,6 @@ import { RiArrowDropRightFill } from "react-icons/ri";
 import { cn } from "@/lib/utils";
 import { FaBars, FaTimes } from "react-icons/fa"; 
 import { FaSearch } from "react-icons/fa";
-
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -15,122 +14,133 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { HiDocumentDownload } from "react-icons/hi";
+import axios from "axios";
+ 
 
-const components = [
-  {
-    title: "Stmicroelecronics",
-    href: "/Stmicroelecronics",
-  },
-  {
-    title: "Texas Instrument",
-    href: "/TexasInstrument",
-  },
-  {
-    title: "Yageo",
-    href: "/Yageo",
-  },
-  {
-    title: "Quectel",
-    href: "/Quectel",
-  },
-  {
-    title: "WaveShare",
-    href: "/WaveShare",
-  },
-  {
-    title: "spark fun",
-    href: "/spark-fun ",
-  },
-];
-const categories = [
-  {
-    title: "Electronic Components",
-    href: "/electronics-components",
-    subItems: [
-      { title: "Resistors", href: "/electronics-components/resistor" },
-      { title: "ICs", href: "/electronics-components/ics" },
-      { title: "Transistors", href: "/electronics-components/transistors" },
-    ],
-  },
-  {
-    title: "Simplify",
-    href: "/simplify",
-    subItems: [
-      { title: "Product A", href: "/simplify/product-a" },
-      { title: "Product B", href: "/simplify/product-b" },
-      { title: "Product C", href: "/simplify/product-c" },
-    ],
-  },
-  {
-    title: "SmartElex",
-    href: "/SmartElex",
-    subItems: [
-      { title: "Sensors", href: "/SmartElex/sensors" },
-      { title: "Controllers", href: "/SmartElex/controllers" },
-      { title: "Modules", href: "/SmartElex/modules" },
-    ],
-  },
-  {
-    title: "SmartElex",
-    href: "/SmartElex",
-    subItems: [
-      { title: "Sensors", href: "/SmartElex/sensors" },
-      { title: "Controllers", href: "/SmartElex/controllers" },
-      { title: "Modules", href: "/SmartElex/modules" },
-    ],
-  },
-  {
-    title: "SmartElex",
-    href: "/SmartElex",
-    subItems: [
-      { title: "Sensors", href: "/SmartElex/sensors" },
-      { title: "Controllers", href: "/SmartElex/controllers" },
-      { title: "Modules", href: "/SmartElex/modules" },
-    ],
-  },
-  {
-    title: "SmartElex",
-    href: "/SmartElex",
-    subItems: [
-      { title: "Sensors", href: "/SmartElex/sensors" },
-      { title: "Controllers", href: "/SmartElex/controllers" },
-      { title: "Modules", href: "/SmartElex/modules" },
-    ],
-  },
-  {
-    title: "SmartElex",
-    href: "/SmartElex",
-    subItems: [
-      { title: "Sensors", href: "/SmartElex/sensors" },
-      { title: "Controllers", href: "/SmartElex/controllers" },
-      { title: "Modules", href: "/SmartElex/modules" },
-    ],
-  },
-  {
-    title: "SmartElex",
-    href: "/SmartElex",
-    subItems: [
-      { title: "Sensors", href: "/SmartElex/sensors" },
-      { title: "Controllers", href: "/SmartElex/controllers" },
-      { title: "Modules", href: "/SmartElex/modules" },
-    ],
-  },
+// const components = [
+//   {
+//     title: "Stmicroelecronics",
+//     href: "/Stmicroelecronics",
+//   },
+//   {
+//     title: "Texas Instrument",
+//     href: "/TexasInstrument",
+//   },
+//   {
+//     title: "Yageo",
+//     href: "/Yageo",
+//   },
+//   {
+//     title: "Quectel",
+//     href: "/Quectel",
+//   },
+//   {
+//     title: "WaveShare",
+//     href: "/WaveShare",
+//   },
+//   {
+//     title: "spark fun",
+//     href: "/spark-fun ",
+//   },
+// ];
 
-  {
-    title: "SmartElex",
-    href: "/SmartElex",
-    subItems: [
-      { title: "Sensors", href: "/SmartElex/sensors" },
-      { title: "Controllers", href: "/SmartElex/controllers" },
-      { title: "Modules", href: "/SmartElex/modules" },
-    ],
-  },
-];
+
+// const categories = [
+//   {
+//     title: "Electronic Components",
+//     href: "/electronics-components",
+//     subItems: [
+//       { title: "Resistors", href: "/electronics-components/resistor" },
+//       { title: "ICs", href: "/electronics-components/ics" },
+//       { title: "Transistors", href: "/electronics-components/transistors" },
+//     ],
+//   },
+//   {
+//     title: "Simplify",
+//     href: "/simplify",
+//     subItems: [
+//       { title: "Product A", href: "/simplify/product-a" },
+//       { title: "Product B", href: "/simplify/product-b" },
+//       { title: "Product C", href: "/simplify/product-c" },
+//     ],
+//   },
+//   {
+//     title: "SmartElex",
+//     href: "/SmartElex",
+//     subItems: [
+//       { title: "Sensors", href: "/SmartElex/sensors" },
+//       { title: "Controllers", href: "/SmartElex/controllers" },
+//       { title: "Modules", href: "/SmartElex/modules" },
+//     ],
+//   },
+//   {
+//     title: "SmartElex",
+//     href: "/SmartElex",
+//     subItems: [
+//       { title: "Sensors", href: "/SmartElex/sensors" },
+//       { title: "Controllers", href: "/SmartElex/controllers" },
+//       { title: "Modules", href: "/SmartElex/modules" },
+//     ],
+//   },
+//   {
+//     title: "SmartElex",
+//     href: "/SmartElex",
+//     subItems: [
+//       { title: "Sensors", href: "/SmartElex/sensors" },
+//       { title: "Controllers", href: "/SmartElex/controllers" },
+//       { title: "Modules", href: "/SmartElex/modules" },
+//     ],
+//   },
+//   {
+//     title: "SmartElex",
+//     href: "/SmartElex",
+//     subItems: [
+//       { title: "Sensors", href: "/SmartElex/sensors" },
+//       { title: "Controllers", href: "/SmartElex/controllers" },
+//       { title: "Modules", href: "/SmartElex/modules" },
+//     ],
+//   },
+//   {
+//     title: "SmartElex",
+//     href: "/SmartElex",
+//     subItems: [
+//       { title: "Sensors", href: "/SmartElex/sensors" },
+//       { title: "Controllers", href: "/SmartElex/controllers" },
+//       { title: "Modules", href: "/SmartElex/modules" },
+//     ],
+//   },
+//   {
+//     title: "SmartElex",
+//     href: "/SmartElex",
+//     subItems: [
+//       { title: "Sensors", href: "/SmartElex/sensors" },
+//       { title: "Controllers", href: "/SmartElex/controllers" },
+//       { title: "Modules", href: "/SmartElex/modules" },
+//     ],
+//   },
+
+//   {
+//     title: "SmartElex",
+//     href: "/SmartElex",
+//     subItems: [
+//       { title: "Sensors", href: "/SmartElex/sensors" },
+//       { title: "Controllers", href: "/SmartElex/controllers" },
+//       { title: "Modules", href: "/SmartElex/modules" },
+//     ],
+//   },
+// ];
+
+
+
 
 export function NavigationMenuDemo() {
+
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [components, setcomponents] = useState([]);
+  const [brandname, setbrandname] = useState([]);
+ 
+
   // Prevent background scrolling when menu is open
   useEffect(() => {
     if (isMenuOpen) {
@@ -139,6 +149,27 @@ export function NavigationMenuDemo() {
       document.body.style.overflow = "auto";
     }
   }, [isMenuOpen]);
+
+  const categoryhandler = async () => {
+    const response = await axios.get('/api/TotalProduct');
+    console.log("responseof category",response.data.data);
+    setcomponents(response.data.data);
+  }
+    useEffect(()=>{
+      categoryhandler();
+    },[])
+
+    const brandhandler = async () => {
+      const response = await axios.get('/api/TopManufacturing');
+      console.log("response of  brand",response.data );
+      setbrandname(response.data)
+    }
+      useEffect(()=>{
+        brandhandler();
+      },[])
+  
+
+
   return (
     <NavigationMenu className="mt-6">
       {/* Hamburger Menu Button */}
@@ -180,13 +211,15 @@ export function NavigationMenuDemo() {
                     <ListItem href="/featured-brands" title="Shop by Brands" />
                     <ListItem href="/latest-products" title="New Arrivals" />
 
-                    {categories.map((category, index) => (
+                    {components.map((category, index) => (
                       <div
                         key={index}
                         className="flex justify-between items-center cursor-pointer hover:text-red-500 px-3 py-2 rounded-md"
-                        onMouseEnter={() => setHoveredCategory(category.title)}
+                        onMouseEnter={() => setHoveredCategory(category.name)}
                       >
-                        <ListItem title={category.title} href={category.href} />
+                        <ListItem title={category.name} 
+                        href={category.name} 
+                        />
                         <RiArrowDropRightFill className="text-xl" />
                       </div>
                     ))}
@@ -208,15 +241,15 @@ export function NavigationMenuDemo() {
                       {hoveredCategory}
                     </h3>
                     <ul className="mt-2 space-y-2">
-                      {categories
-                        .find((cat) => cat.title === hoveredCategory)
-                        ?.subItems.map((sub, i) => (
+                      {components
+                        .find((cat) => cat.name === hoveredCategory)
+                        ?.subcategory.map((sub, i) => (
                           <ListItem
                             key={i}
-                            href={sub.href}
+                            href={`/${hoveredCategory}/${sub.name}`}
                             className="hover:text-blue-600 cursor-pointer"
                           >
-                            {sub.title}
+                            {sub.name}
                           </ListItem>
                         ))}
                     </ul>
@@ -228,11 +261,11 @@ export function NavigationMenuDemo() {
 
                 <NavigationMenuContent>
                   <ul className="w-[200px] gap-2 p-1">
-                    {components.map((component) => (
+                    {brandname.map((component) => (
                       <ListItem
-                        key={component.title}
-                        title={component.title}
-                        href={component.href}
+                        key={component.name}
+                        title={component.name}
+                        href={component.name}
                       >
                         {/* {component.description} */}
                       </ListItem>
@@ -276,15 +309,17 @@ export function NavigationMenuDemo() {
                 <ListItem href="/featured-brands" title="Shop by Brands" />
                 <ListItem href="/latest-products" title="New Arrivals" />
 
-                {categories.map((category, index) => (
+                {components.map((category, index) => (
                   <div
                     key={index}
                     className="flex justify-between items-center cursor-pointer hover:text-red-500 px-3 py-2 rounded-md"
-                    onMouseEnter={() => setHoveredCategory(category.title)}
+                    onMouseEnter={() => setHoveredCategory(category.name)}
                   >
-                    <ListItem title={category.title} href={category.href} />
+                    <ListItem title={category.name} 
+                    href={category._id}
+                     />
                     <RiArrowDropRightFill className="text-xl" />
-                  </div>
+                  </div>  
                 ))}
               </ul>
             </NavigationMenuContent>
@@ -304,15 +339,14 @@ export function NavigationMenuDemo() {
                   {hoveredCategory}
                 </h3>
                 <ul className="mt-2 space-y-2">
-                  {categories
-                    .find((cat) => cat.title === hoveredCategory)
-                    ?.subItems.map((sub, i) => (
+                  {components.find((cat) => cat.name === hoveredCategory)
+                    ?.subcategory.map((sub, i) => (
                       <ListItem
                         key={i}
-                        href={sub.href}
+                        href={`/${sub.name}/${sub._id}`}
                         className="hover:text-blue-600 cursor-pointer"
                       >
-                        {sub.title}
+                        {sub.name}
                       </ListItem>
                     ))}
                 </ul>
@@ -323,11 +357,11 @@ export function NavigationMenuDemo() {
             <NavigationMenuTrigger>TOP Manufacturers</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className=" w-[200px] gap-2 p-1">
-                {components.map((component) => (
+                {brandname.map((component) => (
                   <ListItem
-                    key={component.title}
-                    title={component.title}
-                    href={component.href}
+                    key={component.name}
+                    title={component.name}
+                    href={component._id}
                   >
                     {/* {component.description} */}
                   </ListItem>
@@ -373,7 +407,7 @@ const ListItem = React.forwardRef(
       <li>
         <NavigationMenuLink asChild>
           <a
-            ref={ref}
+            href={ref}
             className={cn(
               "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
               className

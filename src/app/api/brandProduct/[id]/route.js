@@ -5,8 +5,8 @@ import BrandProduct from '@/models/BrandProduct';
 export async function GET(req, { params }) {
   try {
     await connectDB();
-    const { id } = params;
-    const category = await BrandProduct.findById(id).populate('Product');
+    // const { id } = params;
+    const category = await BrandProduct.find().populate('product');
 
     if (!category) {
       return NextResponse.json({ error: 'BrandProduct not found' }, { status: 404 });

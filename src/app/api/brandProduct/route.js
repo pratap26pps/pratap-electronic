@@ -53,19 +53,7 @@ export async function POST(req) {
   }
 }
 
-// export async function GET() {
-//   try {
-//     await connectDB();
-//     const categories = await BrandProduct.find();
-//     return NextResponse.json(categories, { status: 200 });
-//   } catch (error) {
-//     console.error("Error fetching categories:", error);
-//     return NextResponse.json(
-//       { error: "Failed to fetch categories" },
-//       { status: 500 }
-//     );
-//   }
-// }
+
 export async function GET(req) {
   try {
     await connectDB();
@@ -80,7 +68,12 @@ export async function GET(req) {
         }
  
         const subcatDetails = await Subcategory.findById(subcategoryId)
-        .populate("brandProduct")
+        .populate({
+          path:"brandProduct",
+          populate:{
+            path:"product",
+          }
+        })
         .exec();
   
       if (!subcatDetails) {
@@ -90,7 +83,8 @@ export async function GET(req) {
         );
       }
   
-    return NextResponse.json(subcatDetails.brandProduct, { status: 200 });
+    return NextResponse.json(subcatDetails.brandProduct,subcatDetails.brandProduct.product,
+       { status: 200 });
  
   } catch (error) {
     console.error("Error fetching brand products:", error);
