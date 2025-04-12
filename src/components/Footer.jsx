@@ -1,237 +1,106 @@
-import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import {
+  FaFacebook,
+  FaTwitter,
+  FaInstagram,
+  FaLinkedin,
+  FaCertificate,
+  FaShieldAlt,
+  FaLock,
+  FaAward,
+} from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white py-8">
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-        {/* Company Information */}
-        <div className=''>
-          <h2 className="text-xl font-bold mb-4">Pages</h2>
-          <p className="text-gray-400 hover:text-white">
-            {/* Brief company description */}
-            Top Manufacturers
-          </p>
-          <p className='text-gray-400 hover:text-white'>RFQ</p>
-          <p className='text-gray-400 hover:text-white'>Quick Order</p>
-          <p className='text-gray-400 hover:text-white'>Contact Us</p>
-          <p className='text-gray-400 hover:text-white'>Blog</p>
-          <p className='text-gray-400 hover:text-white'>Shipping & Return</p>
-          <p className='text-gray-400 hover:text-white'>Track Your Order</p>
-          <p className='text-gray-400 hover:text-white'>Privacy Policy</p>
-          <p className='text-gray-400 hover:text-white'>Terms and Conditions</p>
-          <p className='text-gray-400 hover:text-white'>Sitemap</p>
-        </div>
+    <footer className="bg-gray-900 text-white py-10">
+      <div className="container mx-auto px-4 sm:px-8">
+        <div className="flex flex-col md:flex-row md:justify-between gap-10">
 
-        {/* Product Categories */}
-        <div>
-          <h2 className="text-xl font-bold mb-4">Categories</h2>
-          <ul>
-            <li>
-              <div className="text-gray-400 hover:text-white">
-                Integrated Circuits
-              </div>
-            </li>
-            <li>
-              <div className="text-gray-400 hover:text-white">
-                Development Boards and Kits
-              </div>
-            </li>
-            <li>
-              <div className="text-gray-400 hover:text-white">
-                Drone Parts
-              </div>
-            </li>
-            <li>
-              <div className="text-gray-400 hover:text-white">
-                Breakout Boards
-              </div>
-            </li>
-            <li>
-              <div className="text-gray-400 hover:text-white">
-                Communication
-              </div>
-            </li>
-            <li>
-              <div className="text-gray-400 hover:text-white">
-                Passive Components
-              </div>
-            </li>
-            <li>
-              <div className="text-gray-400 hover:text-white">
-                Sensors
-              </div>
-            </li>
-            <li>
-              <div className="text-gray-400 hover:text-white">
-                Connectors
-              </div>
-            </li>
-            <li>
-              <div className="text-gray-400 hover:text-white">
-                Optoelectronics
-              </div>
-            </li>
-            <li>
-              <div className="text-gray-400 hover:text-white">
-                Electromechanical
-              </div>
-            </li>
-            <li>
-              <div className="text-gray-400 hover:text-white">
-                Discrete Semiconductors
-              </div>
-            </li>
-            <li>
-              <div className="text-gray-400 hover:text-white">
-                3D Printers and Filaments
-              </div>
-            </li>
-            <li>
-              <div className="text-gray-400 hover:text-white">
-                Wire and Cable Management
-              </div>
-            </li>
-            <li>
-              <div className="text-gray-400 hover:text-white">
-                Circuit Protection
-              </div>
-            </li>
-            <li>
-              <div className="text-gray-400 hover:text-white">
-                Power Supplies
-              </div>
-            </li>
-            <li>
-              <div className="text-gray-400 hover:text-white">
-                Test and Measurement
-              </div>
-            </li>
-            <li>
-              <div className="text-gray-400 hover:text-white">
-                Tools and Supplies
-              </div>
-            </li>
+      
+          <div className="w-full md:w-1/2 md:pl-12">
+            <h2 className="text-2xl font-bold text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text">
+              EMBPROTO
+            </h2>
+            <p className="mt-2 text-gray-400">
+              Empowering businesses with  embproto and slogan.
+            </p>
 
-            {/* Add more categories as needed */}
-          </ul>
-        </div>
+            <div className="mt-6">
+              <p className="text-gray-300 mb-2 font-medium">Subscribe to Newsletter</p>
+              <div className="relative w-full sm:w-[74%]">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="w-full rounded-full py-2 pl-4 pr-10 bg-white text-black placeholder-gray-500 focus:outline-none"
+                />
+                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-600 font-bold text-xl cursor-pointer">
+                  →
+                </span>
+              </div>
+            </div>
 
-        {/* Customer Support */}
-        <div>
-          <h2 className="text-xl font-bold mb-4">Popular Brands</h2>
-          <ul>
-            <li>
-              <Link href="" className="text-gray-400 hover:text-white">
-                Royal Ohm
-              </Link>
-            </li>
-            <li>
-              <Link href="" className="text-gray-400 hover:text-white">
-                Yageo
-              </Link>
-            </li>
-            <li>
-              <Link href="" className="text-gray-400 hover:text-white">
-                CNLINKO
-              </Link>
-            </li>
-            <li>
-              <Link href="" className="text-gray-400 hover:text-white">
-                Waveshare
-              </Link>
-            </li>
-            <li>
-              <Link href="" className="text-gray-400 hover:text-white">
-                7Semi
-              </Link>
-            </li>
-            <li>
-              <Link href="" className="text-gray-400 hover:text-white">
-                JD
-              </Link>
-            </li>
-            <li>
-              <Link href="" className="text-gray-400 hover:text-white">
-                DFRobot
-              </Link>
-            </li>
-            <li>
-              <Link href="" className="text-gray-400 hover:text-white">
-                Generic
-              </Link>
-            </li>
-            <li>
-              <Link href="" className="text-gray-400 hover:text-white">
-                Shenzhen Sunlord
-              </Link>
-            </li>
-            <li>
-              <Link href="" className="text-gray-400 hover:text-white">
-                SparkFun
-              </Link>
-            </li>
-            <li>
-              <Link href="" className="text-gray-400 hover:text-white">
-                View All
-              </Link>
-            </li>
-            {/* Add more support links as needed */}
-          </ul>
-        </div>
-
-        {/* Social Media Links */}
-        <div>
-          <h2 className="text-xl font-bold mb-4">Info</h2>
-          <div className="flex space-x-4">
-            <a href="https://www.facebook.com" className="text-gray-400 hover:text-white">
-              {/* <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"></svg> */}
-              <Image
-                src="/facebook.png"
-                alt="Facebook Logo"
-                width={40}
-                height={40}
-              />
-
-            </a>
-
-            <a href="https://www.twitter.com" className="text-gray-400 hover:text-white">
-             
-
-              <Image
-                src="/twitter (1).png"  // Ensure this image is inside the /public folder
-                alt="X (Twitter) Logo"
-                width={40}
-                height={40}
-                className=''
-              />
-            </a>
-
-            <a href="https://www.whatsapp.com" className="text-gray-400 hover:text-white">
-             
-              <Image
-                src="/logo.png"
-                alt="Whatsapp Logo"
-                width={45}
-                height={45}
-              />
-
-            </a>
-            {/* Add more social icons as needed */}
+          
+            <div className="mt-6">
+              <p className="text-gray-300 mb-2 font-medium">Certifications</p>
+              <ul className="flex flex-wrap gap-6 sm:w-[80%]">
+                <li className="flex items-center gap-2 text-gray-400">
+                  <FaCertificate className="text-yellow-400" />
+                  <span>ISO</span>
+                </li>
+                <li className="flex items-center gap-2 text-gray-400">
+                  <FaAward className="text-blue-400" />
+                  <span>SCO</span>
+                </li>
+                <li className="flex items-center gap-2 text-gray-400">
+                  <FaLock className="text-green-400" />
+                  <span>GDPR</span>
+                </li>
+                <li className="flex items-center gap-2 text-gray-400">
+                  <FaShieldAlt className="text-red-400" />
+                  <span>SOC2</span>
+                </li>
+              </ul>
+            </div>
           </div>
-          <div className='mt-5'>
-            <p className='text-gray-400 hover:text-white'>Office No-1003, 10th Floor,</p>
-            <p className='text-gray-400 hover:text-white'>Ellora Fiesta,</p>
-            <p className='text-gray-400 hover:text-white'>B.R Ambedkar Marg, Jui Nagar,</p>
-            <p className='text-gray-400 hover:text-white'>Navi Mumbai, India - 400705</p>
-            <p className='text-gray-400 hover:text-white'>GSTIN: 27AADCE2693R1ZX</p>
-            <p className='text-gray-400 hover:text-white'>Call us: 86558 21346</p>
+
+         
+          <div className="w-full md:w-1/2 grid grid-cols-1 sm:grid-cols-3 gap-y-8 gap-x-6">
+           
+            <div>
+              <h3 className="text-lg font-semibold">Information</h3>
+              <ul className="mt-2 space-y-2">
+                <li><a href="#" className="text-gray-400 hover:text-white">Track your Order</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Videos</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Faq</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-white">Careers</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold">My Account</h3>
+              <ul className="mt-2 space-y-2">
+                <li className="text-gray-400 cursor-default">Cart</li>
+                <li className="text-gray-400 cursor-default">CheckOut</li>
+                <li className="text-gray-400 cursor-default">My Account</li>
+                <li className="text-gray-400 cursor-default">Payment Option</li>
+              </ul>
+            </div>
+
+         
+            <div>
+              <h3 className="text-lg font-semibold">Services </h3>
+              <div className="flex space-x-4 mt-2">
+                <a href="#" className="text-gray-400 hover:text-white"><FaFacebook size={24} /></a>
+                <a href="#" className="text-gray-400 hover:text-white"><FaTwitter size={24} /></a>
+                <a href="#" className="text-gray-400 hover:text-white"><FaInstagram size={24} /></a>
+                <a href="#" className="text-gray-400 hover:text-white"><FaLinkedin size={24} /></a>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="mt-8 text-center text-gray-500">
-        &copy; {new Date().getFullYear()} EmbProto.in. All rights reserved.
+
+        <div className="mt-10 text-center text-gray-500 text-sm">
+          &copy; {new Date().getFullYear()}   Embproto. All rights reserved.
+        </div>
       </div>
     </footer>
   );

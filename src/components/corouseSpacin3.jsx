@@ -12,7 +12,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 
-export function CarouselSize() {
+export function CarouselSize3() {
 
   const [products, setProducts] = useState([]);
 
@@ -20,7 +20,7 @@ export function CarouselSize() {
     const result = await axios('/api/product', { method: "GET" });
     console.log("result", result.data)
     if (result) {
-      setProducts(result.data.featuredProducts)
+      setProducts(result.data.newProducts)
     }
   }
   useEffect(() => {

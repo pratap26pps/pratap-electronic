@@ -30,8 +30,23 @@ const productDetailsSchema= new mongoose.Schema({
         ref: "BrandProduct",
         required: true,
       },
-
-});
+      
+      isFeatured: {
+        type: Boolean,
+        default: false,
+      },
+      views: {
+        type: Number,
+        default: 0,
+      },
+      purchases: {
+        type: Number,
+        default: 0,
+      },
+   
+},{
+    timestamps: true, 
+  });
 
 const Product = mongoose.models.Product || mongoose.model("Product",productDetailsSchema);
 
