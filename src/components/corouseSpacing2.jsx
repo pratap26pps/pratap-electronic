@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import axios from "axios";
 
 import { Card, CardContent } from "@/components/ui/card"
+import { setAddCart,setRemoveCart } from "@/redux/slices/cartSlice";
+import { useDispatch } from "react-redux";
 import {
   Carousel,
   CarouselContent,
@@ -15,7 +17,8 @@ import {
 export function CarouselSize2() {
 
   const [products, setProducts] = useState([]);
-
+  const [addtocart, setaddtocart] = useState(false);
+  const dispatch = useDispatch()
   const getproductdetails = async () => {
     const result = await axios('/api/product', { method: "GET" });
     console.log("result", result.data)
@@ -27,7 +30,14 @@ export function CarouselSize2() {
     getproductdetails();
   }, [])
 
-  
+    const gotocart =async()=>{
+      if (!addtocart) {
+          dispatch(setAddCart(products));  
+        } else {
+          dispatch(setRemoveCart(products._id));
+        }
+      setaddtocart((prev)=> !prev)     
+    }
 
   return (
     <Carousel
@@ -38,7 +48,7 @@ export function CarouselSize2() {
     >
       <CarouselContent >
         {products.map((item, index) => (
-          <CarouselItem key={index} className=" md:basis-1/2 lg:basis-1/3">
+          <CarouselItem key={item._id || index} className=" md:basis-1/2 lg:basis-1/3">
             <div className="p-1">
               <Card>
                 <CardContent className=" aspect-square items-center justify-center p-6">
@@ -60,7 +70,11 @@ export function CarouselSize2() {
                     <h1 className='font-semibold text-green-600 mb-5 ml-5'>{item.__v}in Stock</h1>
                   </div>
                   <div className='flex flex-col gap-2 p-4'>
-                    <button className='bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-300 shadow-md font-semibold text-white cursor-pointer '>ADD TO Cart</button>
+                    <button onClick={()=>gotocart()} className='bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-300 shadow-md font-semibold text-white cursor-pointer '>
+                    {
+            addtocart ?"Remove from Cart":"Add To Cart"
+           }
+                      </button>
 
                     <button className='border-2 p-2 font-semibold shadow rounded-lg focus:outline-none  hover:text-orange-300 cursor-pointer hover:border-orange-300'>ADD TO wishlist</button>
                   </div>

@@ -121,6 +121,7 @@ export default function Page({ params }) {
                   className="border   my-2 rounded shadow-lg 
                  aspect-square items-center justify-center p-6"
                 >
+                  <Link href={`/checkproduct/${p._id}`}>
                   <div className="shadow shadow-neutral-300 border border-b-gray-200 flex flex-col">
                     <div className="h-56 w-44 p-4  mx-auto">
                       <img src={p.ProductImage} alt="productimage" />
@@ -145,6 +146,8 @@ export default function Page({ params }) {
                     </div>
                     <h1 className='font-semibold text-green-600 mb-5 ml-5'>{p.productItems}in Stock</h1>
                   </div>
+                  </Link>
+            
                   <div className="flex flex-col gap-2 p-4">
                     <button className="bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-300 shadow-md font-semibold text-white cursor-pointer ">
                       ADD TO Cart
@@ -168,6 +171,7 @@ export default function Page({ params }) {
                   className="border   my-2 rounded shadow-lg 
                  aspect-square items-center justify-center p-6"
                 >
+                <Link href={`/checkproduct/${p._id}`}>
                   <div className="shadow shadow-neutral-300 border border-b-gray-200 flex flex-col">
                     <div className="h-56 w-44 p-4  mx-auto">
                       <img src={p.ProductImage} alt="productimage" />
@@ -192,6 +196,7 @@ export default function Page({ params }) {
                     </div>
                     <h1 className='font-semibold text-green-600 mb-5 ml-5'>{p.productItems}in Stock</h1>
                   </div>
+                  </Link>
                   <div className="flex flex-col gap-2 p-4">
                     <button className="bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-300 shadow-md font-semibold text-white cursor-pointer ">
                       ADD TO Cart

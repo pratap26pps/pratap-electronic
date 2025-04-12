@@ -11,14 +11,14 @@ const cartSlice=createSlice({
     initialState:initialState,
     reducers:{
         setTotalItem(state,action){
-            state.token = action.payload;
+            state.totalItem = action.payload;
         },
         // add to cart ka function
         setAddCart(state,action){
             const course = action.payload
             const index = state.cart.findIndex((item)=>item._id === course._id)
             if(index>=0){
-                toast.error("course already in cart")
+                toast.error("product already in cart")
                 return;
             }
            state.cart.push(course)
@@ -38,14 +38,19 @@ const cartSlice=createSlice({
             state.total -= state.cart[index].price
             state.cart.splice(index,1)
          
-
            }
            toast.success("course removed from cart")
         },
         // reset cart
-        setResetCart(state,action){
-            state.token = action.payload;
-        },
+        setResetCart(state) {
+            state.cart = [];
+            state.total = 0;
+            state.totalItem = 0;
+            localStorage.removeItem("cart");
+            localStorage.removeItem("total");
+            localStorage.removeItem("totalItem");
+            toast.success("Cart reset successfully");
+          },
     },
 });
 

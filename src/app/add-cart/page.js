@@ -1,25 +1,14 @@
 "use client"
-// import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+ 
 import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
 export default function YourCart() {
-//   const dispatch = useDispatch();
-//   const cart = useSelector((state) => state.cart.items);
-   const cart =[
-    {
-        name:"pamkaj",
-        description:"hello",
-        price:"4",
-        quantity:"3"
-    },
-    {
-        name:"pamkj",
-        description:"suraj",
-        price:"4",
-        quantity:"23"
-    }
-   ]
+  const router = useRouter()
+  const cart = useSelector((state) => state.cart.cart || []);
+  console.log("product in cart",cart);
+ 
   const [coupon, setCoupon] = useState("");
   const shipping = 50;
   const gstRate = 0.18;
@@ -28,6 +17,10 @@ export default function YourCart() {
   const gst = subtotal * gstRate;
   const discount = coupon === "SAVE10" ? subtotal * 0.1 : 0;
   const grandTotal = subtotal + shipping + gst - discount;
+
+  const  paymenthandler=()=>{
+      router.push('/PlaceOrder')
+  }
 
   return (
     <div className="container mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-6 mt-36">
@@ -38,15 +31,16 @@ export default function YourCart() {
           <p>Your cart is empty.</p>
         ) : (
           <div className="space-y-4">
-            {cart.map((item) => (
-              <div key={item.id} className="flex justify-between items-center p-4 border rounded">
+            {cart.map((item, index) => (
+              <div key={item._id || index} className="flex justify-between items-center p-4 border rounded">
                 <div>
-                  <h3 className="text-lg font-semibold">{item.name}</h3>
-                  <p className="text-sm text-gray-500">{item.description}</p>
-                  <p className="text-sm">Price: ₹{item.price}</p>
-                  <p className="text-sm">Quantity: {item.quantity}</p>
+                   <img src={item?.ProductImage} height={321} width={213}></img>
+                  <h3 className="text-lg font-semibold">{item?.ProductTitle}</h3>
+                  <p className="text-sm text-gray-500">{item?.ProductShortDescription}</p>
+                  <p className="text-sm">Price: ₹{item?.ProductPrice}</p>
+                  <p className="text-sm">Quantity: {item?.productItems}</p>
                 </div>
-                <p className="text-lg font-bold">₹{item.price * item.quantity}</p>
+                <p className="text-lg font-bold">₹{item?.ProductPrice  }</p>
               </div>
             ))}
           </div>
@@ -76,7 +70,8 @@ export default function YourCart() {
         </div>
         
         {/* Checkout Button */}
-        <Button className="mt-4 w-full">Proceed to Checkout</Button>
+        <div onClick={()=>paymenthandler()} className="mt-4 bg-green-600 p-2 rounded-4xl text-center cursor-pointer
+         hover:bg-green-800 w-full">Proceed to Checkout</div>
       </div>
     </div>
   );
