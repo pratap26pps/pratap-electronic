@@ -1,18 +1,17 @@
 "use client"
-import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useState } from 'react' 
 import { useRouter } from 'next/navigation';
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
 
 const Updatepassword = () => {
-    const dispatch = useDispatch();
+  
     const [FormData, setFormData] = useState({
         password: "",
         confirmpassword: ""
     });
     const [showpassword, setshowpassword] = useState(false);
     const [showconfirmpassword, setshowconfirmpassword] = useState(false);
-    const { loading } = useSelector((state) => state.auth);
+   const [loading,setLoading] = useState(false);     
     const { password, confirmpassword } = FormData;
     const router = useRouter();
 
@@ -23,12 +22,40 @@ const Updatepassword = () => {
         }));
     };
 
-    const handleonsubmit = (e) => {
+    const handleonsubmit = async (e) => {
         e.preventDefault();
-        // const token = location.pathname.split('/').at(-1);
-        // dispatch(resetpassword(password,confirmpassword,token))
-        router.push('/Account/login');
-    };
+        try {
+        setLoading(true)
+
+          const res = await fetch("/api/resetpassword", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              password,
+              confirmpassword,
+              token, 
+            }),
+          });
+    
+          const data = await res.json();
+          setLoading(false)
+    
+          if (res.ok) {
+            alert(" Password reset successful!");
+            router.push("/Account/login");
+          } else {
+            alert( data.message);
+          }
+
+        } catch (error) {
+          console.error("Reset failed:", error);
+          alert("Something went wrong");
+        
+
+        }
+      };
 
     return (
         <div className='flex flex-col items-center mt-36 min-h-screen px-4'>

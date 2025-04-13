@@ -1,27 +1,44 @@
 "use client"
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+ 
 import { BiArrowFromRight } from 'react-icons/bi'
 import Link from 'next/link'
 
-// import { getpasswordresettoken } from '../services/opration/authapi'
+ 
 const Forgotpassword = () => {
-   const [emailsend,setemailsend]=useState(true)
+   const [emailsend,setemailsend]=useState(false)
    const [email,setemail]=useState("")
-   
-    const {loading} = useSelector((state)=>state.auth);
-  const dispatch = useDispatch();
-
-
-    const resetpasswordhandler=(e)=>{
+      const [loading,setLoading] = useState(false);     
+ 
+    const resetpasswordhandler = async (e)=>{
+      try{
+        setLoading(true);
          e.preventDefault();
-        //  dispatch(getpasswordresettoken(email,setemailsend));
+       const result = await fetch('/api/resetpasstoken', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      }) 
+      
+      const data = await result.json();
+      setLoading(false);
 
+      if (response.ok) {
+        console.log("Email sent:", data.message);
+  
+      } else {
+        console.error(" Error:", data.message);
+      }
+    } catch (error) {
+      console.error("Error sending reset email:", error);
+    }
     }
 
 
   return (
-    <div className='mt-36 '>
+    <div className='mt-36'>
       {
         loading ?(<div>loading.......</div>):(
         <div className='flex flex-col items-center '>
