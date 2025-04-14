@@ -3,7 +3,7 @@
 export default  function ErrorBoundary({error}){
     return (
         <div>
-            error in reviewid {error.message}
+            error in   {error.message}
         </div>
     )
 }

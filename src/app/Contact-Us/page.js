@@ -4,7 +4,11 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Footer from "@/components/Footer";
-export default function ContactUs() {
+import VoiceInput from "@/components/VoiceInput";
+ 
+
+export default function ContactUs( ) {
+ 
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -24,7 +28,11 @@ export default function ContactUs() {
 
   return (
     <div className="mt-36">
-      <div className="p-6 border rounded-lg shadow-md max-w-lg mx-auto space-y-4 mb-9 mt-40">
+      <div className="flex justify-evenly">
+
+       
+
+         <div className="p-6 border rounded-lg shadow-md max-w-lg   space-y-4 mb-9">
         <h2 className="text-lg font-semibold">Contact Us</h2>
         <p className="text-sm text-gray-600">
           Please fill out the form below and we will revert within 24-48 hours.
@@ -131,7 +139,12 @@ export default function ContactUs() {
             Submit
           </Button>
         </form>
+         </div>
+         <div>
+ <VoiceInput />
+ </div>
       </div>
+    
       <Footer />
     </div>
   );
