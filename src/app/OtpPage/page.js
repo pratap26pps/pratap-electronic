@@ -28,6 +28,7 @@ const OtpPage = () => {
 
   const handleonsubmit =async (e) => {
 //  validation otp
+
 if(otp ===receivedOtp){
 
   toast.success("otp-verified successfully");
@@ -35,6 +36,8 @@ if(otp ===receivedOtp){
   // api call signup
     console.log("signupdata", signupdata);
     e.preventDefault();
+setLoading(false);
+
      try {
       const response = await axios.post("/api/users/signup", JSON.stringify(signupdata), {
         headers: {

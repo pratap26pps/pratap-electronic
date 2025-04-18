@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Footer from "@/components/Footer";
-import VoiceInput from "@/components/VoiceInput";
+ 
  
 
 export default function ContactUs( ) {
@@ -28,10 +28,8 @@ export default function ContactUs( ) {
 
   return (
     <div className="mt-36">
-      <div className="flex justify-evenly">
-
-       
-
+      <div className="flex justify-center">
+ 
          <div className="p-6 border rounded-lg shadow-md max-w-lg   space-y-4 mb-9">
         <h2 className="text-lg font-semibold">Contact Us</h2>
         <p className="text-sm text-gray-600">
@@ -141,7 +139,7 @@ export default function ContactUs( ) {
         </form>
          </div>
          <div>
- <VoiceInput />
+ 
  </div>
       </div>
     

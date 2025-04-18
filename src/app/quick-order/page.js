@@ -5,7 +5,7 @@ import Footer from '@/components/Footer';
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Upload } from "lucide-react";
+ 
 
 const page = () => {
   const [sku, setSku] = useState("");
@@ -15,16 +15,13 @@ const page = () => {
   const decreaseQuantity = () => setQuantity(quantity > 1 ? quantity - 1 : 1);
 
   return (
-    <div className="mt-36">
+    <div className="mt-28">
       <div className=" min-h-screen flex flex-col items-center py-10">
-        <div className="max-w-3xl text-center space-y-4 p-6  shadow-lg rounded-lg border-2">
+        <div className="max-w-3xl text-center space-y-4 p-6  shadow-lg rounded-lg">
           <h1 className="text-4xl font-bold text-blue-600">Quick Order</h1>
-          <p className="text-gray-600">If you would like to add multiple parts quickly to your cart, you can enter SKUs directly into rows on this page or upload a CSV file.</p>
-          <p className="text-gray-600">To upload SKUs in a CSV file to your cart:</p>
+          <p className="text-gray-600">If you would like to add multiple parts quickly to your cart </p>
+       
           <ol className="list-decimal list-inside text-gray-700 space-y-1">
-            <li>Create a 2-column CSV with “sku” and “qty” headings (lower case) on the first row.</li>
-            <li>Click on Upload CSV below.</li>
-            <li>Navigate to and open your CSV file, new rows will appear below. Optionally remove the first blank row.</li>
             <li>Click on Add all items to your cart.</li>
           </ol>
           <p className="text-gray-600">Each row will be added to the cart sequentially.</p>
@@ -44,14 +41,6 @@ const page = () => {
           </div>
 
           <Button className=" w-full m-5 py-2 bg-blue-600 hover:bg-blue-700 text-white ml-1 font-bold">Adding to basket</Button>
-          {/* <button className='bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-300 shadow-md font-semibold text-white cursor-pointer '>ADD TO Cart</button> */}
-
-          <div className="flex items-center gap-2 cursor-pointer text-blue-600 hover:underline">
-            <input type="file" id="csvUpload" className="hidden" />
-            <label htmlFor="csvUpload" className="flex items-center gap-2 ml-1">
-              <Upload size={16} /> Upload CSV
-            </label>
-          </div>
 
           <Button variant="outline" className="w-full border border-blue-600 text-blue-600 hover:bg-blue-100 ml-1">View Cart</Button>
         </div>

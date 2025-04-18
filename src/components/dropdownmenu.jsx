@@ -1,10 +1,11 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import Link from "next/link";
 import { RiArrowDropRightFill } from "react-icons/ri";
 import { cn } from "@/lib/utils";
 import { FaBars, FaTimes } from "react-icons/fa"; 
 import { FaSearch } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -17,121 +18,6 @@ import {
 import axios from "axios";
  
 
-// const components = [
-//   {
-//     title: "Stmicroelecronics",
-//     href: "/Stmicroelecronics",
-//   },
-//   {
-//     title: "Texas Instrument",
-//     href: "/TexasInstrument",
-//   },
-//   {
-//     title: "Yageo",
-//     href: "/Yageo",
-//   },
-//   {
-//     title: "Quectel",
-//     href: "/Quectel",
-//   },
-//   {
-//     title: "WaveShare",
-//     href: "/WaveShare",
-//   },
-//   {
-//     title: "spark fun",
-//     href: "/spark-fun ",
-//   },
-// ];
-
-
-// const categories = [
-//   {
-//     title: "Electronic Components",
-//     href: "/electronics-components",
-//     subItems: [
-//       { title: "Resistors", href: "/electronics-components/resistor" },
-//       { title: "ICs", href: "/electronics-components/ics" },
-//       { title: "Transistors", href: "/electronics-components/transistors" },
-//     ],
-//   },
-//   {
-//     title: "Simplify",
-//     href: "/simplify",
-//     subItems: [
-//       { title: "Product A", href: "/simplify/product-a" },
-//       { title: "Product B", href: "/simplify/product-b" },
-//       { title: "Product C", href: "/simplify/product-c" },
-//     ],
-//   },
-//   {
-//     title: "SmartElex",
-//     href: "/SmartElex",
-//     subItems: [
-//       { title: "Sensors", href: "/SmartElex/sensors" },
-//       { title: "Controllers", href: "/SmartElex/controllers" },
-//       { title: "Modules", href: "/SmartElex/modules" },
-//     ],
-//   },
-//   {
-//     title: "SmartElex",
-//     href: "/SmartElex",
-//     subItems: [
-//       { title: "Sensors", href: "/SmartElex/sensors" },
-//       { title: "Controllers", href: "/SmartElex/controllers" },
-//       { title: "Modules", href: "/SmartElex/modules" },
-//     ],
-//   },
-//   {
-//     title: "SmartElex",
-//     href: "/SmartElex",
-//     subItems: [
-//       { title: "Sensors", href: "/SmartElex/sensors" },
-//       { title: "Controllers", href: "/SmartElex/controllers" },
-//       { title: "Modules", href: "/SmartElex/modules" },
-//     ],
-//   },
-//   {
-//     title: "SmartElex",
-//     href: "/SmartElex",
-//     subItems: [
-//       { title: "Sensors", href: "/SmartElex/sensors" },
-//       { title: "Controllers", href: "/SmartElex/controllers" },
-//       { title: "Modules", href: "/SmartElex/modules" },
-//     ],
-//   },
-//   {
-//     title: "SmartElex",
-//     href: "/SmartElex",
-//     subItems: [
-//       { title: "Sensors", href: "/SmartElex/sensors" },
-//       { title: "Controllers", href: "/SmartElex/controllers" },
-//       { title: "Modules", href: "/SmartElex/modules" },
-//     ],
-//   },
-//   {
-//     title: "SmartElex",
-//     href: "/SmartElex",
-//     subItems: [
-//       { title: "Sensors", href: "/SmartElex/sensors" },
-//       { title: "Controllers", href: "/SmartElex/controllers" },
-//       { title: "Modules", href: "/SmartElex/modules" },
-//     ],
-//   },
-
-//   {
-//     title: "SmartElex",
-//     href: "/SmartElex",
-//     subItems: [
-//       { title: "Sensors", href: "/SmartElex/sensors" },
-//       { title: "Controllers", href: "/SmartElex/controllers" },
-//       { title: "Modules", href: "/SmartElex/modules" },
-//     ],
-//   },
-// ];
-
-
-
 
 export function NavigationMenuDemo() {
 
@@ -139,7 +25,7 @@ export function NavigationMenuDemo() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [components, setcomponents] = useState([]);
   const [brandname, setbrandname] = useState([]);
- 
+  const router = useRouter()
 
   // Prevent background scrolling when menu is open
   useEffect(() => {
@@ -167,7 +53,73 @@ export function NavigationMenuDemo() {
       useEffect(()=>{
         brandhandler();
       },[])
+
+
+
+ 
+
+  // for search box
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("/api/product"); // Change to your actual API endpoint
+        const data = await response.json();
+        console.log("data heee", data);
+        setAllProducts(data.products);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
+
+    if (value.length > 0) {
+      const results = allProducts.filter((product) =>
+        product.ProductTitle.toLowerCase().includes(value)
+      );
+      setFilteredProducts(results);
+    } else {
+      setFilteredProducts([]);
+    }
+  };
+
+  const gotoproduct = (id) => {
+    router.push(`/checkproduct/${id}`);
+    setSearchTerm("");
+    setFilteredProducts([]);
+  };
+
+
   
+  // Close the dropdown filtered products when user clicks outside
+     const searchContainerRef = useRef(null);
+      
+      useEffect(() => {
+        const handleClickOutside = (event) => {
+          if (
+            searchContainerRef.current &&
+            !searchContainerRef.current.contains(event.target)
+          ) {
+            setSearchTerm("");
+            setFilteredProducts([]);
+          }
+        };
+      
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+        };
+      }, []);
 
 
   return (
@@ -186,20 +138,58 @@ export function NavigationMenuDemo() {
           )}
         </button>
         <div className="md:hidden px-4 mt-2">
-          <div className="flex items-center gap-2 p-2 border rounded-full bg-gray-100 shadow-sm focus-within:shadow-md">
-            <FaSearch className="text-gray-500 ml-2" />
-            <input
-              type="search"
-              placeholder="Search for product..."
-              className="w-full bg-gray-100 outline-none text-gray-700 placeholder-gray-500 rounded-full px-2"
-            />
-          </div>
+           <div   ref={searchContainerRef}
+                  className="items-center gap-2 p-2 w-full border rounded-full bg-gray-100 shadow-sm focus-within:shadow-md transition-shadow duration-300">
+                  <div className="flex">
+                 <FaSearch className="text-gray-500 ml-4 mt-1" />
+                   <input
+                     value={searchTerm}
+                     onChange={handleSearchChange}
+                     type="search"
+                     placeholder="Search for product..."
+                     className="w-full bg-gray-100 outline-none text-gray-700 placeholder-gray-500 rounded-full px-2"
+                   />
+                  </div>
+
+                   {filteredProducts.length > 0 && (
+                    <div className="absolute left-7  z-50 mt-3 gap-1 bg-gray-500 w-[95%]">
+                     <div  className="flex text-2xl  justify-center border-b-4  p-2">
+                         Products
+                       </div>
+                     <div className=" border rounded shadow-md p-2">
+             
+                       {filteredProducts.map((product) => (
+                         <div
+                           onClick={() => gotoproduct(product._id)}
+                           key={product._id}
+                           className="hover:bg-gray-800 p-2 cursor-pointer border"
+                         >
+                           <img
+                             src={product.ProductImage}
+                             alt={product.ProductImage}
+                             className="w-10 h-10 object-cover rounded-full"
+                           />
+                           <p className="text-amber-50 font-semibold">
+                             {product.ProductTitle}
+                           </p>
+                           <p className="text-gray-300">
+                             {product.ProductShortDescription}
+                           </p>
+                           <p className="text-green-500 font-bold">
+                             ₹{product.ProductPrice}
+                           </p>
+                         </div>
+                       ))}
+         
+                     </div>
+         </div>
+                   )}
+                 </div>
         </div>
       </div>
       {/* Mobile Menu Content */}
       {isMenuOpen && (
         <div className="absolute top-14 left-0 w-full bg-white dark:bg-neutral-950 shadow-lg p-4 transition-all duration-300 lg:hidden block">
-          {/* <NavigationMenuDemo /> */}
 
           <NavigationMenuList className="w-full">
 
@@ -208,8 +198,7 @@ export function NavigationMenuDemo() {
                 <NavigationMenuTrigger>All Categories</NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="h-72  relative overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 p-1 z-20 md:w-[200px] lg:w-[250px] shadow-lg rounded-md">
-                    <ListItem href="/featured-brands" title="Shop by Brands" />
-                    <ListItem href="/latest-products" title="New Arrivals" />
+           
 
                     {components.map((category, index) => (
                       <div
@@ -273,13 +262,7 @@ export function NavigationMenuDemo() {
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link href="/rfq" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    RFQ
-                  </NavigationMenuLink>
-                </Link>
-              </NavigationMenuItem>
+              
               <NavigationMenuItem>
                 <Link href="/quick-order" legacyBehavior passHref>
                   <NavigationMenuLink className={navigationMenuTriggerStyle()}>
@@ -306,17 +289,15 @@ export function NavigationMenuDemo() {
             <NavigationMenuTrigger>All Categories</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="h-72 relative overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 p-1 z-20 md:w-[200px] lg:w-[250px] shadow-lg rounded-md">
-                <ListItem href="/featured-brands" title="Shop by Brands" />
-                <ListItem href="/latest-products" title="New Arrivals" />
-
+    
                 {components.map((category, index) => (
                   <div
                     key={index}
-                    className="flex justify-between items-center cursor-pointer hover:text-red-500 px-3 py-2 rounded-md"
+                    className=" flex justify-between cursor-pointer hover:text-red-500   rounded-md"
                     onMouseEnter={() => setHoveredCategory(category.name)}
                   >
                     <ListItem title={category.name} 
-                    href={category._id}
+                    // href={category._id}
                      />
                     <RiArrowDropRightFill className="text-xl" />
                   </div>  
@@ -356,7 +337,7 @@ export function NavigationMenuDemo() {
           <NavigationMenuItem>
             <NavigationMenuTrigger>TOP Manufacturers</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className=" w-[200px] gap-2 p-1">
+              <ul className="h-72 relative overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400   z-20 md:w-[200px] lg:w-[250px] shadow-lg rounded-md">
                 {brandname.map((component) => (
                   <ListItem
                     key={component.name}
@@ -371,21 +352,14 @@ export function NavigationMenuDemo() {
 
 
           </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/rfq" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()} >
-                RFQ
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
+     
           <NavigationMenuItem>
             <Link href="/quick-order" legacyBehavior passHref>
              
                 <NavigationMenuLink className={navigationMenuTriggerStyle()} >
                   Quick Order
                 </NavigationMenuLink>
-             
-
+ 
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>

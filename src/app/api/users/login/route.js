@@ -38,6 +38,11 @@ export async function POST(req) {
     const tokendata = {
       id: existingUser._id,
       firstname: existingUser.firstname,
+      lastname: existingUser.lastname,
+      phonenumber: existingUser.phonenumber,
+      state: existingUser.state,
+      country: existingUser.country,
+      city: existingUser.city,
       email: existingUser.email,
       role:existingUser.role,
     };

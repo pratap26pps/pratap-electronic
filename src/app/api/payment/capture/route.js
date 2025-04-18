@@ -1,10 +1,10 @@
 import { instance } from "@/utils/razorpay";
 import Product from "@/models/productDetails";
-import User from "@/models/userModel";
-// import { getServerSession } from "next-auth";
+ 
+import { getServerSession } from "next-auth";
 import connectDB from "@/dbconfig/dbconfig";
 import mongoose from "mongoose";
-// import { authOptions } from "@/utils/authOptions";  
+import { authOptions } from "@/utils/authOptions";  
 export async function POST(req) {
   await connectDB();
 
@@ -12,8 +12,8 @@ export async function POST(req) {
     const body = await req.json();
     const { product } = body;
     console.log("product for payment capture",product)
-    // const session = await getServerSession(authOptions);
-    const userId = User?._id;
+    const session = await getServerSession(authOptions);
+    const userId = session.user?._id;
 
     if (!product || product.length === 0) {
       return Response.json(

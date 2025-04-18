@@ -1,4 +1,4 @@
-// import GoogleProvider from "next-auth/providers/google";
+import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import User from "@/models/userModel"; // adjust path if needed
 import bcrypt from "bcryptjs";
@@ -7,10 +7,10 @@ import connectDB from "@/dbconfig/dbconfig";
 export const authOptions = {
   providers: [
      
-    // GoogleProvider({
-    //   clientId: process.env.GOOGLE_CLIENT_ID,
-    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    // }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
 
  
     CredentialsProvider({
@@ -32,7 +32,7 @@ export const authOptions = {
         return {
           id: user._id,
           email: user.email,
-          name: user.name,
+          name: user.firstname,
         };
       },
     }),
@@ -53,6 +53,6 @@ export const authOptions = {
   },
 
   pages: {
-    signIn: "/login", // Optional: your custom login page
+    signIn: "/Account/profile", // Optional: your custom login page
   },
 };

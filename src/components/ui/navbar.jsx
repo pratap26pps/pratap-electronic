@@ -18,20 +18,23 @@ import {
 } from "./tooltip";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-
-import { useEffect, useState } from "react";
+import { setSignupdata } from "@/redux/slices/userSlice";
+import { useEffect, useState,useRef } from "react";
+import { useDispatch } from "react-redux";
 
 export default function Navbar() {
   const router = useRouter();
   const { setTheme, theme } = useTheme();
   const [user, setUser] = useState(null);
-
+ const dispatch = useDispatch();
   const fetchUser = async () => {
     try {
       const res = await fetch("/api/users/me", { cache: "no-store" });
-      const data = await res.json();
+      const data = await res.json(); 
+     
       if (data.user) {
         setUser(data.user || null);
+       dispatch(setSignupdata(data.user))
       } else {
         setUser(null);
       }
@@ -66,45 +69,64 @@ export default function Navbar() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
-  
+
   useEffect(() => {
-  
     const fetchProducts = async () => {
       try {
-        const response = await fetch('/api/product'); // Change to your actual API endpoint
+        const response = await fetch("/api/product"); // Change to your actual API endpoint
         const data = await response.json();
-        console.log("data heee",data)
+        console.log("data heee", data);
         setAllProducts(data.products);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error("Error fetching products:", error);
       }
     };
 
     fetchProducts();
   }, []);
- 
 
   const handleSearchChange = (e) => {
-
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
 
     if (value.length > 0) {
-      const results = allProducts.filter(product =>
+      const results = allProducts.filter((product) =>
         product.ProductTitle.toLowerCase().includes(value)
       );
       setFilteredProducts(results);
     } else {
       setFilteredProducts([]);
     }
-
   };
 
-  const gotoproduct=(id)=>{
-    router.push(`/checkproduct/${id}`)
-    setSearchTerm("")
+  const gotoproduct = (id) => {
+    router.push(`/checkproduct/${id}`);
+    setSearchTerm("");
     setFilteredProducts([]);
-  }
+  };
+
+
+
+  // Close the dropdown filtered products when user clicks outside
+  const searchContainerRef = useRef(null);
+
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (
+      searchContainerRef.current &&
+      !searchContainerRef.current.contains(event.target)
+    ) {
+      setSearchTerm("");
+      setFilteredProducts([]);
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
+
 
   return (
     <div className="p-4 fixed w-full top-0 z-50 bg-white dark:bg-gray-900 shadow-md">
@@ -116,7 +138,8 @@ export default function Navbar() {
           </Link>
         </div>
         {/* Search Bar (Hidden on Small Screens) */}
-        <div className="hidden md:flex items-center gap-2 p-2 w-[60%] border rounded-full bg-gray-100 shadow-sm focus-within:shadow-md transition-shadow duration-300">
+        <div   ref={searchContainerRef}
+         className="hidden md:flex items-center gap-2 p-2 w-[60%] border rounded-full bg-gray-100 shadow-sm focus-within:shadow-md transition-shadow duration-300">
           <FaSearch className="text-gray-500 ml-4" />
           <input
             value={searchTerm}
@@ -125,21 +148,39 @@ export default function Navbar() {
             placeholder="Search for product..."
             className="w-full bg-gray-100 outline-none text-gray-700 placeholder-gray-500 rounded-full px-2"
           />
-           {filteredProducts.length > 0 && (
-        <div className="absolute grid grid-cols-3 grid-rows-2 top-full z-50 -mt-16 gap-1  w-[55%] bg-gray-500 border rounded shadow-md p-2">
-          {filteredProducts.map(product => (
-           
-            <div onClick={()=>gotoproduct(product._id)} key={product._id} className="p-2 cursor-pointer border">
-              <img src={product.ProductImage} alt={product.ProductTitle} className="w-10 h-10 object-cover rounded-full" />
-              <p className="text-gray-700 font-semibold">{product.ProductTitle}</p>
-              <p className="text-gray-500">{product.ProductShortDescription}</p>
-              <p className="text-green-500 font-bold">₹{product.ProductPrice}</p>
+          {filteredProducts.length > 0 && (
+           <div className="absolute top-full z-50 -mt-16 gap-1 bg-gray-500  w-[55%]">
+            <div  className="flex text-2xl  justify-center border-b-4  p-2">
+                Products
+              </div>
+            <div className=" grid grid-cols-3 grid-rows-2  border rounded shadow-md p-2">
+    
+              {filteredProducts.map((product) => (
+                <div
+                  onClick={() => gotoproduct(product._id)}
+                  key={product._id}
+                  className="hover:bg-gray-800 p-2 cursor-pointer border"
+                >
+                  <img
+                    src={product.ProductImage}
+                    alt={product.ProductImage}
+                    className="w-10 h-10 object-cover rounded-full"
+                  />
+                  <p className="text-amber-50 font-semibold">
+                    {product.ProductTitle}
+                  </p>
+                  <p className="text-gray-300">
+                    {product.ProductShortDescription}
+                  </p>
+                  <p className="text-green-500 font-bold">
+                    ₹{product.ProductPrice}
+                  </p>
+                </div>
+              ))}
+
             </div>
-           
-           
-          ))}
-        </div>
-      )}
+</div>
+          )}
         </div>
 
         {/* Icons & Theme Toggle */}
@@ -163,7 +204,7 @@ export default function Navbar() {
                 <FaUserPlus className="text-xl lg:hidden block cursor-pointer" />
               </Link>
             ) : (
-              <Link href="/Account/Signup">
+              <Link href="/Account/Login">
                 <FaUserPlus className="text-xl lg:hidden block cursor-pointer" />
               </Link>
             )}
@@ -210,7 +251,7 @@ export default function Navbar() {
                 </Link>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Add to Cart</p>
+                <p>My Cart</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -231,16 +272,3 @@ export default function Navbar() {
     </div>
   );
 }
-
-
-
- 
-
- 
-
-
- 
-
-
- 
- 

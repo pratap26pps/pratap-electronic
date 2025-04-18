@@ -47,7 +47,7 @@ const router= useRouter();
   {
     id:1,
     name:"orders",
-    link:"/order-status"
+    link:"/Account/profile/order"
   },
   {
     id:2,
@@ -57,7 +57,7 @@ const router= useRouter();
   {
     id:3,
     name:"Message",
-    link:"/message"
+    link:"/Contact-Us"
   },
   {
     id:4,
@@ -78,14 +78,18 @@ const router= useRouter();
 
   return (
     <div className='flex flex-col items-center gap-3 text-4xl mt-44'>
-    <h1>your dashboard</h1>
+    <h1>Welcome {user?.firstname} {user?.lastname}</h1>
 
     {user?.role === "owner" ?(
       <div>
+
         <div>Owner</div>
         <div className='flex  gap-36'>
         <Link href="/ShowProduct">
           <button className="bg-blue-500 px-4 py-2 rounded">Show All Product</button>
+        </Link>
+        <Link href="/Account/profile/ShowAllOrder">
+          <button className="bg-blue-500 px-4 py-2 rounded">Show All Order</button>
         </Link>
         <Link href="/upload/category">
           <button className="bg-blue-500 px-4 py-2 rounded">Upload Product</button>
@@ -119,7 +123,7 @@ const router= useRouter();
 
     <Button
     onClick={logout}
-    className="bg-amber-600 hover:bg-amber-800  text-white font-bold p-2 rounded-xl">
+    className="bg-amber-600 hover:bg-amber-800 cursor-pointer  text-white font-bold p-2 rounded-xl">
       Logout</Button>
     </div>
   )

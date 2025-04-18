@@ -39,6 +39,12 @@ const userSchema = new mongoose.Schema({
         enum: ["customer", "owner"],
         default: "customer",
       },
+       product: [
+          {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Product",
+          },
+        ],
       forgotpasswordToken:String,
       verifypasswordTokenExpiry:Date,
       verifyTokenExpiry:Date,

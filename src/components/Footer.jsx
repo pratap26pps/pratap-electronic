@@ -68,20 +68,20 @@ const Footer = () => {
             <div>
               <h3 className="text-lg font-semibold">Information</h3>
               <ul className="mt-2 space-y-2">
-                <li><a href="#" className="text-gray-400 hover:text-white">Track your Order</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Videos</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Faq</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Careers</a></li>
+                <li><a href="order-status" className="text-gray-400 hover:text-white">Track your Order</a></li>
+                <li><a href="" className="text-gray-400 hover:text-white">Videos</a></li>
+                <li><a href="about-us" className="text-gray-400 hover:text-white">About Us</a></li>
+                <li><a href="" className="text-gray-400 hover:text-white">Careers</a></li>
               </ul>
             </div>
 
             <div>
               <h3 className="text-lg font-semibold">My Account</h3>
               <ul className="mt-2 space-y-2">
-                <li className="text-gray-400 cursor-default">Cart</li>
-                <li className="text-gray-400 cursor-default">CheckOut</li>
-                <li className="text-gray-400 cursor-default">My Account</li>
-                <li className="text-gray-400 cursor-default">Payment Option</li>
+                <li className="text-gray-400 cursor-default"><a href="add-cart">Cart</a> </li>
+                <li className="text-gray-400 cursor-default"><a href="">CheckOut</a> </li>
+                <li className="text-gray-400 cursor-default"><a href="Account/profile">My Account</a> </li>
+                <li className="text-gray-400 cursor-default"><a href="">Payment Option</a></li>
               </ul>
             </div>
 
