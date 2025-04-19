@@ -15,6 +15,7 @@ export default function Page({ params }) {
   const [cartItems, setCartItems] = useState({});
   const [Loading, setLoading] = useState(false);
   const { data: session, status } = useSession();
+  console.log("Session in cart API:", session);
 
   const BrandProducthandler = async () => {
     try {
@@ -40,12 +41,12 @@ export default function Page({ params }) {
   }, [product]);
 
   const gotocart = async (productId) => {
-    // if (!session) {
-    //   console.log("You must be logged in to perform this action");
-    //   return;
-    // }
+    if (!session) {
+      console.log("You must be logged in to perform this action");
+      return;
+    }
 
-    if (status !== "authenticated") {
+    if (status === "authenticated") {
       try {
         const res = await axios.get("/api/cart", { withCredentials: true });
         let cartItems = res.data.items || [];

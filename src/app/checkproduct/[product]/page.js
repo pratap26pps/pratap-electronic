@@ -40,8 +40,11 @@ console.log("Session:", session, "Status:", status);
  
 
       const gotocart = async () => {
-  
-        if (status !== "authenticated") {
+        if (!session) {
+          console.log("You must be logged in to perform this action");
+          return;
+        }
+        if (status === "authenticated") {
         try {
           const res = await axios.get("/api/cart", { withCredentials: true });
           let cartItems = res.data.items || [];

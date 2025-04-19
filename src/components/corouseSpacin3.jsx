@@ -41,8 +41,15 @@ export function CarouselSize3() {
 
   const toggleCartItem = async (productId) => {
     setloading(true);
- 
-    if (status !== "authenticated") {
+
+    if (!session) {
+      console.log("You must be logged in to perform this action");
+    setloading(false);
+
+      return;
+    }
+
+    if (status === "authenticated") {
       try {
         const res = await axios.get("/api/cart", { withCredentials: true });
         let currentCartItems = res.data.items || [];
