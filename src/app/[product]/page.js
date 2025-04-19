@@ -1,17 +1,20 @@
 "use client";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { use } from "react";
-import { setAddCart } from "@/redux/slices/cartSlice";
-import { useDispatch } from "react-redux";
 
+import Link from "next/link";
+import { use, useEffect, useState } from "react";
+import axios from "axios";
+import { setAddCart, setRemoveCart } from "@/redux/slices/cartSlice";
+import { useDispatch } from "react-redux";
+import { useSession } from "next-auth/react"; 
 export default function Page({ params }) {
-  const { product } = use(params);
+ 
+  const { product } = use(params)
   const dispatch = useDispatch();
+
   const [specificproducts, setspecificproducts] = useState([]);
   const [cartItems, setCartItems] = useState({});
   const [Loading, setLoading] = useState(false);
+  const { data: session, status } = useSession();
 
   const BrandProducthandler = async () => {
     try {
@@ -29,30 +32,63 @@ export default function Page({ params }) {
       console.log(error.message);
     }
   };
+
   useEffect(() => {
     if (product) {
-      BrandProducthandler(product);
+      BrandProducthandler();
     }
   }, [product]);
 
-  const toggleCartItem = (item) => {
-    if (!cartItems[item._id]) {
-      dispatch(setAddCart(item));
-    } else {
-      dispatch(setRemoveCart(item._id));
+  const gotocart = async (productId) => {
+    if (!session) {
+      console.log("You must be logged in to perform this action");
+      return;
     }
 
-    setCartItems((prev) => ({
-      ...prev,
-      [item._id]: !prev[item._id],
-    }));
+    if (status === "authenticated") {
+      try {
+        const res = await axios.get("/api/cart", { withCredentials: true });
+        let cartItems = res.data.items || [];
+
+        const productToToggle = specificproducts.find((p) => p._id === productId);
+        if (!productToToggle) return;
+
+        const alreadyInCart = cartItems.some(
+          (item) => item.productId === productId
+        );
+
+        if (!alreadyInCart) {
+          cartItems.push({
+            productId: productToToggle._id,
+            price: productToToggle.ProductPrice,
+          });
+
+          await axios.put("/api/cart", { items: cartItems });
+          dispatch(setAddCart(productToToggle));
+        } else {
+          const updatedItems = cartItems.filter(
+            (item) => item.productId !== productId
+          );
+
+          await axios.put("/api/cart", { items: updatedItems });
+          dispatch(setRemoveCart(productToToggle._id));
+        }
+
+        setCartItems((prev) => ({
+          ...prev,
+          [productId]: !prev[productId],
+        }));
+      } catch (error) {
+        console.error("Cart operation failed:", error);
+      }
+    }
   };
 
   return (
     <div>
       <div className="mt-40 flex gap-4">
-        {/* stock status */}
-        <div className="ml-10 p-4 h-20  rounded-2xl shadow-md w-64 border border-gray-200">
+        {/* Sidebar filters */}
+        <div className="ml-10 p-4 h-20 rounded-2xl shadow-md w-64 border border-gray-200">
           <p className="text-lg font-semibold text-gray-700 mb-1">Refine by</p>
           <p className="text-sm text-gray-400 mb-4">No filters applied</p>
 
@@ -69,11 +105,10 @@ export default function Page({ params }) {
           </div>
         </div>
 
-        {/* main content */}
+        {/* Main product content */}
         <div>
           <div className="flex">
             <Link href="/">
-              {" "}
               <h1 className="text-orange-500 mx-2">
                 <u>Home</u>
               </h1>
@@ -81,54 +116,50 @@ export default function Page({ params }) {
             <h1 className="mr-2">/</h1>
             <h1>{product}</h1>
           </div>
+
           {Loading ? (
-            "loading..."
+            <span className="loader ml-[50%] mt-36"></span>
           ) : (
             <div className="grid w-[71%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
               {specificproducts.map((p) => (
                 <div
                   key={p._id}
-                  className="border   my-2 rounded shadow-lg 
-       aspect-square items-center justify-center p-6"
+                  className="border my-2 rounded shadow-lg aspect-square items-center justify-center p-6"
                 >
                   <Link href={`/checkproduct/${p._id}`}>
                     <div className="shadow shadow-neutral-300 border border-b-gray-200 flex flex-col">
-                      <div className="h-56 w-44 p-4  mx-auto">
+                      <div className="h-56 w-44 p-4 mx-auto">
                         <img src={p.ProductImage} alt="productimage" />
                       </div>
 
-                      <div className="text-neutral-400 ml-5 ">
-                        {p.ProductTitle}
-                      </div>
-
+                      <div className="text-neutral-400 ml-5">{p.ProductTitle}</div>
                       <div className="font-semibold hover:text-neutral-500 cursor-pointer ml-5">
                         {p.ProductShortDescription}
                       </div>
-
-                      <div className="text-lg font-semibold text-red-400 ml-5 ">
+                      <div className="text-lg font-semibold text-red-400 ml-5">
                         ₹ {p.ProductPrice}
                         <span className="text-gray-500 text-sm"> ex. GST</span>
                       </div>
 
-                      <div className=" w-full h-px p-[1/2px] bg-gray-100  mb-3 mt-4 flex mx-auto"></div>
+                      <div className="w-full h-px p-[1/2px] bg-gray-100 mb-3 mt-4 flex mx-auto"></div>
                       <div className="font-semibold mb-2 ml-5">
                         Shipped in 24 Hours from Mumbai Warehouse
                       </div>
                       <h1 className="font-semibold text-green-600 mb-5 ml-5">
-                        {p.productItems}in Stock
+                        {p.productItems} in Stock
                       </h1>
                     </div>
                   </Link>
 
                   <div className="flex flex-col gap-2 p-4">
                     <button
-                      onClick={() => toggleCartItem(p)}
-                      className="bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-300 shadow-md font-semibold text-white cursor-pointer "
+                      className="bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-300 shadow-md font-semibold text-white cursor-pointer"
+                      onClick={() => gotocart(p._id)}
                     >
                       {cartItems[p._id] ? "Remove from Cart" : "Add To Cart"}
                     </button>
 
-                    <button className="border-2 p-2 font-semibold shadow rounded-lg focus:outline-none  hover:text-orange-300 cursor-pointer hover:border-orange-300">
+                    <button className="border-2 p-2 font-semibold shadow rounded-lg focus:outline-none hover:text-orange-300 cursor-pointer hover:border-orange-300">
                       ADD TO wishlist
                     </button>
                   </div>
@@ -137,8 +168,9 @@ export default function Page({ params }) {
             </div>
           )}
         </div>
-        {/* cart review */}
-        <div className="fixed left-[76%]  shadow-xl rounded-2xl p-6 w-72 hidden sm:block border border-gray-200">
+
+        {/* Cart Review Sidebar */}
+        <div className="fixed left-[76%] shadow-xl rounded-2xl p-6 w-72 hidden sm:block border border-gray-200">
           <h2 className="text-xl font-bold mb-4 text-gray-800">Your Cart</h2>
 
           <div className="space-y-3 text-sm text-gray-700">
@@ -168,12 +200,17 @@ export default function Page({ params }) {
           </div>
 
           <div className="mt-6 space-y-2">
-            <button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg transition">
-              View Cart
-            </button>
-            <button className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">
-              BuyNow
-            </button>
+            <Link href="/add-cart">
+              <button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg transition">
+                View Cart
+              </button>
+            </Link>
+
+            <Link href="/">
+              <button className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">
+                BuyNow
+              </button>
+            </Link>
           </div>
         </div>
       </div>

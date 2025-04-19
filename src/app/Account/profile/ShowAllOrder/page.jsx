@@ -37,7 +37,7 @@ console.log("order in owner dashboard",orders);
   return (
     <div className="max-w-6xl mt-36 mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <div className="flex">
-      <Link href="/Account/profile">
+         <Link href="/Account/profile">
              <Button  className="cursor-pointer">
             Back
           </Button>
@@ -45,7 +45,7 @@ console.log("order in owner dashboard",orders);
       <h1 className="text-3xl mx-auto font-bold mb-6">🛍 All Orders</h1>
       </div>
  
-{  loading ?  <div className="flex justify-center mt-32">loading..</div> :
+{  loading ?   <span class="loader ml-[50%] mt-36"></span> :
     <div>
       {orders.length === 0 ? (
         <p className="text-gray-600">

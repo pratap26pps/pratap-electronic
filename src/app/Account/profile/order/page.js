@@ -54,7 +54,7 @@ console.log("user in dashboard",user);
           below.
         </p>
       </div>
-{  loading ?  <div className="flex justify-center mt-32">loading..</div> :
+{  loading ?   <span className="loader ml-[50%] mt-36"></span> :
     <div>
       {orders.length === 0 ? (
         <p className="text-gray-600">

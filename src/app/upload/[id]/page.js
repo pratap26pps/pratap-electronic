@@ -1,12 +1,15 @@
 "use client";
-
+import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import axios from "axios";
+import Link from "next/link";
+import { FaLongArrowAltLeft } from "react-icons/fa";
 
 export default function EditProduct() {
   const router = useRouter();
-  const { id } = useParams(); // Get ID from the URL
+  const { id } = useParams();
+
   const [formData, setFormData] = useState({
     ProductTitle: "",
     ProductShortDescription: "",
@@ -20,14 +23,11 @@ export default function EditProduct() {
   useEffect(() => {
     if (!id) return;
 
-    // Fetch product data by ID
     const fetchProduct = async () => {
       try {
         const res = await fetch(`/api/product/${id}`);
-
         if (!res.ok) throw new Error("Failed to fetch product");
         const data = await res.json();
-        console.log("data", data);
         setFormData({
           ProductTitle: data.data.ProductTitle,
           ProductShortDescription: data.data.ProductShortDescription,
@@ -45,145 +45,130 @@ export default function EditProduct() {
 
   const submithandler = async (e) => {
     e.preventDefault();
-  
+    setLoading(true);
+
     const formDataToSend = new FormData();
-    formDataToSend.append('ProductTitle', formData.ProductTitle);
-    formDataToSend.append('ProductShortDescription', formData.ProductShortDescription);
-    formDataToSend.append('ProductPrice', formData.ProductPrice);
-    formDataToSend.append('BenefitsOfProduct', formData.BenefitsOfProduct);
-    formDataToSend.append('id',id);
-  
+    formDataToSend.append("ProductTitle", formData.ProductTitle);
+    formDataToSend.append("ProductShortDescription", formData.ProductShortDescription);
+    formDataToSend.append("ProductPrice", formData.ProductPrice);
+    formDataToSend.append("BenefitsOfProduct", formData.BenefitsOfProduct);
+    formDataToSend.append("id", id);
+
     if (formData.ProductImage) {
-      formDataToSend.append('ProductImage', formData.ProductImage); // Ensure ProductImage is a File object
+      formDataToSend.append("ProductImage", formData.ProductImage);
     }
-  
-    console.log('Sending FormData:', Object.fromEntries(formDataToSend.entries())); // Debugging
-  
+
     try {
-      const response = await axios.put('/api/product', formDataToSend, {
+      const response = await axios.put("/api/product", formDataToSend, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       });
-  
-      console.log('Response:', response.data);
-  
+
       if (response.status === 200) {
-        alert('Product updated successfully!');
+        alert("Product updated successfully!");
       } else {
-        console.error('Failed to update product:', response.data);
+        console.error("Failed to update product:", response.data);
       }
     } catch (error) {
-      console.error('Error updating product:', error.response?.data || error);
+      console.error("Error updating product:", error.response?.data || error);
+    } finally {
+      setLoading(false);
     }
   };
-    
 
   const handleThumbnailChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      const fileURL = URL.createObjectURL(file);
-      setThumbnailPreview(fileURL);
+      setFormData({ ...formData, ProductImage: file });
+      setThumbnailPreview(URL.createObjectURL(file));
     }
   };
-  
 
   return (
-    <div className="scale-75 flex justify-evenly lg:scale-100">
-      <form onSubmit={submithandler} className="mt-36 p-6 rounded-md space-y-5">
-        <h1 className="flex justify-center">Edit Product</h1>
-
-        <div>
-          <label htmlFor="ProductTitle">
-            Product Title <sup>*</sup>
-          </label>
-          <input
-            type="text"
-            value={formData.ProductTitle || ""}
-            onChange={(e) =>
-              setFormData({ ...formData, ProductTitle: e.target.value })
-            }
-            className="w-full border p-1 rounded-md font-semibold"
-          />
-        </div>
-        <div>
-          <label htmlFor="ProductShortDescription">
-            Product Short Description <sup>*</sup>
-          </label>
-          <textarea
-            type="text"
-            value={formData.ProductShortDescription || ""}
-            onChange={(e) =>
-              setFormData({ ...formData, ProductShortDescription: e.target.value })
-            }
-            className="w-full min-h-[120px] border p-1 rounded-md font-semibold"
-          />
-        </div>
-
-        <div className="relative">
-          <label htmlFor="ProductPrice">
-            Product Price <sup>*</sup>
-          </label>
-          <div className="flex items-center border p-1 rounded-md font-semibold">
+    <div className="min-h-screen  pt-28 px-4">
+      <div className="max-w-4xl mx-auto shadow-xl rounded-3xl p-10">
+        <h1 className="text-3xl font-semibold text-center  mb-8">Edit Product</h1>
+        <form onSubmit={submithandler} className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium mb-1">Product Title</label>
             <input
-              type="number"
-              value={formData.ProductPrice || ""}
-              onChange={(e) =>
-                setFormData({ ...formData, ProductPrice: e.target.value })
-              }
-              className="w-full outline-none"
+              type="text"
+              value={formData.ProductTitle}
+              onChange={(e) => setFormData({ ...formData, ProductTitle: e.target.value })}
+              className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
+              required
             />
           </div>
-        </div>
 
-        {/* Upload Thumbnail */}
-        <div>
-          <label className="block font-medium mb-2">Upload Product Thumbnail</label>
-          <input
-            type="file"
-            id="ProductImage"
-            accept=".jpg, .jpeg, .png, .gif"
-            onChange={handleThumbnailChange}
-            className="font-bold p-3 cursor-pointer rounded-md"
-          />
-        </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Short Description</label>
+            <textarea
+              value={formData.ProductShortDescription}
+              onChange={(e) =>
+                setFormData({ ...formData, ProductShortDescription: e.target.value })
+              }
+              className="w-full border border-gray-300 rounded-xl px-4 py-2 min-h-[100px] resize-none focus:ring-2 focus:ring-blue-400 outline-none"
+              required
+            />
+          </div>
 
-        <div >
- 
-              {/* Display the thumbnail preview */}
-              {ThumbnailPreview && (
-                <div className="thumbnail-preview mb-4">
-                  <img
-                    src={ThumbnailPreview}
-                    alt="Course Thumbnail Preview"
-                    className="w-52 h-32 ml-5 p-1 rounded-md font-semibold"
-                  />
-                </div>
-              )}
-            </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Product Price (₹)</label>
+            <input
+              type="number"
+              value={formData.ProductPrice}
+              onChange={(e) => setFormData({ ...formData, ProductPrice: e.target.value })}
+              className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
+              required
+            />
+          </div>
 
-        {/* Benefits of Product */}
-        <div>
-          <label htmlFor="BenefitsOfProduct">
-            Benefits of Product <sup>*</sup>
-          </label>
-          <textarea
-            type="text"
-            value={formData.BenefitsOfProduct || ""}
-            onChange={(e) =>
-              setFormData({ ...formData, BenefitsOfProduct: e.target.value })
-            }
-            className="w-full h-[190px] border p-1 rounded-md font-semibold"
-          />
-        </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Upload Product Thumbnail</label>
+            <input
+              type="file"
+              accept=".jpg, .jpeg, .png, .gif"
+              onChange={handleThumbnailChange}
+              className="w-full border rounded-xl px-4 py-2 font-medium"
+            />
+            {ThumbnailPreview && (
+              <img
+                src={ThumbnailPreview}
+                alt="Preview"
+                className="mt-4 w-52 h-36 object-cover rounded-xl shadow"
+              />
+            )}
+          </div>
 
-        <button
-          type="submit"
-          className="bg-amber-600 hover:bg-amber-800 p-4 border rounded-2xl flex justify-center "
-        >
-          {loading ? "Updating...." : "Update Product"}
-        </button>
-      </form>
+          <div>
+            <label className="block text-sm font-medium mb-1">Benefits of Product</label>
+            <textarea
+              value={formData.BenefitsOfProduct}
+              onChange={(e) =>
+                setFormData({ ...formData, BenefitsOfProduct: e.target.value })
+              }
+              className="w-full border border-gray-300 rounded-xl px-4 py-2 min-h-[150px] resize-none focus:ring-2 focus:ring-blue-400 outline-none"
+              required
+            />
+          </div>
+
+          <div className="flex flex-col sm:flex-row justify-between gap-4 mt-6">
+            <Link href="/Account/profile">
+              <Button variant="outline" className="flex gap-2 items-center px-6 py-3 rounded-xl">
+                <FaLongArrowAltLeft /> Back
+              </Button>
+            </Link>
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-gradient-to-r from-amber-500 to-amber-600 text-white px-8 py-3 rounded-xl shadow hover:from-amber-600 hover:to-amber-700 transition disabled:opacity-50"
+            >
+              {loading ? "Updating..." : "Update Product"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

@@ -93,7 +93,7 @@ console.log("Session:", session, "Status:", status);
             <h1>{product}</h1>
          </div>
          {
-          loading ? "loading..":
+          loading ? <span className="loader ml-[50%] mt-36"></span> :
           <div className="lg:flex flex-col lg:flex-row justify-evenly">
 
           <div className="h-56 mt-8 w-44 p-4 ">

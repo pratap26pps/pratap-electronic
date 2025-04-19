@@ -1,7 +1,9 @@
 "use client";
 import Link from "next/link";
-import { setAddCart } from "@/redux/slices/cartSlice";
 
+import { setAddCart, setRemoveCart } from "@/redux/slices/cartSlice";
+
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { use } from "react";
 import axios from "axios";
@@ -12,10 +14,12 @@ export default function Page({ params }) {
   const dispatch = useDispatch();
   const [brandname, setproducts] = useState([]);
   const [specificproducts, setspecificproducts] = useState([]);
+  const [addtocart, setaddtocart] = useState(false);
+
   const [cartItems, setCartItems] = useState({});
   const [loading, setloading] = useState(false);
   const [loading1, setloading1] = useState(false);
-
+  const { data: session, status } = useSession();
   const [selectedBrands, setSelectedBrands] = useState([]);
   const handleCheckboxChange = (brandId) => {
     setSelectedBrands((prev) =>
@@ -37,7 +41,6 @@ export default function Page({ params }) {
       console.log(error.message);
     }
     setloading1(false);
-
   };
   useEffect(() => {
     producthandler();
@@ -57,17 +60,54 @@ export default function Page({ params }) {
     setloading(false);
   };
 
-  const toggleCartItem = (item) => {
-    if (!cartItems[item._id]) {
-      dispatch(setAddCart(item));
-    } else {
-      dispatch(setRemoveCart(item._id));
+  const gotocart = async (productId) => {
+    if (!session) {
+      console.log("You must be logged in to perform this action");
+      return;
     }
 
-    setCartItems((prev) => ({
-      ...prev,
-      [item._id]: !prev[item._id],
-    }));
+    if (status === "authenticated") {
+      try {
+        const res = await axios.get("/api/cart", { withCredentials: true });
+        let cartItems = res.data.items || [];
+
+        // Find the product from either specificproducts or brandname (flattened)
+        const allProducts = [
+          ...specificproducts,
+          ...brandname.flatMap((brand) => brand.product),
+        ];
+        const product = allProducts.find((p) => p._id === productId);
+        if (!product) return;
+
+        const alreadyInCart = cartItems.some(
+          (item) => item.productId === productId
+        );
+
+        if (!alreadyInCart) {
+          cartItems.push({
+            productId: product._id,
+            price: product.ProductPrice,
+          });
+
+          await axios.put("/api/cart", { items: cartItems });
+          dispatch(setAddCart(product));
+        } else {
+          const updatedItems = cartItems.filter(
+            (item) => item.productId !== productId
+          );
+
+          await axios.put("/api/cart", { items: updatedItems });
+          dispatch(setRemoveCart(product._id));
+        }
+
+        setCartItems((prev) => ({
+          ...prev,
+          [productId]: !prev[productId],
+        }));
+      } catch (error) {
+        console.error("Cart operation failed:", error);
+      }
+    }
   };
 
   return (
@@ -142,7 +182,7 @@ export default function Page({ params }) {
           </div>
           {/* specific brand product  */}
           {loading1 ? (
-            "loading..."
+            <span className="loader ml-[50%] mt-36"></span>
           ) : (
             <div className="grid w-[71%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
               {specificproducts.map((p) => (
@@ -180,11 +220,11 @@ export default function Page({ params }) {
                     </div>
                   </Link>
 
-                  <div className="flex flex-col gap-2 p-4">
-                    <button
-                      onClick={() => toggleCartItem(p)}
-                      className="bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-300 shadow-md font-semibold text-white cursor-pointer "
-                    >
+                  <div  className="flex flex-col gap-2 p-4" >
+                    <button onClick={() => gotocart(p._id)}
+                        className="bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-300 shadow-md font-semibold text-white cursor-pointer "
+                      
+                      >
                       {cartItems[p._id] ? "Remove from Cart" : "Add To Cart"}
                     </button>
 
@@ -242,10 +282,10 @@ export default function Page({ params }) {
                       </div>
                     </Link>
                     <div className="flex flex-col gap-2 p-4">
-                      <button
-                        onClick={() => toggleCartItem(p)}
+                      <button onClick={() => gotocart(p._id)}
                         className="bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-300 shadow-md font-semibold text-white cursor-pointer "
-                      >
+                        
+                        >
                         {cartItems[p._id] ? "Remove from Cart" : "Add To Cart"}
                       </button>
 
