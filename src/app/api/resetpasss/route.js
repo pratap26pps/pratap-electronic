@@ -1,8 +1,11 @@
 import connectDB from "@/dbconfig/dbconfig";
 import User from "@/models/userModel";
-import bcrypt from "bcrypt";
+import bcrypt from 'bcryptjs';
+
 
 export default async function handler(req, res) {
+  
+  connectDB()
   if (req.method !== "POST") {
     return res.status(405).json({ success: false, message: "Method not allowed" });
   }
