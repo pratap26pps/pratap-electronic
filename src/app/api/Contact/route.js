@@ -1,7 +1,6 @@
 import connectDB from "@/dbconfig/dbconfig";
 import ContactModel from "@/models/Contact";
  
- 
 import {mailSender} from "@/utils/mailSender"
 
 export async function POST(req) {
@@ -37,3 +36,27 @@ export async function POST(req) {
   }
 }
 
+
+export async function GET(req) {
+  try {
+    await connectDB();
+  
+    const savedContact = await ContactModel.find()
+    // .sort({ [sort]: -1 });
+ 
+    return Response.json(
+      {
+        success: true,
+        message: "Contact form submitted successfully.",
+        data: savedContact,
+      },
+      { status: 200,   headers: { "Content-Type": "application/json" } }
+    );
+  } catch (error) {
+    console.error(error);
+    return Response.json(
+      { success: false, message: "Failed to get contact form." },
+      { status: 500 }
+    );
+  }
+}

@@ -1,24 +1,23 @@
 import connectDB from "@/dbconfig/dbconfig";
- 
+import { NextResponse } from "next/server"; 
 import User from "@/models/userModel";
-import mailSender from "@/utils/mailSender";
+import {mailSender} from "@/utils/mailSender";
 import crypto from "crypto";
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ success: false, message: "Method not allowed" });
-  }
-
+export async function POST(req,) {
+ 
   try {
     await connectDB();
-    const { email } = req.body;
+
+    const { email } =await req.json()
+    console.log("email",email);
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({
+      return NextResponse.json({
         success: false,
         message: "Your email is not registered with us",
-      });
+      },{status:401});
     }
 
     const token = crypto.randomUUID();
@@ -34,16 +33,16 @@ export default async function handler(req, res) {
     const url = `http://localhost:3000/Account/updatepassword/${token}`;
     await mailSender(email, "Password Reset Link", `Click to reset your password: ${url}`);
 
-    return res.status(200).json({
+    return NextResponse.json({
       success: true,
       message: "Email sent successfully, check your inbox",
       userDetails,
-    });
+    },  { status: 200 });
   } catch (error) {
     console.error("Reset password token error:", error.message);
-    return res.status(500).json({
+    return NextResponse.json({
       success: false,
       message: "Reset password failed",
-    });
+    }, { status: 500 });
   }
 }

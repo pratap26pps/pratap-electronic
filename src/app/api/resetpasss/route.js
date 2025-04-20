@@ -1,53 +1,57 @@
+import { NextResponse } from "next/server";
 import connectDB from "@/dbconfig/dbconfig";
 import User from "@/models/userModel";
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
 
-
-export default async function handler(req, res) {
-  
-  connectDB()
-  if (req.method !== "POST") {
-    return res.status(405).json({ success: false, message: "Method not allowed" });
-  }
-
+export async function POST(req) {
   try {
-    await dbConnect();
-    const { password, confirmpassword, token } = req.body;
+    await connectDB();
+
+    const { password, confirmpassword, token } = await req.json();
 
     if (password !== confirmpassword) {
-      return res.status(400).json({
-        success: false,
-        message: "Passwords do not match",
-      });
+      return NextResponse.json(
+        { success: false, message: "Passwords do not match" },
+        { status: 400 }
+      );
     }
 
     const userDetails = await User.findOne({ token });
+
     if (!userDetails) {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid token",
-      });
+      return NextResponse.json(
+        { success: false, message: "Invalid token" },
+        { status: 401 }
+      );
     }
 
     if (userDetails.passwordExpireIn < Date.now()) {
-      return res.status(401).json({
-        success: false,
-        message: "Token has expired, please regenerate",
-      });
+      return NextResponse.json(
+        { success: false, message: "Token expired" },
+        { status: 401 }
+      );
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    await User.findOneAndUpdate({ token }, { password: hashedPassword }, { new: true });
+    await User.findOneAndUpdate(
+      { token },
+      {
+        password: hashedPassword,
+        token: undefined,
+        passwordExpireIn: undefined,
+      },
+      { new: true }
+    );
 
-    return res.status(200).json({
-      success: true,
-      message: "Password reset successful",
-    });
+    return NextResponse.json(
+      { success: true, message: "Password reset successful" },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Reset password error:", error.message);
-    return res.status(500).json({
-      success: false,
-      message: "Something went wrong during password reset",
-    });
+    return NextResponse.json(
+      { success: false, message: "Something went wrong" },
+      { status: 500 }
+    );
   }
 }

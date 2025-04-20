@@ -61,7 +61,7 @@ const Page = () => {
   return (
     <div className="min-h-screen pt-36 px-6">
       {
-        loading ? <span class="loader ml-[50%] mt-36"></span>:
+        loading ? <span className="loader ml-[50%] mt-36"></span>:
         <div className="max-w-6xl mt-8 mx-auto shadow-lg rounded-3xl p-10">
         <h1 className="text-3xl font-semibold mb-6">
           Welcome {user?.firstname} {user?.lastname}
@@ -79,6 +79,11 @@ const Page = () => {
               <Link href="/Account/profile/ShowAllOrder">
                 <div className="bg-green-500 hover:bg-green-600 text-white text-center py-4 rounded-xl shadow-md transition">
                   Show All Orders
+                </div>
+              </Link>
+              <Link href="/Account/showallmessage">
+                <div className="bg-amber-700 hover:bg-amber-800 text-white text-center py-4 rounded-xl shadow-md transition">
+                  Show All Message
                 </div>
               </Link>
               <Link href="/upload/category">

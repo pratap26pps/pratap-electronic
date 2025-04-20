@@ -20,12 +20,13 @@ const Forgotpassword = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email }),
+   
       }) 
-      
       const data = await result.json();
+      console.log("data in forgotpass",data);
       setLoading(false);
-
-      if (response.ok) {
+      setemailsend(true)
+      if (result) {
         console.log("Email sent:", data.message);
   
       } else {
@@ -39,8 +40,7 @@ const Forgotpassword = () => {
 
   return (
     <div className='mt-36'>
-      {
-        loading ?(<div>loading.......</div>):(
+ 
         <div className='flex flex-col items-center '>
             <h1 className=''>
                 {
@@ -76,24 +76,26 @@ const Forgotpassword = () => {
                       placeholder='myemailaddress@gmail.com' />
                  </div>
                 )
-            } 
+            }
+                 {
+              loading ?(<div className='loader ml-5 mt-2'></div>):( 
               <button className='p-2 cursor-pointer lg:w-48 mt-3 bg-yellow-400 text-black rounded-lg '
                 type='submit'>
                  {
                   !emailsend ?"Reset Password":"Resend Email"
                  }
               </button>
-                
+        )}
                  
              <Link href={'/Account/Login'}>
              <div className='flex lg:mt-3'>
                                <BiArrowFromRight className='mt-1'/>
-                               <p>back to login</p>
+               <p>back to login</p>
             </div>
             </Link>   
                </form>
-        </div>)
-      }
+        </div>
+      
     </div>
   )
 }
