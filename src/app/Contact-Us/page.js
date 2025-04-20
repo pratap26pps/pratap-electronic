@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Footer from "@/components/Footer";
+import axios from "axios";
  
  
 
@@ -14,6 +15,7 @@ export default function ContactUs( ) {
     lastName: "",
     email: "",
     phone: "",
+    issueType:"",
     message: "",
   });
 
@@ -21,9 +23,16 @@ export default function ContactUs( ) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
+    try{
+      const response =await axios.post("/api/Contact",{data:formData})
+      console.log("contact data",response.data)
+
+    }catch(error){
+      console.log("error",error.message)
+    }
   };
 
   return (
@@ -46,8 +55,8 @@ export default function ContactUs( ) {
         </p>
         <p className="text-sm font-medium">
           Email:{" "}
-          <a href="mailto:sales@evelta.com" className="text-blue-600">
-            sales@evelta.com
+          <a href="mailto:sales@embproto.com" className="text-blue-600">
+            sales@EmbProto.com
           </a>
         </p>
         <p className="text-sm text-gray-600">

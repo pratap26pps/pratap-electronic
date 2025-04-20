@@ -53,6 +53,6 @@ export const authOptions = {
   },
 
   pages: {
-    signIn: "/Account/profile", // Optional: your custom login page
+    signIn: "/Account/profile", 
   },
 };
