@@ -29,6 +29,22 @@ const shipping = orderDetails?.shipping;
 const subtotal = orderDetails?.subtotal;
 const discount = orderDetails?.discount || "";
 
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => {
+      resolve(true);
+    };
+    script.onerror = () => {
+      resolve(false);
+    };
+    document.body.appendChild(script);
+  });
+};
+
+
+
   const paymentcapturehandler = async () => {
     setloading(true);
     if (!paymentMethod) {
@@ -68,6 +84,13 @@ const discount = orderDetails?.discount || "";
       return;
     }
 
+    const isLoaded = await loadRazorpayScript();
+    if (!isLoaded) {
+      alert("Razorpay SDK failed to load. Please check your internet connection.");
+      setloading(false);
+      return;
+    }
+
     try {
       const res = await fetch("/api/payment/capture", {
         method: "POST",
@@ -76,11 +99,19 @@ const discount = orderDetails?.discount || "";
       });
 
       const data = await res.json();
-
+      console.log("data for online order",data);
       const options = {
         ...data.message, // orderId, amount, currency, key, etc.
         handler: async function (response) {
           // This runs after payment is successful
+          console.log("Verify API body:", {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature,
+            product: productIds,
+            userId: userid,
+          });
+          
           const verifyRes = await fetch("/api/payment/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -89,22 +120,22 @@ const discount = orderDetails?.discount || "";
               razorpay_order_id: response.razorpay_order_id,
               razorpay_signature: response.razorpay_signature,
               product: productIds,
-              productId: user._id,
+              userId: userid,
             }),
           });
 
           const verifyData = await verifyRes.json();
           if (verifyData.success) {
             alert("Payment successful & enrollment done!");
-            router.push("/orders");
+            router.push("/OrderSuccess");
           } else {
             alert("Payment verification failed.");
           }
         },
         prefill: {
-          name: user?.name || "",
+          name: user?.firstname || "",
           email: user?.email || "",
-          contact: customer?.contact || "",
+          contact: user?.phonenumber || "",
         },
         theme: {
           color: "#F37254",

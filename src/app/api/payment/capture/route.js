@@ -53,7 +53,14 @@ export async function POST(req) {
     const paymentResponse = await instance.orders.create(options);
 
     return Response.json(
-      { success: true, message: paymentResponse },
+      { success: true, message: {
+        key: process.env.RAZORPAY_KEY, 
+        amount: paymentResponse.amount,
+        currency: paymentResponse.currency,
+        name: "EmbProto",
+        description: "Order Payment",
+        order_id: paymentResponse.id,
+      }, },
       { status: 200 }
     );
   } catch (error) {
