@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import React from "react";
+import toast from "react-hot-toast";
 
 const PlaceOrder = () => {
   const router = useRouter();
@@ -74,7 +75,7 @@ const loadRazorpayScript = () => {
         const data = await res.json();
 
         if (data.success) {
-          alert("Order placed via COD successfully!");
+          toast.success("Order placed via COD successfully!");
           router.push("/OrderSuccess");
           setloading(false);
         }
@@ -126,10 +127,10 @@ const loadRazorpayScript = () => {
 
           const verifyData = await verifyRes.json();
           if (verifyData.success) {
-            alert("Payment successful & enrollment done!");
+            toast.success("Payment successful & enrollment done!");
             router.push("/OrderSuccess");
           } else {
-            alert("Payment verification failed.");
+            toast.error("Payment verification failed.");
           }
         },
         prefill: {

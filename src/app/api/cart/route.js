@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import connectDB from "@/dbconfig/dbconfig";
 import Cart from "@/models/cart";
-import toast from "react-hot-toast";
+ 
 
 export async function GET(req) {
   await connectDB();

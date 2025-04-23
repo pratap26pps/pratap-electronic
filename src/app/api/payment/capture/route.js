@@ -1,10 +1,11 @@
 import { instance } from "@/utils/razorpay";
 import Product from "@/models/productDetails";
+import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
  
-import { getServerSession } from "next-auth";
 import connectDB from "@/dbconfig/dbconfig";
 import mongoose from "mongoose";
-import { authOptions } from "@/utils/authOptions";  
+   
 export async function POST(req) {
   await connectDB();
 
@@ -12,8 +13,16 @@ export async function POST(req) {
     const body = await req.json();
     const { product } = body;
     console.log("product for payment capture",product)
-    const session = await getServerSession(authOptions);
-    const userId = session.user?._id;
+    
+    const cookieStore = cookies();
+    const token = cookieStore.get("token")?.value;
+
+    if (!token) {
+      return Response.json({ success: false, message: "Unauthorized" }, { status: 401 });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded._id;
 
     if (!product || product.length === 0) {
       return Response.json(
