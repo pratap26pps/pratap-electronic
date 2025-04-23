@@ -2,7 +2,6 @@ import connectDB from "@/dbconfig/dbconfig";
 import User from "@/models/userModel";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { cookies } from "next/headers";
 connectDB(); // Ensure database connection
 
 export async function POST(req) {
@@ -20,7 +19,7 @@ export async function POST(req) {
     if (password !== confirmpassword) {
       return NextResponse.json({ error: "Passwords do not match." }, { status: 400 });
     }
-
+ 
     // Check if the user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -49,9 +48,6 @@ export async function POST(req) {
 
     await newUser.save();
 
- 
-    // cookies().set("role", newUser.role, { httpOnly: true, secure: true });
-
     return NextResponse.json(
       { message: "User registered successfully!" },
        { status: 201 },
@@ -59,6 +55,29 @@ export async function POST(req) {
       );
   } catch (error) {
     console.error("Signup Error:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}
+
+export async function GET(req) {
+  try {
+ 
+    await connectDB();
+    const { searchParams } = new URL(req.url);
+    const email = searchParams.get("email");
+
+    if (!email) {
+      return NextResponse.json({ error: "Email is required" }, { status: 400 });
+    }
+    
+   const existingUser = await User.findOne({ email });
+    if (!existingUser) {
+      return NextResponse.json({ error: "User not exists." }, { status: 400 });
+    }
+ 
+    return NextResponse.json({ user: existingUser }, { status: 200 });
+  } catch (error) {
+    console.error("get Signup data Error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

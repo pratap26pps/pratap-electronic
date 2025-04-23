@@ -21,12 +21,14 @@ import axios from "axios";
 import { setSignupdata } from "@/redux/slices/userSlice";
 import { useEffect, useState,useRef } from "react";
 import { useDispatch } from "react-redux";
-
+import { setUserdetail } from "@/redux/slices/userSlice";
 export default function Navbar() {
   const router = useRouter();
   const { setTheme, theme } = useTheme();
   const [user, setUser] = useState(null);
  const dispatch = useDispatch();
+
+//  get userdetail from token
   const fetchUser = async () => {
     try {
       const res = await fetch("/api/users/me", { cache: "no-store" });
@@ -49,6 +51,34 @@ export default function Navbar() {
     fetchUser();
   }, []);
   console.log("user", user);
+
+// get all userdetails from get request
+const fetchUser2 = async () => {
+  try {
+    if (!user?.email) return;
+
+    const res = await fetch(`/api/users/signup?email=${user.email}`, {
+      method: "GET",
+      cache: "no-store"
+    });
+    const data = await res.json();
+    console.log("data in user2 nav", data);
+
+    if (data.user) {
+      dispatch(setUserdetail(data.user));
+    }
+  } catch (error) {
+    console.error("Error fetching user2:", error);
+  }
+};
+
+useEffect(() => {
+  if (user?.email) {
+    fetchUser2();
+  }
+}, [user]);
+ 
+
 
   const logouthandler = async () => {
     try {

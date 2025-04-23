@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 const PlaceOrder = () => {
   const router = useRouter();
   const cart = useSelector((state) => state.cart.cart);
-  const user = useSelector((state) => state.auth.signupdata);
+  const user = useSelector((state) => state.auth.userdetail);
   console.log("user in orderplace", user);
   console.log("cart in orderplace", cart);
   const [paymentMethod, setPaymentMethod] = useState("");

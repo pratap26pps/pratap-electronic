@@ -5,6 +5,7 @@ import axios from "axios";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
+import { useSelector } from "react-redux";
 
 const Page = () => {
   const router = useRouter();
@@ -14,6 +15,9 @@ const Page = () => {
   const [loading, setloading] = useState(false);
   const [loading2, setloading2] = useState(false);
 
+ const signupdata = useSelector((state)=>state.auth.userdetail);
+ console.log("signupdata in profile",signupdata);
+  
   const fetchUser = async () => {
     setloading(true)
     try {
