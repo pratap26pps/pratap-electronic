@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { FaLongArrowAltLeft } from "react-icons/fa";
-import "@lottiefiles/lottie-player";
+ 
 export default function SignupFormDemo() {
   const router = useRouter();
   const [user, setUser] = useState({
@@ -16,6 +16,10 @@ export default function SignupFormDemo() {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    import("@lottiefiles/lottie-player");
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
