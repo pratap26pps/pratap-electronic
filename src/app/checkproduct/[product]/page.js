@@ -1,11 +1,13 @@
 "use client";
-import { useSession } from "next-auth/react";
+ 
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { use } from "react";
 import { useDispatch } from "react-redux";
 import { setAddCart,setRemoveCart } from "@/redux/slices/cartSlice";
+import toast from "react-hot-toast";
+ 
 
 export default function Page({ params }) {
 
@@ -15,9 +17,6 @@ export default function Page({ params }) {
   const [specificproducts, setspecificproducts] = useState([]);
   const [addtocart, setaddtocart] = useState(false);
   const [loading, setloading] = useState(false);
-  
-const { data: session, status } = useSession();
-console.log("Session:", session, "Status:", status);
 
   const BrandProducthandler = async () => {
     setloading(true)
@@ -38,13 +37,20 @@ console.log("Session:", session, "Status:", status);
     }
   }, [product]);
  
+  const getAuthToken = () => {
+    return localStorage.getItem("token");  
+  };
 
       const gotocart = async () => {
-        if (!session) {
+
+        const token = getAuthToken();
+    //  console.log("token in checkout product",token);
+        if (token === "undefined") {
           console.log("You must be logged in to perform this action");
+          toast.error("You must be logged in to perform this action");
           return;
         }
-        if (status === "authenticated") {
+          
         try {
           const res = await axios.get("/api/cart", { withCredentials: true });
           let cartItems = res.data.items || [];
@@ -76,7 +82,7 @@ console.log("Session:", session, "Status:", status);
         } catch (error) {
           console.error("Cart operation failed:", error);
         }
-      };
+      
     }
  
 
@@ -138,5 +144,4 @@ console.log("Session:", session, "Status:", status);
          }
     
     </div>
-  );
-}
+  );}

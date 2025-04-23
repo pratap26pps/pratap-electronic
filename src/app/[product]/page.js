@@ -39,14 +39,20 @@ export default function Page({ params }) {
       BrandProducthandler();
     }
   }, [product]);
+  const getAuthToken = () => {
+    return localStorage.getItem("token");  
+  };
 
-  const gotocart = async (productId) => {
-    if (!session) {
-      console.log("You must be logged in to perform this action");
-      return;
-    }
+      const gotocart = async () => {
 
-    if (status === "authenticated") {
+        const token = getAuthToken();
+        
+    //  console.log("token in checkout product",token);
+        if (token === "undefined") {
+          console.log("You must be logged in to perform this action");
+          return;
+        }
+ 
       try {
         const res = await axios.get("/api/cart", { withCredentials: true });
         let cartItems = res.data.items || [];
@@ -82,7 +88,7 @@ export default function Page({ params }) {
       } catch (error) {
         console.error("Cart operation failed:", error);
       }
-    }
+    
   };
 
   return (

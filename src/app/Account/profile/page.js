@@ -12,6 +12,7 @@ const Page = () => {
 
   const [user, setUser] = useState(null);
   const [loading, setloading] = useState(false);
+  const [loading2, setloading2] = useState(false);
 
   const fetchUser = async () => {
     setloading(true)
@@ -38,14 +39,18 @@ const Page = () => {
   }, []);
 
   const logout = async () => {
+    setloading2(true);
     try {
       await axios.get("/api/users/logout");
-      toast.success("Logged out successfully!");
+ 
       router.push("/Account/Login");
+      toast.success("Logged out successfully!");
       router.refresh();
+      setloading2(false)
     } catch (error) {
       console.log(error.message);
       toast.error(error.message);
+      setloading2(false)
     }
   };
 
@@ -114,12 +119,17 @@ const Page = () => {
           </div>
         )}
 
-        <div className="mt-10 text-right">
+        <div className="mt-10  text-right">
           <Button
             onClick={logout}
-            className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl shadow-md transition"
+            className="bg-red-600 hover:bg-red-700 cursor-pointer text-white px-6 py-3 rounded-xl shadow-md transition"
           >
-            Logout
+            {
+              loading2 ?
+              <div className="loader scale-50"></div>:
+              "Logout"
+            }
+            
           </Button>
         </div>
       </div>

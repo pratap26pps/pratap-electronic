@@ -1,14 +1,13 @@
 "use client";
 import Link from "next/link";
-
 import { setAddCart, setRemoveCart } from "@/redux/slices/cartSlice";
-
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { use } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
+
 export default function Page({ params }) {
+  
   const { subproduct } = use(params);
   const { product } = use(params);
   const dispatch = useDispatch();
@@ -19,7 +18,7 @@ export default function Page({ params }) {
   const [cartItems, setCartItems] = useState({});
   const [loading, setloading] = useState(false);
   const [loading1, setloading1] = useState(false);
-  const { data: session, status } = useSession();
+ 
   const [selectedBrands, setSelectedBrands] = useState([]);
   const handleCheckboxChange = (brandId) => {
     setSelectedBrands((prev) =>
@@ -59,14 +58,20 @@ export default function Page({ params }) {
     }
     setloading(false);
   };
+  const getAuthToken = () => {
+    return localStorage.getItem("token");  
+  };
 
-  const gotocart = async (productId) => {
-    if (!session) {
-      console.log("You must be logged in to perform this action");
-      return;
-    }
+      const gotocart = async () => {
 
-    if (status === "authenticated") {
+        const token = getAuthToken();
+    //  console.log("token in checkout product",token);
+        if (token === "undefined") {
+          console.log("You must be logged in to perform this action");
+          return;
+        }
+
+   
       try {
         const res = await axios.get("/api/cart", { withCredentials: true });
         let cartItems = res.data.items || [];
@@ -107,7 +112,7 @@ export default function Page({ params }) {
       } catch (error) {
         console.error("Cart operation failed:", error);
       }
-    }
+    
   };
 
   return (

@@ -6,10 +6,16 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { setSignupdata } from "@/redux/slices/userSlice";
 import { setreceivedOtp } from "@/redux/slices/userSlice";
+import dynamic from "next/dynamic"; 
+import { FaLongArrowAltLeft } from "react-icons/fa";
+    
+const LottiePlayer = dynamic(
+  () => import("@lottiefiles/lottie-player"),
+  { ssr: false }
+);
 
 export default function SignupFormDemo() {
   const router = useRouter();
@@ -59,7 +65,19 @@ export default function SignupFormDemo() {
   };
 
   return (
-    <div className="shadow-input mt-36 mx-auto w-[61%] rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
+    <div className='flex flex-col lg:flex-row'>
+       <div>
+        <lottie-player
+          className="mt-40 scale-110"
+          src="/signup.json"
+          background="transparent"
+          speed="1"
+          style={{ width: "300px", height: "300px" }}
+          loop
+          autoplay
+        ></lottie-player>
+      </div>
+      <div className="shadow-input mt-36 mx-auto w-[61%] rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
         Welcome to EmbProto
       </h2>
@@ -199,15 +217,16 @@ export default function SignupFormDemo() {
             Login
           </Link>
         </div>
-        <Link href="/" className="mt-3">
-          Back
-        </Link>
-
-        <Link href="/" className="mt-3 text-gray-600">
-          Back
-        </Link>
+        <Link
+            href="/"
+            className="mt-3 flex gap-1 border w-16 rounded-full p-2"
+          >
+            <FaLongArrowAltLeft className="mt-1" /> Back
+          </Link>
       </form>
     </div>
+    </div>
+  
   );
 }
 

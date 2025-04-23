@@ -7,6 +7,7 @@ import { useTheme } from "next-themes";
 import Navbar from "@/components/ui/navbar";
 import CartInit from "@/components/CartInit";
 import { SessionProvider } from "next-auth/react";
+import {Toaster, ToastBar } from "react-hot-toast";
 export default function RootLayout({ children }) {
   const { theme } = useTheme();
 
@@ -26,10 +27,17 @@ export default function RootLayout({ children }) {
         >
           <Navbar />
           <SessionProvider>
-          
+         
               <CartInit />
               {children}
-          
+              <Toaster>
+  {(t) => (
+    <ToastBar
+      toast={t}
+      style={{ background: "#333", color: "#fff" }}
+    />
+  )}
+</Toaster>
           </SessionProvider>
         </ThemeProvider>
         </Provider>

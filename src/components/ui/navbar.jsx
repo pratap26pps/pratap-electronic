@@ -31,7 +31,8 @@ export default function Navbar() {
     try {
       const res = await fetch("/api/users/me", { cache: "no-store" });
       const data = await res.json(); 
-     
+     console.log("data in user nav",data);
+     localStorage.setItem("token", data.token);
       if (data.user) {
         setUser(data.user || null);
        dispatch(setSignupdata(data.user))

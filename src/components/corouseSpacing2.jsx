@@ -38,17 +38,20 @@ export function CarouselSize2() {
     getproductdetails();
   }, []);
 
+  const getAuthToken = () => {
+    return localStorage.getItem("token");  
+  };
+
   const toggleCartItem = async (productId) => {
     setloading(true);
+    const token = getAuthToken();
+    //  console.log("token in checkout product",token);
+        if (token === "undefined") {
+          console.log("You must be logged in to perform this action");
+          return;
+        }
 
-    if (!session) {
-      console.log("You must be logged in to perform this action");
-      setloading(false);
-
-      return;
-    }
-
-    if (status === "authenticated") {
+     
       try {
         const res = await axios.get("/api/cart", { withCredentials: true });
         let currentCartItems = res.data.items || [];
@@ -84,7 +87,7 @@ export function CarouselSize2() {
         console.error("Cart operation failed:", error);
         setloading(false);
       }
-    }
+    
   };
 
   return (
