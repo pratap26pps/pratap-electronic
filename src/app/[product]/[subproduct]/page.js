@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { use } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-
+import toast from "react-hot-toast";
 export default function Page({ params }) {
   
   const { subproduct } = use(params);
@@ -58,19 +58,9 @@ export default function Page({ params }) {
     }
     setloading(false);
   };
-  const getAuthToken = () => {
-    return localStorage.getItem("token");  
-  };
+ 
 
-      const gotocart = async () => {
-
-        const token = getAuthToken();
-    //  console.log("token in checkout product",token);
-        if (token === "undefined") {
-          console.log("You must be logged in to perform this action");
-          return;
-        }
-
+      const gotocart = async (productId) => {
    
       try {
         const res = await axios.get("/api/cart", { withCredentials: true });
@@ -110,6 +100,8 @@ export default function Page({ params }) {
           [productId]: !prev[productId],
         }));
       } catch (error) {
+              toast.error("You must be logged in to perform this action")
+        
         console.error("Cart operation failed:", error);
       }
     

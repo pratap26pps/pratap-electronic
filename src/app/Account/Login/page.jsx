@@ -25,23 +25,21 @@ export default function SignupFormDemo() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post("/api/users/login", JSON.stringify(user), {
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const res = await axios.post("/api/users/login", user, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true, // 👈 include credentials for cookie auth
       });
-      console.log("res of login", res.data);
-
+  
+      toast.success("Login successful");
       router.push("/Account/profile");
-      toast.success("login successfully");
-      console.log("Form submitted");
-      setLoading(false);
     } catch (error) {
-      toast.error(error.message);
-      console.log(error.message);
+      toast.error(error.response?.data?.error || "Login failed");
+      console.error("Login error:", error);
+    } finally {
       setLoading(false);
     }
   };
+  
   return (
     <div className="lg:flex flex-col-reverse lg:flex-row">
       <div className="shadow-input mt-36 mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">

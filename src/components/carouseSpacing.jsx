@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { setAddCart, setRemoveCart } from "@/redux/slices/cartSlice";
 import { useDispatch } from "react-redux";
-import { useSession } from "next-auth/react";
 import { Card, CardContent } from "@/components/ui/card";
+import toast from "react-hot-toast";
 import {
   Carousel,
   CarouselContent,
@@ -20,7 +20,7 @@ export function CarouselSize() {
   
   const [cartItems, setCartItems] = useState({});
   const dispatch = useDispatch();
-  const { data: session, status } = useSession();
+ 
 
   const getproductdetails = async () => {
     try {
@@ -38,19 +38,10 @@ export function CarouselSize() {
     getproductdetails();
   }, []);
 
-  const getAuthToken = () => {
-    return localStorage.getItem("token");  
-  };
+ 
 
   const toggleCartItem = async (productId) => {
     setloading(true);
-
-    const token = getAuthToken();
-    //  console.log("token in checkout product",token);
-        if (token === "undefined") {
-          console.log("You must be logged in to perform this action");
-          return;
-        }
     
       try {
         const res = await axios.get("/api/cart", { withCredentials: true });
@@ -85,6 +76,8 @@ export function CarouselSize() {
     setloading(false);
 
       } catch (error) {
+              toast.error("You must be logged in to perform this action")
+        
         console.error("Cart operation failed:", error);
     setloading(false);
 

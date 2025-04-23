@@ -37,53 +37,49 @@ export default function Page({ params }) {
     }
   }, [product]);
  
-  const getAuthToken = () => {
-    return localStorage.getItem("token");  
-  };
 
-      const gotocart = async () => {
-
-        const token = getAuthToken();
-    //  console.log("token in checkout product",token);
-        if (token === "undefined") {
-          console.log("You must be logged in to perform this action");
-          toast.error("You must be logged in to perform this action");
-          return;
-        }
-          
-        try {
-          const res = await axios.get("/api/cart", { withCredentials: true });
-          let cartItems = res.data.items || [];
-      
-          if (!addtocart) {
-            // Add to cart (POST or PUT to backend)
-            cartItems.push({
-              productId: specificproducts._id,
-              price: specificproducts.ProductPrice,
-            });
-      
-            await axios.put("/api/cart", { items: cartItems });
-      
-            // Dispatch to Redux
-            dispatch(setAddCart(specificproducts));
-          } else {
-            // Remove from cart
-            const updatedItems = cartItems.filter(
-              (item) => item.productId !== specificproducts._id
-            );
-      
-            await axios.put("/api/cart", { items: updatedItems });
-      
-            // Dispatch to Redux
-            dispatch(setRemoveCart(specificproducts._id));
-          }
-      
-          setaddtocart((prev) => !prev);
-        } catch (error) {
-          console.error("Cart operation failed:", error);
-        }
-      
+  const gotocart = async () => {
+    try {
+      const res = await axios.get("/api/cart", { withCredentials: true });
+      let cartItems = res.data.items || [];
+  
+      const isInCart = cartItems.some(
+        (item) => item.productId === specificproducts._id
+      );
+  
+      if (!isInCart) {
+        // Add to cart
+        cartItems.push({
+          productId: specificproducts._id,
+          price: specificproducts.ProductPrice,
+          quantity: 1,
+        });
+  
+        await axios.put("/api/cart", { items: cartItems }, { withCredentials: true });
+  
+        dispatch(setAddCart(specificproducts));
+        toast.success("Product added to cart!");
+        setaddtocart(true);
+  
+      } else {
+        // Remove from cart
+        const updatedItems = cartItems.filter(
+          (item) => item.productId !== specificproducts._id
+        );
+  
+        await axios.put("/api/cart", { items: updatedItems }, { withCredentials: true });
+  
+        dispatch(setRemoveCart(specificproducts._id));
+        toast.success("Product removed from cart!");
+        setaddtocart(false);
+      }
+  
+    } catch (error) {
+      toast.error("You must be logged in to perform this action");
+      console.error("Cart operation failed:", error);
     }
+  };
+  
  
 
   return (

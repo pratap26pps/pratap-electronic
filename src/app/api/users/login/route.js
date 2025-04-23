@@ -11,55 +11,55 @@ export async function POST(req) {
     const reqbody = await req.json();
     const { email, password } = reqbody;
 
-    console.log("Received Email:", email);
-    console.log("Received Password:", password);
-
     if (!email || !password) {
       return NextResponse.json(
-        { error: "All required fields must be filled." },
+        { error: "All fields are required." },
         { status: 400 }
       );
     }
 
     const existingUser = await User.findOne({ email });
     if (!existingUser) {
-      return NextResponse.json(
-        { error: "User Account is not Registered" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "User not found." }, { status: 404 });
     }
 
-    const verifypassword = await bcrypt.compare(password, existingUser.password);
-    if (!verifypassword) {
-      return NextResponse.json({ error: "Invalid password" }, { status: 401 });
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
+    if (!isPasswordValid) {
+      return NextResponse.json({ error: "Invalid password." }, { status: 401 });
     }
 
-    // Generate JWT
     const tokendata = {
       id: existingUser._id,
-      firstname: existingUser.firstname,
-      lastname: existingUser.lastname,
-      phonenumber: existingUser.phonenumber,
-      state: existingUser.state,
-      country: existingUser.country,
-      city: existingUser.city,
       email: existingUser.email,
-      role:existingUser.role,
+      role: existingUser.role,
     };
 
-    const token = jwt.sign(tokendata, process.env.JWT_SECRET, { expiresIn: "1d" });
+    const token = jwt.sign(tokendata, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
 
-    // Set the cookie properly
-    const res = NextResponse.json(
+    const response = NextResponse.json(
       { message: "Login successful!", success: true },
       { status: 200 }
     );
-    res.cookies.set("token", token, { httpOnly: true });
 
-    return res;
+    response.cookies.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 24 * 60 * 60, // 1 day
+    });
 
+    return response;
   } catch (error) {
     console.error("Login Error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
