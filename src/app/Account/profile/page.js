@@ -73,7 +73,7 @@ const Page = () => {
         loading ? <span className="loader ml-[50%] mt-36"></span>:
         <div className="max-w-6xl mt-8 mx-auto shadow-lg rounded-3xl p-10">
         <h1 className="text-3xl font-semibold mb-6">
-          Welcome {user?.firstname} {user?.lastname}
+          Welcome {signupdata?.firstname} {signupdata?.lastname}
         </h1>
 
         {user?.role === "owner" ? (

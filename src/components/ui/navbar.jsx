@@ -26,6 +26,7 @@ export default function Navbar() {
   const router = useRouter();
   const { setTheme, theme } = useTheme();
   const [user, setUser] = useState(null);
+  const [user2, setUser2] = useState(null);
  const dispatch = useDispatch();
 
 //  get userdetail from token
@@ -66,6 +67,7 @@ const fetchUser2 = async () => {
 
     if (data.user) {
       dispatch(setUserdetail(data.user));
+      setUser2(data.user)
     }
   } catch (error) {
     console.error("Error fetching user2:", error);
@@ -250,7 +252,7 @@ useEffect(() => {
               <TooltipContent>
                 {user ? (
                   <div>
-                    <p>Welcome {user.firstname}</p>
+                    <p>Welcome {user2?.firstname}</p>
                     <Link href="/Account/profile">
                       <p className="hover:text-amber-700">Dashboard</p>
                     </Link>
