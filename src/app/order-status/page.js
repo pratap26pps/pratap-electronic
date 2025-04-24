@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Footer from "@/components/Footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -16,8 +16,16 @@ const page = () => {
     console.log("Form submitted:", formData);
   };
 
+    useEffect(() => {
+      import("@lottiefiles/lottie-player");
+    }, []);
+
   return (
     <div className="min-h-screen  pt-40">
+
+    <div className="flex justify-evenly lg:flex-row flex-col">
+
+
       <div className="flex flex-col justify-center items-center gap-y-8 px-4 text-center">
         <h1 className="text-5xl font-bold text-gray-500 mb-2">
           Track Your Order
@@ -49,6 +57,18 @@ const page = () => {
             powered by ------ 
           </p>
         </form>
+      </div>
+      <div>
+        <lottie-player
+          className="mt-36 "
+          src="/orderstatus.json"
+          background="transparent"
+          speed="1"
+          style={{ width: "300px", height: "300px" }}
+          loop
+          autoplay
+        ></lottie-player>
+      </div>
       </div>
       <div className="mt-36">
         <Footer />

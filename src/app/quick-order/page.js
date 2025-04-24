@@ -2,7 +2,7 @@
 
 import React from "react";
 import Footer from "@/components/Footer";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
@@ -42,9 +42,25 @@ const addToCart = async (sku, quantity = 1) => {
   }
 };
 
+  useEffect(() => {
+    import("@lottiefiles/lottie-player");
+  }, []);
+
 
   return (
     <div className="mt-28">
+    <div className="flex justify-evenly lg:flex-row flex-col">
+    <div>
+        <lottie-player
+          className="mt-36 "
+          src="/quick-order.json"
+          background="transparent"
+          speed="1"
+          style={{ width: "300px", height: "300px" }}
+          loop
+          autoplay
+        ></lottie-player>
+      </div>
       <div className=" min-h-screen flex flex-col items-center py-10">
         <div className="max-w-3xl text-center space-y-4 p-6  shadow-lg rounded-lg">
           <h1 className="text-4xl font-bold text-blue-600">Quick Order</h1>
@@ -109,6 +125,9 @@ const addToCart = async (sku, quantity = 1) => {
 
         </div>
       </div>
+    </div>
+
+    
       <Footer className="mt-10" />
     </div>
   );
