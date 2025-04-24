@@ -6,8 +6,10 @@ import bcrypt from "bcryptjs";
 export async function POST(req) {
   try {
     await connectDB();
+  const body = await req.json();
+  console.log("Body received:", body);
 
-    const { password, confirmpassword, token } = await req.json();
+    const { password, confirmpassword, token } = body;
 
     if (password !== confirmpassword) {
       return NextResponse.json(
@@ -16,7 +18,10 @@ export async function POST(req) {
       );
     }
 
-    const userDetails = await User.findOne({ token });
+    const userDetails = await User.findOne({ 
+      forgotpasswordToken: token,
+      verifypasswordTokenExpiry: { $gt: Date.now() },
+     });
 
     if (!userDetails) {
       return NextResponse.json(
@@ -24,21 +29,15 @@ export async function POST(req) {
         { status: 401 }
       );
     }
-
-    if (userDetails.passwordExpireIn < Date.now()) {
-      return NextResponse.json(
-        { success: false, message: "Token expired" },
-        { status: 401 }
-      );
-    }
-
+    
     const hashedPassword = await bcrypt.hash(password, 10);
+
     await User.findOneAndUpdate(
-      { token },
+      { forgotpasswordToken: token },
       {
         password: hashedPassword,
-        token: undefined,
-        passwordExpireIn: undefined,
+        forgotpasswordToken: undefined,
+        verifypasswordTokenExpiry: undefined,
       },
       { new: true }
     );

@@ -60,9 +60,9 @@ const cartSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchCart.fulfilled, (state, action) => {
-      state.cart = action.payload;
-      state.totalItem = action.payload?.length;
-      state.total = action.payload.reduce((sum, item) => sum + item.price, 0);
+      state.cart = action.payload || [];
+      state.totalItem = action.payload?.length || 0;
+      state.total = (action.payload || []).reduce((sum, item) => sum + item.price, 0);
     });
   },
 });

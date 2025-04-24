@@ -69,9 +69,8 @@ const Footer = () => {
               <h3 className="text-lg font-semibold">Information</h3>
               <ul className="mt-2 space-y-2">
                 <li><a href="order-status" className="text-gray-400 hover:text-white">Track your Order</a></li>
-                <li><a href="" className="text-gray-400 hover:text-white">Videos</a></li>
+                <li><a href="https://www.youtube.com/@pratap26pps" className="text-gray-400 hover:text-white">Videos</a></li>
                 <li><a href="about-us" className="text-gray-400 hover:text-white">About Us</a></li>
-                <li><a href="" className="text-gray-400 hover:text-white">Careers</a></li>
               </ul>
             </div>
 
@@ -81,7 +80,6 @@ const Footer = () => {
                 <li className="text-gray-400 cursor-default"><a href="add-cart">Cart</a> </li>
                 <li className="text-gray-400 cursor-default"><a href="">CheckOut</a> </li>
                 <li className="text-gray-400 cursor-default"><a href="Account/profile">My Account</a> </li>
-                <li className="text-gray-400 cursor-default"><a href="">Payment Option</a></li>
               </ul>
             </div>
 
@@ -89,10 +87,10 @@ const Footer = () => {
             <div>
               <h3 className="text-lg font-semibold">Services </h3>
               <div className="flex space-x-4 mt-2">
-                <a href="#" className="text-gray-400 hover:text-white"><FaFacebook size={24} /></a>
-                <a href="#" className="text-gray-400 hover:text-white"><FaTwitter size={24} /></a>
-                <a href="#" className="text-gray-400 hover:text-white"><FaInstagram size={24} /></a>
-                <a href="#" className="text-gray-400 hover:text-white"><FaLinkedin size={24} /></a>
+                <a href="https://www.facebook.com/" className="text-gray-400 hover:text-white"><FaFacebook size={24} /></a>
+                <a href="https://twitter.com/" className="text-gray-400 hover:text-white"><FaTwitter size={24} /></a>
+                <a href="https://www.instagram.com/" className="text-gray-400 hover:text-white"><FaInstagram size={24} /></a>
+                <a href="https://www.linkedin.com/" className="text-gray-400 hover:text-white"><FaLinkedin size={24} /></a>
               </div>
             </div>
           </div>

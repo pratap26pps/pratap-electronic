@@ -10,6 +10,8 @@ import { useDispatch } from "react-redux";
 import { setSignupdata, setreceivedOtp } from "@/redux/slices/userSlice";
 import dynamic from "next/dynamic";
 import { FaLongArrowAltLeft } from "react-icons/fa";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+
 import toast from "react-hot-toast";
 
 const LottiePlayer = dynamic(() => import("@lottiefiles/lottie-player"), {
@@ -34,6 +36,24 @@ export default function SignupFormDemo() {
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+  const [showpassword, setshowpassword] = useState(false);
+  const [showconfirmpassword, setshowconfirmpassword] = useState(false);
+
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    setUser({ ...user, password: value });
+
+    const isValid = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value);
+
+    if (!isValid) {
+      setPasswordError(
+        "Password must be at least 8 characters and include letters and numbers."
+      );
+    } else {
+      setPasswordError("");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -135,20 +155,42 @@ export default function SignupFormDemo() {
           {/* PASSWORD */}
           <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
             <LabelInputContainer>
+            <div className="flex justify-between">
+
               <Label htmlFor="password">Password</Label>
+              <span
+                className="text-white mr-4 cursor-pointer"
+                onClick={() => setshowpassword((prev) => !prev)}
+              >
+                {showpassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
+              </span></div>
               <Input
                 id="password"
-                type="password"
+                type={showpassword ? "text" : "password"}
                 value={user.password}
-                onChange={(e) => setUser({ ...user, password: e.target.value })}
+                onChange={handlePasswordChange}
                 required
               />
+              {passwordError && (
+                <p className="text-red-500 text-sm mt-1">{passwordError}</p>
+              )}
             </LabelInputContainer>
             <LabelInputContainer>
+              <div className="flex justify-between"> 
               <Label htmlFor="confirmpassword">Confirm Password</Label>
+              <span
+                className="text-white mr-4 cursor-pointer"
+                onClick={() => setshowconfirmpassword((prev) => !prev)}
+              >
+                {showconfirmpassword ? (
+                  <AiOutlineEye />
+                ) : (
+                  <AiOutlineEyeInvisible />
+                )}
+              </span></div>
               <Input
                 id="confirmpassword"
-                type="password"
+                type={showconfirmpassword ? "text" : "password"}
                 value={user.confirmpassword}
                 onChange={(e) =>
                   setUser({ ...user, confirmpassword: e.target.value })

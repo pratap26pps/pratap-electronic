@@ -24,13 +24,17 @@ export async function POST(req,) {
     const userDetails = await User.findOneAndUpdate(
       { email },
       {
-        token: token,
-        passwordExpireIn: Date.now() + 5 * 60 * 1000, // 5 minutes
+        forgotpasswordToken: token,
+        verifypasswordTokenExpiry: Date.now() + 5 * 60 * 1000, // 5 minutes
       },
       { new: true }
     );
+    // for locally run 
+    // const url = `http://localhost:3000/Account/updatepassword/${token}`;
+    
+    // for vercel run or in production 
+    const url = `https://embproto.vercel.app/Account/updatepassword/${token}`;
 
-    const url = `http://localhost:3000/Account/updatepassword/${token}`;
     await mailSender(email, "Password Reset Link", `Click to reset your password: ${url}`);
 
     return NextResponse.json({

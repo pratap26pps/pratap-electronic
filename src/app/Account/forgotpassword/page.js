@@ -3,6 +3,7 @@ import React, { useState } from 'react'
  
 import { BiArrowFromRight } from 'react-icons/bi'
 import Link from 'next/link'
+import toast from 'react-hot-toast'
 
  
 const Forgotpassword = () => {
@@ -28,6 +29,7 @@ const Forgotpassword = () => {
       setemailsend(true)
       if (result) {
         console.log("Email sent:", data.message);
+        toast.success("Email Sent")
   
       } else {
         console.error(" Error:", data.message);

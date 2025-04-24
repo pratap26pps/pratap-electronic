@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema({
       verifypasswordTokenExpiry:Date,
       verifyTokenExpiry:Date,
       verifyToken:String,
-      forgotpasswordToken:String,
+     
 
 });
 

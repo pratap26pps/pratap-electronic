@@ -7,6 +7,7 @@ import { IconGolfFilled } from "@tabler/icons-react";
 import { NextResponse } from "next/server";
  import axios from "axios";
 import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 export default function ProductInfoForm() {
   const SubCategoryId = useSelector((state)=>state.product.SubCategoryId)
@@ -48,10 +49,7 @@ export default function ProductInfoForm() {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  // Handle File Upload
-  // const handleFileChange = (e) => {
-  //   setFormData((prev) => ({ ...prev, ProductImage: e.target.files[0] }));
-  // };
+ 
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -112,7 +110,7 @@ export default function ProductInfoForm() {
         ProductImage: "",
         productItems:""
       });
-
+  toast.success("product added successfully");
      return NextResponse.json({
          success:true,
          message:"product added successfully",
@@ -122,6 +120,7 @@ export default function ProductInfoForm() {
     } catch (error) {
       console.error("Error adding product:", error);
       setError(error.message);
+      toast.error(error.message)
     } finally {
       setLoading(false);
     }
@@ -201,10 +200,9 @@ export default function ProductInfoForm() {
         </div>
         <div>
         <label htmlFor="ProductPrice">
-            Product items <sup>*</sup>
+            Product Quantity <sup>*</sup>
           </label>
           <div className="flex items-center border p-1 rounded-md font-semibold">
-            <HiOutlineCurrencyRupee className="mr-2 text-lg" />
             <input
               id="productItems"
               type="number"

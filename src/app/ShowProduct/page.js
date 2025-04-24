@@ -6,6 +6,7 @@ import { Pencil, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaIndianRupeeSign } from "react-icons/fa6";
+import toast from "react-hot-toast";
 const ProductTable = () => {
   const router = useRouter();
   const [products, setProducts] = useState([]);
@@ -33,7 +34,9 @@ const ProductTable = () => {
     if (confirm("Are you sure you want to delete this product?")) {
       try {
         await axios.delete("/api/product", { data: { id } });
-        router.refresh();
+        toast.success("producted deleted successfully")
+        setProducts(prev => prev.filter(product => product._id !== id));
+ 
       } catch (error) {
         console.error("Error deleting product:", error);
       }
@@ -60,6 +63,7 @@ const ProductTable = () => {
               <tr>
                 <th className="border border-gray-300 px-4 py-2">Image</th>
                 <th className="border border-gray-300 px-4 py-2">Title</th>
+                <th className="border border-gray-300 px-4 py-2">Quantity</th>
                 <th className="border border-gray-300 px-4 py-2 flex justify-center">
                   Price ( <FaIndianRupeeSign className="mt-2" />)
                 </th>
@@ -78,6 +82,7 @@ const ProductTable = () => {
                     />
                   </td>
                   <td className=" px-4 py-2">{product.ProductTitle}</td>
+                  <td className=" px-4 py-2">{product?.productItems}</td>
                   <td className=" px-4 py-2"> {product.ProductPrice}</td>
                   <td className="mt-3 px-4 py-2  flex justify-center gap-2">
                     <Button

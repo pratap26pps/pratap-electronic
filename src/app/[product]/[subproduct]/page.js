@@ -13,7 +13,7 @@ export default function Page({ params }) {
   const dispatch = useDispatch();
   const [brandname, setproducts] = useState([]);
   const [specificproducts, setspecificproducts] = useState([]);
-  const [addtocart, setaddtocart] = useState(false);
+   
 
   const [cartItems, setCartItems] = useState({});
   const [loading, setloading] = useState(false);

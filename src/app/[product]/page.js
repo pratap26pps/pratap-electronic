@@ -5,7 +5,7 @@ import { use, useEffect, useState } from "react";
 import axios from "axios";
 import { setAddCart, setRemoveCart } from "@/redux/slices/cartSlice";
 import { useDispatch } from "react-redux";
-import { useSession } from "next-auth/react"; 
+ 
 import toast from "react-hot-toast";
 export default function Page({ params }) {
  
@@ -15,8 +15,8 @@ export default function Page({ params }) {
   const [specificproducts, setspecificproducts] = useState([]);
   const [cartItems, setCartItems] = useState({});
   const [Loading, setLoading] = useState(false);
-  const { data: session, status } = useSession();
-  console.log("Session in cart API:", session);
+ 
+   
 
   const BrandProducthandler = async () => {
     try {

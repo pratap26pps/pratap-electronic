@@ -2,6 +2,7 @@
 import React, { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
+import toast from "react-hot-toast";
 
 const Updatepassword = ({ params }) => {
   const { token } = use(params);
@@ -25,21 +26,31 @@ const Updatepassword = ({ params }) => {
 
   const handleonsubmit = async (e) => {
     e.preventDefault();
+    console.log("Password:", password, "Token:", token);
+
+
+    const isValid = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
+    if (!isValid) {
+      toast.error(
+        "Password must be at least 8 characters with letters and numbers."
+      );
+      return;
+    }
+
+    if (password !== confirmpassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
     try {
       setLoading(true);
 
-      const res = await fetch("/api/resetpassword", {
+      const res = await fetch("/api/resetpasss", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          password,
-          confirmpassword,
-          token,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password, confirmpassword, token }),
       });
-      console.log("res in update pan:", res);
+      
       const contentType = res.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
         const text = await res.text(); // fallback for HTML
@@ -48,25 +59,24 @@ const Updatepassword = ({ params }) => {
       }
 
       const data = await res.json();
+
+      console.log("res in update pan:", data);
       setLoading(false);
 
       if (res.ok) {
-        alert(" Password reset successful!");
-        router.push("/Account/login");
+        toast.success(" Password reset successful!");
+        router.push("/Account/Login");
       } else {
-        alert(data.message);
+        toast.error(data.message);
       }
     } catch (error) {
       console.error("Reset failed:", error);
-      alert("Something went wrong");
+      toast.error(error.message);
     }
   };
 
   return (
     <div className="flex flex-col items-center mt-36 min-h-screen px-4">
-      {loading ? (
-        <div className="loader flex justify-center"></div>
-      ) : (
         <div className="bg-gray-900 p-8 rounded-2xl shadow-lg w-full max-w-md text-white">
           <h2 className="text-2xl font-semibold mb-2 text-center">
             Choose New Password
@@ -132,13 +142,14 @@ const Updatepassword = ({ params }) => {
 
             <button
               type="submit"
-              className="w-full py-2 bg-yellow-400 text-black font-bold rounded-xl hover:bg-yellow-300 transition-all"
+              disabled={loading}
+              className="w-full py-2 bg-yellow-400 text-black font-bold rounded-xl hover:bg-yellow-300 transition-all disabled:opacity-60"
             >
-              Reset Password
+              {loading ? "Resetting..." : "Reset Password"}
             </button>
           </form>
         </div>
-      )}
+    
     </div>
   );
 };

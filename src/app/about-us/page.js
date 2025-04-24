@@ -3,7 +3,7 @@ import Footer from "@/components/Footer";
 const AboutUs = () => {
   return (
     <>
-    <div className="max-w-5xl mt-24  mx-auto px-4 py-10 text-gray-200">
+    <div className="max-w-5xl mt-24  mx-auto px-4 py-10">
       <h1 className="text-4xl font-bold mb-6 text-center">About Us</h1>
 
       <p className="mb-4">
