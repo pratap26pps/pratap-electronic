@@ -1,149 +1,150 @@
 "use client";
- 
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { use } from "react";
 import { useDispatch } from "react-redux";
-import { setAddCart,setRemoveCart } from "@/redux/slices/cartSlice";
+import { setAddCart, setRemoveCart } from "@/redux/slices/cartSlice";
 import toast from "react-hot-toast";
 import Footer from "@/components/Footer";
- 
 
 export default function Page({ params }) {
-
   const { product } = use(params);
-  console.log("id aagya", product);
   const dispatch = useDispatch();
-  const [specificproducts, setspecificproducts] = useState([]);
-  const [addtocart, setaddtocart] = useState(false);
-  const [loading, setloading] = useState(false);
+  const [specificproducts, setSpecificProducts] = useState({});
+  const [addToCart, setAddToCart] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const BrandProducthandler = async () => {
-    setloading(true)
-
+    setLoading(true);
     try {
       const response = await axios.get(`/api/product/${product}`);
-      console.log("response of check product", response.data);
-      setspecificproducts(response.data.data);
+      setSpecificProducts(response.data.data);
     } catch (error) {
-      console.log(error.message);
+      console.error("Error fetching product:", error.message);
     }
-    setloading(false)
-
+    setLoading(false);
   };
+
   useEffect(() => {
     if (product) {
-      BrandProducthandler(product);
+      BrandProducthandler();
     }
   }, [product]);
- 
 
-  const gotocart = async () => {
+  const gotoCart = async () => {
     try {
       const res = await axios.get("/api/cart", { withCredentials: true });
       let cartItems = res.data.items || [];
-  
+
       const isInCart = cartItems.some(
         (item) => item.productId === specificproducts._id
       );
-  
+
       if (!isInCart) {
-        // Add to cart
         cartItems.push({
           productId: specificproducts._id,
           price: specificproducts.ProductPrice,
           quantity: 1,
         });
-  
-        await axios.put("/api/cart", { items: cartItems }, { withCredentials: true });
-  
+
+        await axios.put(
+          "/api/cart",
+          { items: cartItems },
+          { withCredentials: true }
+        );
         dispatch(setAddCart(specificproducts));
         toast.success("Product added to cart!");
-        setaddtocart(true);
-  
+        setAddToCart(true);
       } else {
-        // Remove from cart
         const updatedItems = cartItems.filter(
           (item) => item.productId !== specificproducts._id
         );
-  
-        await axios.put("/api/cart", { items: updatedItems }, { withCredentials: true });
-  
+
+        await axios.put(
+          "/api/cart",
+          { items: updatedItems },
+          { withCredentials: true }
+        );
         dispatch(setRemoveCart(specificproducts._id));
         toast.success("Product removed from cart!");
-        setaddtocart(false);
+        setAddToCart(false);
       }
-  
     } catch (error) {
-      toast.error("You must be logged in to perform this action");
+      toast.error("You must be logged in to perform this action.");
       console.error("Cart operation failed:", error);
     }
   };
-  
- 
 
   return (
     <>
-    <div className="mb-9">
-         <div className="flex mt-40 ml-20 ">
-            <Link href="/">
-              {" "}
-              <h1 className="text-orange-500 mx-2">
-                <u>Home</u>
-              </h1>
-            </Link>
-            <h1 className="mr-2">/</h1>
-            <h1>{product}</h1>
-         </div>
-         {
-          loading ? <span className="loader ml-[50%] mt-36"></span> :
-          <div className="lg:flex flex-col lg:flex-row justify-evenly">
+      <div className="mt-36 px-6 lg:px-16">
+        <div className="flex items-center gap-2 mb-6 text-sm text-gray-600">
+          <Link href="/" className="text-orange-500 underline">
+            Home
+          </Link>
+          <span>/</span>
+          <span>{product}</span>
+        </div>
 
-          <div className="h-56 mt-8 w-44 p-4 ">
-            <img src={specificproducts.ProductImage} alt="productimage" />
+        {loading ? (
+          <div className="flex justify-center items-center h-40">
+            <span className="loader"></span>
           </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+            <div className="flex justify-center">
+              <img
+                src={specificproducts.ProductImage}
+                alt="Product"
+                className="rounded-xl shadow-lg w-[300px] h-[300px] object-contain"
+              />
+            </div>
 
-      {/* cart review */}
-      <div
-        className="shadow shadow-neutral-300 border border-b-gray-200 flex flex-col">
-        <div className="text-neutral-400 ml-5 ">{specificproducts.ProductTitle}</div>
+            <div className="p-6 mb-4 rounded-xl shadow-lg border border-gray-100 space-y-4">
+              <h2 className="text-xl font-bold text-gray-800">
+                {specificproducts.ProductTitle}
+              </h2>
+              <p className="text-gray-600">
+                {specificproducts.ProductShortDescription}
+              </p>
 
-        <div className="font-semibold hover:text-neutral-500 cursor-pointer ml-5">
-          {specificproducts.ProductShortDescription}
-        </div>
+              <p className="text-2xl text-red-500 font-bold">
+                ₹{specificproducts.ProductPrice}
+                <span className="text-sm text-gray-400 font-normal ml-1">
+                  ex. GST
+                </span>
+              </p>
 
-        <div className="text-lg font-semibold text-red-400 ml-5 ">
-          ₹ {specificproducts.ProductPrice}
-          <span className="text-gray-500 text-sm"> ex. GST</span>
-        </div>
+              <p className="text-sm font-medium text-green-600">
+                {specificproducts.productItems} in Stock
+              </p>
+              <p className="text-sm text-gray-500">
+                Shipped in 24 hours from Mumbai warehouse
+              </p>
 
-        <div className=" w-full h-px p-[1/2px] bg-gray-100  mb-3 mt-4 flex mx-auto"></div>
-        <div className="font-semibold mb-2 ml-5">
-          Shipped in 24 Hours from Mumbai Warehouse
-        </div>
-        <h1 className="font-semibold text-green-600 mb-5 ml-5">
-          {specificproducts.productItems}in Stock
-        </h1>
-        <div className="flex flex-col gap-2 p-4">
-        <button onClick={()=>gotocart()} className="bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-700 shadow-md font-semibold text-white cursor-pointer ">
-         {
-          addtocart ?"Remove from Cart":"Add To Cart"
-         }
-        </button>
-
-        <button className="border-2 p-2 font-semibold shadow rounded-lg focus:outline-none  hover:text-orange-300 cursor-pointer hover:border-orange-300">
-          ADD TO wishlist
-        </button>
+              <div className="flex flex-col gap-3 pt-4">
+                <button
+                  onClick={gotoCart}
+                  className={`px-5 py-2 rounded-lg text-white font-semibold shadow hover:shadow-lg transition ${
+                    addToCart
+                      ? "bg-red-500 hover:bg-red-600"
+                      : "bg-orange-500 hover:bg-orange-600"
+                  }`}
+                >
+                  {addToCart ? "Remove from Cart" : "Add to Cart"}
+                </button>
+                <button className="px-5 py-2 rounded-lg border-2 border-gray-300 font-semibold hover:border-orange-400 hover:text-orange-400 transition">
+                  Add to Wishlist
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-      </div>
 
-    </div>
-         }
-    
-    </div>
-    <Footer/>
-    
+      <Footer />
     </>
-    
-  );}
+  );
+}

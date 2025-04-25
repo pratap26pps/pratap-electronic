@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 export default function YourCart() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [coupon, setCoupon] = useState("");
   const cart = useSelector((state) => state.cart.cart || []);
   const user = useSelector((state) => state.auth.signupdata || null);
@@ -18,6 +18,7 @@ export default function YourCart() {
   console.log("user in cart", user);
 
   useEffect(() => {
+    setLoading(true);
     const getCart = async () => {
       if (user) {
         dispatch(fetchCart());
@@ -55,14 +56,19 @@ export default function YourCart() {
     localStorage.setItem("orderData", JSON.stringify(orderData));
     router.push("/PlaceOrder");
   };
-  const removehandler = (productId) => {
+  const removehandler =async (productId) => {
     console.log("productid during btn click",productId)
-    dispatch(removeFromCart(productId));
+   await dispatch(removeFromCart(productId));
      
   };
 
   if (loading) {
-    return <div className="text-center mt-40 text-xl">Loading your cart...</div>;
+    return (
+      <div className="flex gap-1">
+        <div className="loader"></div>
+        <div className="text-center text-blue-900 mt-40 text-xl">Loading your cart...</div>
+      </div>
+  );
   }
 
   if (!user) {
@@ -88,8 +94,9 @@ export default function YourCart() {
                     <p className="text-sm">Price: ₹{item?.productId?.ProductPrice}</p>
                     <p className="text-sm">Quantity: {item?.quantity}</p>
                   </div>
-                  <p className="text-lg font-bold">₹{item?.productId?.ProductPrice}</p>
-                  <Button onClick={() => removehandler(item.productId._id)} className="mt-2">
+                  <p className="text-lg font-bold mr-3">₹{item?.productId?.ProductPrice}</p>
+                  <Button onClick={() => removehandler(item.productId._id)} 
+                  className="mt-2 cursor-pointer">
                     Remove
                   </Button>
                 </div>
