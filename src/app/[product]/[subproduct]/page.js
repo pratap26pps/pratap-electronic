@@ -6,18 +6,25 @@ import { use } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
+// import Footer from "@/components/Footer";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 export default function Page({ params }) {
   
   const { subproduct } = use(params);
   const { product } = use(params);
   const dispatch = useDispatch();
+  const router = useRouter();
   const [brandname, setproducts] = useState([]);
   const [specificproducts, setspecificproducts] = useState([]);
+  const cart = useSelector((state) => state.cart.cart || []);
+  console.log("product in subproduct cart", cart);
    
 
   const [cartItems, setCartItems] = useState({});
   const [loading, setloading] = useState(false);
   const [loading1, setloading1] = useState(false);
+  const [coupon, setcoupon] = useState("");
  
   const [selectedBrands, setSelectedBrands] = useState([]);
   const handleCheckboxChange = (brandId) => {
@@ -60,7 +67,7 @@ export default function Page({ params }) {
   };
  
 
-      const gotocart = async (productId) => {
+   const gotocart = async (productId) => {
    
       try {
         const res = await axios.get("/api/cart", { withCredentials: true });
@@ -105,6 +112,38 @@ export default function Page({ params }) {
         console.error("Cart operation failed:", error);
       }
     
+  };
+
+  const items= cart.reduce((acc, item) => acc + item.quantity, 0)
+   
+  const shipping = 50;
+  const gstRate = 0.18;
+
+  const subtotal = cart.reduce(
+    (acc, item) => acc + item.productId?.ProductPrice * item.quantity,
+    0
+  );
+
+  const gst = subtotal * gstRate;
+  const discount = coupon === "PPS10" ? subtotal * 0.1 : 0;
+  const grandTotal = subtotal + shipping + gst - discount;
+  
+   
+
+  const paymenthandler = () => {
+    const orderData = {
+      cartItems: cart,
+      coupon,
+      shipping,
+      gstRate,
+      subtotal,
+      discount,
+      grandTotal,
+    };
+  
+    // You can use localStorage or query params
+    localStorage.setItem("orderData", JSON.stringify(orderData));
+    router.push("/PlaceOrder");
   };
 
   return (
@@ -299,45 +338,76 @@ export default function Page({ params }) {
 
         {/* cart review */}
 
-        <div className="fixed left-[76%]  shadow-xl rounded-2xl p-6 w-72 hidden sm:block border border-gray-200">
-          <h2 className="text-xl font-bold mb-4 text-gray-800">Your Cart</h2>
+      {/* cart review */}
+<div className="fixed z-20 left-[76%] shadow-xl rounded-2xl p-6 w-72 hidden sm:block border border-gray-200">
+  <h2 className="text-xl font-bold mb-4 text-gray-800">Your Cart</h2>
 
-          <div className="space-y-3 text-sm text-gray-700">
-            <p className="text-center text-gray-500 italic">
-              Your cart is empty
-            </p>
-
-            <div className="flex justify-between">
-              <span>Total items</span>
-              <span className="font-semibold">0</span>
+  <div className="space-y-3 text-sm text-gray-700">
+    {cart.length === 0 ? (
+      <p className="text-center text-gray-500 italic">
+        Your cart is empty
+      </p>
+    ) : (
+      <>
+          <div className="space-y-2 max-h-40 overflow-y-auto">
+          {cart.map((item) => (
+            <div key={item._id} className="flex justify-between items-center">
+              <img src={item.productId.ProductImage} height={34} width={34}></img>
+              <span className="truncate w-2/3">{item.productId.ProductTitle}</span>
+              <span className="truncate w-2/3">{item.productId.ProductPrice}</span>
+              <span> {item.quantity}</span>
             </div>
+          ))}
+        </div>
 
-            <div className="flex justify-between">
-              <span>Subtotal:</span>
-              <span className="font-medium">₹ 0.00</span>
-            </div>
+        <div className="flex justify-between">
+          <span>Total items</span>
+          <span className="font-semibold">
+            {items}
+          </span>
+        </div>
 
-            <div className="flex justify-between">
-              <span>Shipping:</span>
-              <span className="font-medium">₹ 0.00</span>
-            </div>
+        <div className="flex justify-between">
+          <span>Subtotal:</span>
+          <span className="font-medium">
+            ₹ { subtotal}
+          </span>
+        </div>
 
-            <div className="flex justify-between text-lg font-bold text-green-600">
-              <span>Grand Total:</span>
-              <span>₹ 0.00</span>
-            </div>
-          </div>
+        <div className="flex justify-between">
+          <span>Shipping:</span>
+          <span className="font-medium">₹ {shipping}.00</span>
+        </div>
 
-          <div className="mt-6 space-y-2">
+        <div className="flex justify-between text-lg font-bold text-green-600">
+          <span>Grand Total:</span>
+          <span>
+            ₹ {grandTotal}
+          </span>
+        </div>
+      </>
+    )}
+      <div className="mt-6 space-y-2">
+        <Link href="/add-cart">
+        
             <button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg transition">
               View Cart
             </button>
-            <button className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">
+        </Link>
+
+            <button
+            
+            onClick={paymenthandler}
+            
+            className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">
               BuyNow
             </button>
           </div>
-        </div>
+  </div>
+</div>
+
       </div>
+      {/* <Footer/> */}
     </div>
   );
 }

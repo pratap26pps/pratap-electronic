@@ -231,22 +231,22 @@ const loadRazorpayScript = () => {
             <h2 className="text-lg font-bold mb-2">Order Summary</h2>
             <div className="space-y-2">
               <p className="flex justify-between">
-                <span>Subtotal:</span> ₹{orderDetails.subtotal.toFixed(2)}
+                <span>Subtotal:</span> ₹{orderDetails?.subtotal?.toFixed(2)}
               </p>
               <p className="flex justify-between">
-                <span>Shipping:</span> ₹{orderDetails.shipping}
+                <span>Shipping:</span> ₹{orderDetails?.shipping}
               </p>
               <p className="flex justify-between">
                 <span>GST (18%):</span> ₹
-                {(orderDetails.subtotal * orderDetails.gstRate).toFixed(2)}
+                {(orderDetails?.subtotal * orderDetails?.gstRate).toFixed(2)}
               </p>
               {orderDetails.discount > 0 && (
                 <p className="flex justify-between text-green-500">
-                  <span>Discount:</span> -₹{orderDetails.discount.toFixed(2)}
+                  <span>Discount:</span> -₹{orderDetails?.discount.toFixed(2)}
                 </p>
               )}
               <p className="flex justify-between font-bold text-lg">
-                <span>Grand Total:</span> ₹{orderDetails.grandTotal.toFixed(2)}
+                <span>Grand Total:</span> ₹{orderDetails?.grandTotal.toFixed(2)}
               </p>
             </div>
           </div>

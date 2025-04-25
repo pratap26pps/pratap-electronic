@@ -5,18 +5,19 @@ import { use, useEffect, useState } from "react";
 import axios from "axios";
 import { setAddCart, setRemoveCart } from "@/redux/slices/cartSlice";
 import { useDispatch } from "react-redux";
- 
+import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 export default function Page({ params }) {
- 
-  const { product } = use(params)
+  const { product } = use(params);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const [specificproducts, setspecificproducts] = useState([]);
   const [cartItems, setCartItems] = useState({});
   const [Loading, setLoading] = useState(false);
- 
-   
+  const [coupon, setcoupon] = useState("");
+  const cart = useSelector((state) => state.cart.cart || []);
 
   const BrandProducthandler = async () => {
     try {
@@ -40,48 +41,75 @@ export default function Page({ params }) {
       BrandProducthandler();
     }
   }, [product]);
- 
 
-      const gotocart = async (productId) => {
- 
-      try {
-        const res = await axios.get("/api/cart", { withCredentials: true });
-        let cartItems = res.data.items || [];
+  const gotocart = async (productId) => {
+    try {
+      const res = await axios.get("/api/cart", { withCredentials: true });
+      let cartItems = res.data.items || [];
 
-        const productToToggle = specificproducts.find((p) => p._id === productId);
-        if (!productToToggle) return;
+      const productToToggle = specificproducts.find((p) => p._id === productId);
+      if (!productToToggle) return;
 
-        const alreadyInCart = cartItems.some(
-          (item) => item.productId === productId
+      const alreadyInCart = cartItems.some(
+        (item) => item.productId === productId
+      );
+
+      if (!alreadyInCart) {
+        cartItems.push({
+          productId: productToToggle._id,
+          price: productToToggle.ProductPrice,
+        });
+
+        await axios.put("/api/cart", { items: cartItems });
+        dispatch(setAddCart(productToToggle));
+      } else {
+        const updatedItems = cartItems.filter(
+          (item) => item.productId !== productId
         );
 
-        if (!alreadyInCart) {
-          cartItems.push({
-            productId: productToToggle._id,
-            price: productToToggle.ProductPrice,
-          });
-
-          await axios.put("/api/cart", { items: cartItems });
-          dispatch(setAddCart(productToToggle));
-        } else {
-          const updatedItems = cartItems.filter(
-            (item) => item.productId !== productId
-          );
-
-          await axios.put("/api/cart", { items: updatedItems });
-          dispatch(setRemoveCart(productToToggle._id));
-        }
-
-        setCartItems((prev) => ({
-          ...prev,
-          [productId]: !prev[productId],
-        }));
-      } catch (error) {
-       toast.error("You must be logged in to perform this action")
-        
-        console.error("Cart operation failed:", error);
+        await axios.put("/api/cart", { items: updatedItems });
+        dispatch(setRemoveCart(productToToggle._id));
       }
-    
+
+      setCartItems((prev) => ({
+        ...prev,
+        [productId]: !prev[productId],
+      }));
+    } catch (error) {
+      toast.error("You must be logged in to perform this action");
+
+      console.error("Cart operation failed:", error);
+    }
+  };
+
+  const items = cart.reduce((acc, item) => acc + item.quantity, 0);
+
+  const shipping = 50;
+  const gstRate = 0.18;
+
+  const subtotal = cart.reduce(
+    (acc, item) => acc + item.productId?.ProductPrice * item.quantity,
+    0
+  );
+
+  const gst = subtotal * gstRate;
+  const discount = coupon === "PPS10" ? subtotal * 0.1 : 0;
+  const grandTotal = subtotal + shipping + gst - discount;
+
+  const paymenthandler = () => {
+    const orderData = {
+      cartItems: cart,
+      coupon,
+      shipping,
+      gstRate,
+      subtotal,
+      discount,
+      grandTotal,
+    };
+
+    // You can use localStorage or query params
+    localStorage.setItem("orderData", JSON.stringify(orderData));
+    router.push("/PlaceOrder");
   };
 
   return (
@@ -120,8 +148,14 @@ export default function Page({ params }) {
           {Loading ? (
             <span className="loader ml-[50%] mt-36"></span>
           ) : (
-            <div className="grid w-[71%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+            
+          <div>
+            {
+              specificproducts.length === 0 ? 
+              <div className="flex justify-center mt-10 text-orange-700">No Any Product upload Here</div>:
+              <div className="grid w-[71%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
               {specificproducts.map((p) => (
+                
                 <div
                   key={p._id}
                   className="border my-2 rounded shadow-lg aspect-square items-center justify-center p-6"
@@ -132,7 +166,9 @@ export default function Page({ params }) {
                         <img src={p.ProductImage} alt="productimage" />
                       </div>
 
-                      <div className="text-neutral-400 ml-5">{p.ProductTitle}</div>
+                      <div className="text-neutral-400 ml-5">
+                        {p.ProductTitle}
+                      </div>
                       <div className="font-semibold hover:text-neutral-500 cursor-pointer ml-5">
                         {p.ProductShortDescription}
                       </div>
@@ -166,51 +202,79 @@ export default function Page({ params }) {
                 </div>
               ))}
             </div>
+            }
+          </div>
           )}
         </div>
 
         {/* Cart Review Sidebar */}
-        <div className="fixed left-[76%] shadow-xl rounded-2xl p-6 w-72 hidden sm:block border border-gray-200">
+        <div className="fixed z-20 left-[76%] shadow-xl rounded-2xl p-6 w-72 hidden sm:block border border-gray-200">
           <h2 className="text-xl font-bold mb-4 text-gray-800">Your Cart</h2>
 
           <div className="space-y-3 text-sm text-gray-700">
-            <p className="text-center text-gray-500 italic">
-              Your cart is empty
-            </p>
+            {cart.length === 0 ? (
+              <p className="text-center text-gray-500 italic">
+                Your cart is empty
+              </p>
+            ) : (
+              <>
+                <div className="space-y-2 max-h-40 overflow-y-auto">
+                  {cart.map((item) => (
+                    <div
+                      key={item._id}
+                      className="flex justify-between items-center"
+                    >
+                      <img
+                        src={item.productId.ProductImage}
+                        height={34}
+                        width={34}
+                      ></img>
+                      <span className="truncate w-2/3">
+                        {item.productId.ProductTitle}
+                      </span>
+                      <span className="truncate w-2/3">
+                        {item.productId.ProductPrice}
+                      </span>
+                      <span> {item.quantity}</span>
+                    </div>
+                  ))}
+                </div>
 
-            <div className="flex justify-between">
-              <span>Total items</span>
-              <span className="font-semibold">0</span>
-            </div>
+                <div className="flex justify-between">
+                  <span>Total items</span>
+                  <span className="font-semibold">{items}</span>
+                </div>
 
-            <div className="flex justify-between">
-              <span>Subtotal:</span>
-              <span className="font-medium">₹ 0.00</span>
-            </div>
+                <div className="flex justify-between">
+                  <span>Subtotal:</span>
+                  <span className="font-medium">₹ {subtotal}</span>
+                </div>
 
-            <div className="flex justify-between">
-              <span>Shipping:</span>
-              <span className="font-medium">₹ 0.00</span>
-            </div>
+                <div className="flex justify-between">
+                  <span>Shipping:</span>
+                  <span className="font-medium">₹ {shipping}.00</span>
+                </div>
 
-            <div className="flex justify-between text-lg font-bold text-green-600">
-              <span>Grand Total:</span>
-              <span>₹ 0.00</span>
-            </div>
-          </div>
+                <div className="flex justify-between text-lg font-bold text-green-600">
+                  <span>Grand Total:</span>
+                  <span>₹ {grandTotal}</span>
+                </div>
+              </>
+            )}
+            <div className="mt-6 space-y-2">
+              <Link href="/add-cart">
+                <button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg transition">
+                  View Cart
+                </button>
+              </Link>
 
-          <div className="mt-6 space-y-2">
-            <Link href="/add-cart">
-              <button className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg transition">
-                View Cart
-              </button>
-            </Link>
-
-            <Link href="/">
-              <button className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">
+              <button
+                onClick={paymenthandler}
+                className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition"
+              >
                 BuyNow
               </button>
-            </Link>
+            </div>
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ import { use } from "react";
 import { useDispatch } from "react-redux";
 import { setAddCart,setRemoveCart } from "@/redux/slices/cartSlice";
 import toast from "react-hot-toast";
+import Footer from "@/components/Footer";
  
 
 export default function Page({ params }) {
@@ -83,8 +84,9 @@ export default function Page({ params }) {
  
 
   return (
-    <div>
-         <div className="flex mt-40 ml-20">
+    <>
+    <div className="mb-9">
+         <div className="flex mt-40 ml-20 ">
             <Link href="/">
               {" "}
               <h1 className="text-orange-500 mx-2">
@@ -140,4 +142,8 @@ export default function Page({ params }) {
          }
     
     </div>
+    <Footer/>
+    
+    </>
+    
   );}

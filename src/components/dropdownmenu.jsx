@@ -16,6 +16,8 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import axios from "axios";
+import toast from "react-hot-toast";
+ 
  
 
 
@@ -24,6 +26,7 @@ export function NavigationMenuDemo() {
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [components, setcomponents] = useState([]);
+  const [Loading, setLoading] = useState([]);
   const [brandname, setbrandname] = useState([]);
   const router = useRouter()
 
@@ -37,9 +40,17 @@ export function NavigationMenuDemo() {
   }, [isMenuOpen]);
 
   const categoryhandler = async () => {
-    const response = await axios.get('/api/TotalProduct');
-    console.log("responseof category",response.data.data);
-    setcomponents(response.data.data);
+    setLoading(true)
+    try{
+      const response = await axios.get('/api/TotalProduct');
+      console.log("responseof category",response.data.data);
+      setcomponents(response.data.data);
+    }catch(error){
+     toast.error("error.message")
+    }finally{
+      setLoading(false)
+    }
+
   }
     useEffect(()=>{
       categoryhandler();
@@ -52,11 +63,7 @@ export function NavigationMenuDemo() {
     }
       useEffect(()=>{
         brandhandler();
-      },[])
-
-
-
- 
+      },[]) 
 
   // for search box
 
@@ -288,7 +295,9 @@ export function NavigationMenuDemo() {
           <NavigationMenuItem>
             <NavigationMenuTrigger>All Categories</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="h-72 relative overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 p-1 z-20 md:w-[200px] lg:w-[250px] shadow-lg rounded-md">
+              {
+                Loading ? <div className="loader"></div> :
+                <ul className="h-72 relative overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 p-1 z-20 md:w-[200px] lg:w-[250px] shadow-lg rounded-md">
     
                 {components.map((category, index) => (
                   <div
@@ -303,6 +312,8 @@ export function NavigationMenuDemo() {
                   </div>  
                 ))}
               </ul>
+              }
+             
             </NavigationMenuContent>
 
             {/* Submenu Panel */}

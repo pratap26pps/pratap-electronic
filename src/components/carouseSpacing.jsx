@@ -94,12 +94,12 @@ export function CarouselSize() {
               <Card>
                 <CardContent className="aspect-square items-center justify-center p-6">
                   <div className="shadow shadow-neutral-300 border border-b-gray-200 flex flex-col">
-                    <div className="h-56 w-44 p-4 mx-auto">
+                    <div className="h-56 w-44 mt-4 mx-auto">
                       <img src={item.ProductImage} alt="productimage" loading="lazy" />
                     </div>
 
                     <div className="text-neutral-400 ml-5">{item.ProductTitle}</div>
-                    <div className="font-semibold hover:text-neutral-500 cursor-pointer ml-5">
+                    <div className="font-semibold   hover:text-neutral-500 cursor-pointer ml-5">
                       {item.ProductShortDescription}
                     </div>
 
