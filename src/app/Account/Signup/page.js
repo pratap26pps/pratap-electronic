@@ -13,6 +13,7 @@ import { FaLongArrowAltLeft } from "react-icons/fa";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 import toast from "react-hot-toast";
+import Footer from "@/components/Footer";
 
 const LottiePlayer = dynamic(() => import("@lottiefiles/lottie-player"), {
   ssr: false,
@@ -92,6 +93,7 @@ export default function SignupFormDemo() {
   };
 
   return (
+    <>
     <div className="flex flex-col lg:flex-row">
       <div>
         <lottie-player
@@ -284,6 +286,9 @@ export default function SignupFormDemo() {
         </form>
       </div>
     </div>
+    <Footer/>
+    </>
+
   );
 }
 

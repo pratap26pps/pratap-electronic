@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { FaLongArrowAltLeft } from "react-icons/fa";
+import Footer from "@/components/Footer";
  
 export default function SignupFormDemo() {
   const router = useRouter();
@@ -41,6 +42,7 @@ export default function SignupFormDemo() {
   };
   
   return (
+    <>
     <div className="lg:flex flex-col-reverse lg:flex-row">
       <div className="shadow-input mt-36 mx-auto w-full max-w-md rounded-none bg-white p-4 md:rounded-2xl md:p-8 dark:bg-black">
         <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
@@ -122,6 +124,9 @@ export default function SignupFormDemo() {
         ></lottie-player>
       </div>
     </div>
+    <Footer/>
+    </>
+
   );
 }
 

@@ -95,6 +95,11 @@ const Page = () => {
                   Show All Message
                 </div>
               </Link>
+              <Link href="/Account/NewsForm">
+                <div className="bg-amber-700 hover:bg-amber-800 text-white text-center py-4 rounded-xl shadow-md transition">
+                Upload News
+                </div>
+              </Link>
               <Link href="/upload/category">
                 <div className="bg-purple-500 hover:bg-purple-600 text-white text-center py-4 rounded-xl shadow-md transition">
                   Upload Product

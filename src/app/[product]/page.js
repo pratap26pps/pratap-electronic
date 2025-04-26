@@ -12,6 +12,7 @@ export default function Page({ params }) {
   const { product } = use(params);
   const dispatch = useDispatch();
   const router = useRouter();
+  const user = useSelector((state) => state.auth.signupdata || null);
 
   const [specificproducts, setspecificproducts] = useState([]);
   const [cartItems, setCartItems] = useState({});
@@ -43,6 +44,10 @@ export default function Page({ params }) {
   }, [product]);
 
   const gotocart = async (productId) => {
+    if(user.role ==="owner"){
+     toast.error("you cannot add items,you are an owner");
+     return;
+    }
     try {
       const res = await axios.get("/api/cart", { withCredentials: true });
       let cartItems = res.data.items || [];
@@ -148,61 +153,66 @@ export default function Page({ params }) {
           {Loading ? (
             <span className="loader ml-[50%] mt-36"></span>
           ) : (
-            
-          <div>
-            {
-              specificproducts.length === 0 ? 
-              <div className="flex justify-center mt-10 text-orange-700">No Any Product upload Here</div>:
-              <div className="grid w-[71%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
-              {specificproducts.map((p) => (
-                
-                <div
-                  key={p._id}
-                  className="border my-2 rounded shadow-lg aspect-square items-center justify-center p-6"
-                >
-                  <Link href={`/checkproduct/${p._id}`}>
-                    <div className="shadow shadow-neutral-300 border border-b-gray-200 flex flex-col">
-                      <div className="h-56 w-44 p-4 mx-auto">
-                        <img src={p.ProductImage} alt="productimage" />
-                      </div>
-
-                      <div className="text-neutral-400 ml-5">
+            <div className="grid w-[71%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+            {specificproducts.map((p) => (
+              <div
+                key={p._id}
+                className="border rounded-2xl shadow-lg flex flex-col justify-between p-4 h-[550px]" // fixed card height
+              >
+                <Link href={`/checkproduct/${p._id}`}>
+                  <div className="flex flex-col items-center text-center h-full">
+                    {/* Image */}
+                    <div className="h-44 w-44 mb-4 flex items-center justify-center overflow-hidden rounded-lg">
+                      <img
+                        src={p.ProductImage}
+                        alt="productimage"
+                        className="object-cover h-full w-full hover:scale-105 transition duration-300"
+                      />
+                    </div>
+          
+                    {/* Product Texts */}
+                    <div className="flex flex-col items-center gap-2 px-2">
+                      <div className="text-neutral-400 font-medium truncate">
                         {p.ProductTitle}
                       </div>
-                      <div className="font-semibold hover:text-neutral-500 cursor-pointer ml-5">
+          
+                      <div className="font-semibold hover:text-neutral-500 cursor-pointer line-clamp-2">
                         {p.ProductShortDescription}
                       </div>
-                      <div className="text-lg font-semibold text-red-400 ml-5">
+          
+                      <div className="text-lg font-bold text-red-400">
                         ₹ {p.ProductPrice}
                         <span className="text-gray-500 text-sm"> ex. GST</span>
                       </div>
-
-                      <div className="w-full h-px p-[1/2px] bg-gray-100 mb-3 mt-4 flex mx-auto"></div>
-                      <div className="font-semibold mb-2 ml-5">
+          
+                      <div className="w-full h-px bg-gray-200 my-2"></div>
+          
+                      <div className="text-sm font-semibold text-gray-700">
                         Shipped in 24 Hours from Mumbai Warehouse
                       </div>
-                      <h1 className="font-semibold text-green-600 mb-5 ml-5">
+          
+                      <div className="text-green-600 font-semibold text-sm">
                         {p.productItems} in Stock
-                      </h1>
+                      </div>
                     </div>
-                  </Link>
-
-                  <div className="flex flex-col gap-2 p-4">
-                    <button
-                      className="bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-300 shadow-md font-semibold text-white cursor-pointer"
-                      onClick={() => gotocart(p._id)}
-                    >
-                      {cartItems[p._id] ? "Remove from Cart" : "Add To Cart"}
-                    </button>
-
-                    <button className="border-2 p-2 font-semibold shadow rounded-lg focus:outline-none hover:text-orange-300 cursor-pointer hover:border-orange-300">
-                      ADD TO wishlist
-                    </button>
                   </div>
+                </Link>
+          
+                {/* Action Buttons */}
+                <div className="flex flex-col gap-2 mt-4">
+                  <button
+                    onClick={() => gotocart(p._id)}
+                    className="bg-orange-400 hover:bg-orange-300 text-white font-semibold py-2 rounded-lg transition shadow-md"
+                  >
+                    {cartItems[p._id] ? "Remove from Cart" : "Add To Cart"}
+                  </button>
+          
+                  <button className="border-2 border-gray-300 hover:border-orange-300 text-gray-700 hover:text-orange-400 font-semibold py-2 rounded-lg transition shadow-md">
+                    Add to Wishlist
+                  </button>
                 </div>
-              ))}
-            </div>
-            }
+              </div>
+            ))}
           </div>
           )}
         </div>
