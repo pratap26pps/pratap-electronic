@@ -91,7 +91,7 @@ console.log("user in dashboard",user);
               <h2 className="text-lg font-semibold mb-3 ">
                 📦 Products
               </h2>
-           <div className="lg:flex flex-col lg:flex-row justify-between">
+           <div className="lg:flex flex-col lg:flex-row justify-evenly">
 
                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {order?.products?.map((product) => (
@@ -121,7 +121,7 @@ console.log("user in dashboard",user);
               <h2 className="text-lg font-semibold mb-3 ">
                 📑 Order Summary
               </h2>
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="grid lg:w-52 grid-cols-2 gap-4 text-sm">
                 <p>Subtotal: ₹{order?.subtotal?.toFixed(2)}</p>
                 <p>Shipping: ₹{order?.shipping?.toFixed(2)}</p>
                 <p>GST (18%): ₹{(order?.subtotal * order?.gstRate).toFixed(2)}</p>

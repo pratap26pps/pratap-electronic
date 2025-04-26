@@ -18,7 +18,7 @@ export async function POST(req) {
       subtotal,
       discount,
     } = body;
-    console.log("graandtotal", grandTotal);
+    console.log("userId", userId);
     if (
       !product ||
       !grandTotal ||
@@ -44,7 +44,7 @@ export async function POST(req) {
     }
 
     const newOrder = new Order({
-      user: userId,
+      user: new mongoose.Types.ObjectId(userId),
       products,
       paymentMethod: "COD",
       status: "Processing",

@@ -214,7 +214,7 @@ export function NavigationMenuDemo() {
                         onMouseEnter={() => setHoveredCategory(category.name)}
                       >
                         <ListItem title={category.name} 
-                        href={category.name} 
+            
                         />
                         <RiArrowDropRightFill className="text-xl" />
                       </div>
@@ -242,7 +242,7 @@ export function NavigationMenuDemo() {
                         ?.subcategory.map((sub, i) => (
                           <ListItem
                             key={i}
-                            href={`/${hoveredCategory}/${sub.name}`}
+                            href={`/${hoveredCategory}/${sub._id}`}
                             className="hover:text-blue-600 cursor-pointer"
                           >
                             {sub.name}
@@ -259,11 +259,11 @@ export function NavigationMenuDemo() {
                   <ul className="w-[200px] gap-2 p-1">
                     {brandname.map((component) => (
                       <ListItem
-                        key={component.name}
-                        title={component.name}
-                        href={component.name}
+                        key={component?.name}
+                        title={component?.name}
+                        href={component?._id}
                       >
-                        {/* {component.description} */}
+                       
                       </ListItem>
                     ))}
                   </ul>

@@ -51,11 +51,15 @@ const loadRazorpayScript = () => {
     if (!paymentMethod) {
       setError("Please select a payment method.");
       setloading(false);
-
+      return;
+    }
+    if (!user) {
+      toast.error("user id is not here");
+      setloading(false);
       return;
     }
     const productIds = cart.map((item) => item.productId._id);
-    const userid = user.id;
+    const userid = user?._id;
 
     if (paymentMethod === "COD") {
       try {
@@ -87,7 +91,7 @@ const loadRazorpayScript = () => {
 
     const isLoaded = await loadRazorpayScript();
     if (!isLoaded) {
-      alert("Razorpay SDK failed to load. Please check your internet connection.");
+      toast.error("Razorpay SDK failed to load. Please check your internet connection.");
       setloading(false);
       return;
     }

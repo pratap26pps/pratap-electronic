@@ -42,28 +42,28 @@ const Hero = () => {
           Featured Categories
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-          <div className="  rounded-lg shadow-md text-center">
+          <div className="lg:ml-0 ml-8  rounded-lg shadow-md text-center">
             <img
               src="https://cdn11.bigcommerce.com/s-3fd3md1ghs/images/stencil/original/image-manager/drone-parts-1.jpg?t=1732813857"
               alt="drone part"
               className="mt-2 rounded-md"
             />
           </div>
-          <div className="  rounded-lg shadow-md text-center">
+          <div className="lg:ml-0 ml-8   rounded-lg shadow-md text-center">
             <img
               src="https://cdn11.bigcommerce.com/s-3fd3md1ghs/images/stencil/original/image-manager/usb-and-hdmi-connectors-1.jpg?t=1732813882"
               alt="drone part"
               className="mt-2 rounded-md"
             />
           </div>
-          <div className="  rounded-lg shadow-md text-center">
+          <div className="lg:ml-0 ml-8   rounded-lg shadow-md text-center">
             <img
               src="https://cdn11.bigcommerce.com/s-3fd3md1ghs/images/stencil/original/image-manager/microcontroller-website-banner-m1.jpg?t=1730219309"
               alt="drone part"
               className="mt-2 rounded-md"
             />
           </div>
-          <div className=" rounded-lg shadow-md text-center">
+          <div className="lg:ml-0 ml-8  rounded-lg shadow-md text-center">
             <img
               src="https://cdn11.bigcommerce.com/s-3fd3md1ghs/images/stencil/original/image-manager/inductors-and-chokes-1.jpg?t=1732813905 "
               alt="drone part"
@@ -96,7 +96,7 @@ const Hero = () => {
             (
               item  
             ) => (
-              <div key={item?._id} className="p-2 rounded-lg shadow-md">
+              <div key={item?._id} className="p-2 ml-8 lg:ml-0 rounded-lg shadow-md">
                 <img src={item?.image} alt="news" className="rounded-md" />
                 <p className="font-semibold">{item?.date}</p>
                 <p className="text-gray-500 mt-2">{item?.heading}</p>

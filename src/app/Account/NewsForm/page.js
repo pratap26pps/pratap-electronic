@@ -104,7 +104,7 @@ const NewsForm = () => {
           />
         </div>
 
-        <div className=" flex">
+        <div className=" flex gap-3">
          <Link href='/Account/profile'>
          <button
           className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white font-semibold py-2 px-8 rounded-lg transition duration-300 disabled:bg-blue-300"

@@ -1,11 +1,11 @@
 import Order from "@/models/Order";
 import connectDB from "@/dbconfig/dbconfig";
 import { NextResponse } from "next/server";
+
 export async function GET(req) {
   try {
     await connectDB();
 
- 
     const orders = await Order.find()
       .populate("products")
       .sort({ createdAt: -1 });

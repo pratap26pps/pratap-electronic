@@ -4,20 +4,21 @@ import User from "@/models/userModel";
 import { mailSender } from "@/utils/mailSender";
 import { productEnrollment } from "@/app/templete/productenrollmail";
 import connectDB from "@/dbconfig/dbconfig";
-
+import Order from "@/models/Order";
 // Enroll the student into the product
-async function enrollStudent(product, userId) {
+async function enrollCustomer(product, userId) {
   try {
+    const productDocs = [];
     for (const productId of product) {
       const items = await Product.findByIdAndUpdate(
         productId,
-        { $push: { studentsEnrolled: userId } },
+        { $push: { CustomerId: userId } },
         { new: true }
       );
 
       if (!items)
-        throw new Error("Course not found");
-
+        throw new Error("Product not found");
+      productDocs.push(items._id);
       // Add the product to the user's courses
       const user = await User.findByIdAndUpdate(
         userId,
@@ -28,10 +29,24 @@ async function enrollStudent(product, userId) {
       // Send an enrollment confirmation email
       await mailSender(
         user.email,
-        `Successfully enrolled into ${items.ProductName}`,
+        `Successfully purchased into ${items.ProductName}`,
         productEnrollment(items.ProductName, user.firstname)
       );
     }
+    // After enrolling in products, create an Order
+    const newOrder = await Order.create({
+      user: userId,
+      products: productDocs,  
+      paymentMethod:  "Online",
+      status: "Processing",
+      subtotal: product.subtotal || 280,
+      shipping: product.shipping || 50,
+      gstRate: product.gstRate ||0.18,
+      discount: product.discount || null,
+      grandTotal: product.grandTotal || 500,
+    });
+    return newOrder;
+
   } catch (error) {
     throw new Error(error.message || "An error occurred while enrolling");
   }
@@ -49,7 +64,7 @@ export async function POST(req) {
     product,
     userId,
   } = await req.json();  
-
+  
   // Check for missing fields
   if (
     !razorpay_order_id ||
@@ -76,11 +91,11 @@ export async function POST(req) {
 
   // Verify signature and process enrollment
   if (expectedSignature === razorpay_signature) {
-    await enrollStudent(product, userId); 
+    await enrollCustomer(product, userId); 
     return new Response(
       JSON.stringify({
         success: true,
-        message: "Payment verified and enrollment done",
+        message: "Payment verified done Successfullly",
       }),
       { status: 200 }
     );

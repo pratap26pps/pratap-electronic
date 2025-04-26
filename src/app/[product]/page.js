@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import Footer from "@/components/Footer";
 export default function Page({ params }) {
   const { product } = use(params);
   const dispatch = useDispatch();
@@ -44,9 +45,9 @@ export default function Page({ params }) {
   }, [product]);
 
   const gotocart = async (productId) => {
-    if(user.role ==="owner"){
-     toast.error("you cannot add items,you are an owner");
-     return;
+    if (user?.role === "owner") {
+      toast.error("you cannot add items,you are an owner");
+      return;
     }
     try {
       const res = await axios.get("/api/cart", { withCredentials: true });
@@ -119,9 +120,22 @@ export default function Page({ params }) {
 
   return (
     <div>
-      <div className="mt-40 flex gap-4">
+      <div className="mt-40 flex lg:flex-row flex-col gap-4">
+        {/* homelink */}
+        <div className="lg:hidden block">
+          <div className="flex ">
+            <Link href="/">
+              <h1 className="text-orange-500 mx-2">
+                {" "}
+                <u>Home</u>{" "}
+              </h1>
+            </Link>
+            <h1 className="mr-2">/</h1>
+            <h1>{product}/</h1>
+          </div>
+        </div>
         {/* Sidebar filters */}
-        <div className="ml-10 p-4 h-20 rounded-2xl shadow-md w-64 border border-gray-200">
+        <div className="ml-10 p-4  mb-10 lg:mb-0 h-20 rounded-2xl shadow-md w-64 border border-gray-200">
           <p className="text-lg font-semibold text-gray-700 mb-1">Refine by</p>
           <p className="text-sm text-gray-400 mb-4">No filters applied</p>
 
@@ -140,85 +154,91 @@ export default function Page({ params }) {
 
         {/* Main product content */}
         <div>
-          <div className="flex">
-            <Link href="/">
-              <h1 className="text-orange-500 mx-2">
-                <u>Home</u>
-              </h1>
-            </Link>
-            <h1 className="mr-2">/</h1>
-            <h1>{product}</h1>
+          <div className="hidden lg:block">
+            <div className="flex ">
+              <Link href="/">
+                <h1 className="text-orange-500 mx-2">
+                  {" "}
+                  <u>Home</u>{" "}
+                </h1>
+              </Link>
+              <h1 className="mr-2">/</h1>
+              <h1>{product}/</h1>
+            </div>
           </div>
 
           {Loading ? (
             <span className="loader ml-[50%] mt-36"></span>
           ) : (
-            <div className="grid w-[71%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
-            {specificproducts.map((p) => (
-              <div
-                key={p._id}
-                className="border rounded-2xl shadow-lg flex flex-col justify-between p-4 h-[550px]" // fixed card height
-              >
-                <Link href={`/checkproduct/${p._id}`}>
-                  <div className="flex flex-col items-center text-center h-full">
-                    {/* Image */}
-                    <div className="h-44 w-44 mb-4 flex items-center justify-center overflow-hidden rounded-lg">
-                      <img
-                        src={p.ProductImage}
-                        alt="productimage"
-                        className="object-cover h-full w-full hover:scale-105 transition duration-300"
-                      />
+            <div className="grid lg:w-[71%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+              {specificproducts.map((p) => (
+                <div
+                  key={p._id}
+                  className="border rounded-2xl shadow-lg flex flex-col justify-between p-4 h-[550px]" // fixed card height
+                >
+                  <Link href={`/checkproduct/${p._id}`}>
+                    <div className="flex flex-col items-center text-center h-full">
+                      {/* Image */}
+                      <div className="h-44 w-44 mb-4 flex items-center justify-center overflow-hidden rounded-lg">
+                        <img
+                          src={p.ProductImage}
+                          alt="productimage"
+                          className="object-cover h-full w-full hover:scale-105 transition duration-300"
+                        />
+                      </div>
+
+                      {/* Product Texts */}
+                      <div className="flex flex-col items-center gap-2 px-2">
+                        <div className="text-neutral-400 font-medium truncate">
+                          {p.ProductTitle}
+                        </div>
+
+                        <div className="font-semibold hover:text-neutral-500 cursor-pointer line-clamp-2">
+                          {p.ProductShortDescription}
+                        </div>
+
+                        <div className="text-lg font-bold text-red-400">
+                          ₹ {p.ProductPrice}
+                          <span className="text-gray-500 text-sm">
+                            {" "}
+                            ex. GST
+                          </span>
+                        </div>
+
+                        <div className="w-full h-px bg-gray-200 my-2"></div>
+
+                        <div className="text-sm font-semibold text-gray-700">
+                          Shipped in 24 Hours from Mumbai Warehouse
+                        </div>
+
+                        <div className="text-green-600 font-semibold text-sm">
+                          {p.productItems} in Stock
+                        </div>
+                      </div>
                     </div>
-          
-                    {/* Product Texts */}
-                    <div className="flex flex-col items-center gap-2 px-2">
-                      <div className="text-neutral-400 font-medium truncate">
-                        {p.ProductTitle}
-                      </div>
-          
-                      <div className="font-semibold hover:text-neutral-500 cursor-pointer line-clamp-2">
-                        {p.ProductShortDescription}
-                      </div>
-          
-                      <div className="text-lg font-bold text-red-400">
-                        ₹ {p.ProductPrice}
-                        <span className="text-gray-500 text-sm"> ex. GST</span>
-                      </div>
-          
-                      <div className="w-full h-px bg-gray-200 my-2"></div>
-          
-                      <div className="text-sm font-semibold text-gray-700">
-                        Shipped in 24 Hours from Mumbai Warehouse
-                      </div>
-          
-                      <div className="text-green-600 font-semibold text-sm">
-                        {p.productItems} in Stock
-                      </div>
-                    </div>
+                  </Link>
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-col gap-2 mt-4">
+                    <button
+                      onClick={() => gotocart(p._id)}
+                      className="bg-orange-400 hover:bg-orange-300 text-white font-semibold py-2 rounded-lg transition shadow-md"
+                    >
+                      {cartItems[p._id] ? "Remove from Cart" : "Add To Cart"}
+                    </button>
+
+                    <button className="border-2 border-gray-300 hover:border-orange-300 text-gray-700 hover:text-orange-400 font-semibold py-2 rounded-lg transition shadow-md">
+                      Add to Wishlist
+                    </button>
                   </div>
-                </Link>
-          
-                {/* Action Buttons */}
-                <div className="flex flex-col gap-2 mt-4">
-                  <button
-                    onClick={() => gotocart(p._id)}
-                    className="bg-orange-400 hover:bg-orange-300 text-white font-semibold py-2 rounded-lg transition shadow-md"
-                  >
-                    {cartItems[p._id] ? "Remove from Cart" : "Add To Cart"}
-                  </button>
-          
-                  <button className="border-2 border-gray-300 hover:border-orange-300 text-gray-700 hover:text-orange-400 font-semibold py-2 rounded-lg transition shadow-md">
-                    Add to Wishlist
-                  </button>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
           )}
         </div>
 
         {/* Cart Review Sidebar */}
-        <div className="fixed z-20 left-[76%] shadow-xl rounded-2xl p-6 w-72 hidden sm:block border border-gray-200">
+        <div className="lg:fixed z-20 mb-3 lg:mb-0  lg:left-[76%] lg:ml-0 ml-12 shadow-xl rounded-2xl p-6 w-72 border border-gray-200">
           <h2 className="text-xl font-bold mb-4 text-gray-800">Your Cart</h2>
 
           <div className="space-y-3 text-sm text-gray-700">
@@ -280,13 +300,17 @@ export default function Page({ params }) {
 
               <button
                 onClick={paymenthandler}
-                className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition"
+                className="w-full mt-4 cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition"
               >
                 BuyNow
               </button>
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="lg:hidden block">
+        <Footer />
       </div>
     </div>
   );

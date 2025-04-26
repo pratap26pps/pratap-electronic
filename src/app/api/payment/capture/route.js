@@ -1,8 +1,7 @@
 import { instance } from "@/utils/razorpay";
 import Product from "@/models/productDetails";
 import jwt from "jsonwebtoken";
-import { cookies } from "next/headers";
- 
+import { cookies } from "next/headers"; 
 import connectDB from "@/dbconfig/dbconfig";
 import mongoose from "mongoose";
    
@@ -45,7 +44,7 @@ export async function POST(req) {
       const enrolled = items.studentsEnrolled || [];
       if (Array.isArray(enrolled) && enrolled.includes(uid)) {
         return Response.json(
-          { success: false, message: "Already enrolled in a product" },
+          { success: false, message: "Already purchased this product" },
           { status: 400 }
         );
       }
@@ -60,7 +59,7 @@ export async function POST(req) {
 
 
     const paymentResponse = await instance.orders.create(options);
-
+  console.log("payment receipt",paymentResponse);
     return Response.json(
       { success: true, message: {
         key: process.env.RAZORPAY_KEY, 

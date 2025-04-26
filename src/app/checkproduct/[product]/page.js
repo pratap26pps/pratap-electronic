@@ -8,13 +8,23 @@ import { useDispatch } from "react-redux";
 import { setAddCart, setRemoveCart } from "@/redux/slices/cartSlice";
 import toast from "react-hot-toast";
 import Footer from "@/components/Footer";
-
-export default function Page({ params }) {
+import { useSelector } from "react-redux";
+export default function Page({ params}) {
   const { product } = use(params);
   const dispatch = useDispatch();
   const [specificproducts, setSpecificProducts] = useState({});
   const [addToCart, setAddToCart] = useState(false);
   const [loading, setLoading] = useState(false);
+  const user = useSelector((state) => state.auth.signupdata || null);
+
+  const [position, setPosition] = useState({ x: '50%', y: '50%' });
+
+  const handleMouseMove = (e) => {
+    const { left, top, width, height } = e.target.getBoundingClientRect();
+    const x = ((e.clientX - left) / width) * 100;
+    const y = ((e.clientY - top) / height) * 100;
+    setPosition({ x: `${x}%`, y: `${y}%` });
+  };
 
   const BrandProducthandler = async () => {
     setLoading(true);
@@ -34,6 +44,10 @@ export default function Page({ params }) {
   }, [product]);
 
   const gotoCart = async () => {
+        if (user?.role === "owner") {
+          toast.error("you cannot add items,you are an owner");
+          return;
+        }
     try {
       const res = await axios.get("/api/cart", { withCredentials: true });
       let cartItems = res.data.items || [];
@@ -94,13 +108,21 @@ export default function Page({ params }) {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-            <div className="flex justify-center">
-              <img
-                src={specificproducts.ProductImage}
-                alt="Product"
-                className="rounded-xl shadow-lg w-[300px] h-[300px] object-contain"
-              />
-            </div>
+ <div
+      className="relative w-[300px] h-[300px] overflow-hidden rounded-xl shadow-lg mx-auto"
+      onMouseMove={handleMouseMove}
+    >
+      <img
+        src={specificproducts.ProductImage}
+        alt="Product"
+        className="w-full h-full object-contain transition-transform duration-300 ease-in-out"
+        style={{
+          transformOrigin: `${position.x} ${position.y}`,
+          transform: 'scale(1.5)',
+        }}
+      />
+    </div>
+
 
             <div className="p-6 mb-4 rounded-xl shadow-lg border border-gray-100 space-y-4">
               <h2 className="text-xl font-bold text-gray-800">
