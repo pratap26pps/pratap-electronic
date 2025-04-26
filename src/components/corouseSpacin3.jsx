@@ -43,7 +43,7 @@ export function CarouselSize3() {
 
   const toggleCartItem = async (productId) => {
     setloading(true);
-             if(user.role ==="owner"){
+             if(user?.role ==="owner"){
                toast.error("you cannot add items,you are an owner");
                return;
               }

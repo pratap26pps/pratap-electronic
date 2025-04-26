@@ -72,7 +72,7 @@ export default function YourCart() {
   }
 
   
-  if (user.role === "owner") {
+  if (user?.role === "owner") {
     return <div className="text-center mt-40 text-lg font-medium text-red-600">
       Hey! You are an Owner, you cannot show public cart page </div>;
   }
