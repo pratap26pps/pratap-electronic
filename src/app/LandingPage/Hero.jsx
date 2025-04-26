@@ -4,7 +4,7 @@ import { CarouselSize } from "@/components/carouseSpacing";
 import { CarouselSize2 } from "@/components/corouseSpacing2";
 import { CarouselSize3 } from "@/components/corouseSpacin3";
 import Footer from "@/components/Footer";
- import Front from "./front";
+ import Front from "./Front";
 
 const Hero = () => {
 
