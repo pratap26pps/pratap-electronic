@@ -1,19 +1,20 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
 import { FaLongArrowAltLeft } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 export default function EditProduct() {
-  const router = useRouter();
   const { id } = useParams();
 
   const [formData, setFormData] = useState({
     ProductTitle: "",
     ProductShortDescription: "",
     ProductPrice: "",
+    productItems:"",
     BenefitsOfProduct: "",
     ProductImage: null,
   });
@@ -28,10 +29,13 @@ export default function EditProduct() {
         const res = await fetch(`/api/product/${id}`);
         if (!res.ok) throw new Error("Failed to fetch product");
         const data = await res.json();
+        // console.error("data of iteems:", data);
+
         setFormData({
           ProductTitle: data.data.ProductTitle,
           ProductShortDescription: data.data.ProductShortDescription,
           ProductPrice: data.data.ProductPrice,
+          productItems: data.data.productItems,
           BenefitsOfProduct: data.data.BenefitsOfProduct,
           ProductImage: data.data.ProductImage,
         });
@@ -51,6 +55,7 @@ export default function EditProduct() {
     formDataToSend.append("ProductTitle", formData.ProductTitle);
     formDataToSend.append("ProductShortDescription", formData.ProductShortDescription);
     formDataToSend.append("ProductPrice", formData.ProductPrice);
+    formDataToSend.append("productItems", formData.productItems);
     formDataToSend.append("BenefitsOfProduct", formData.BenefitsOfProduct);
     formDataToSend.append("id", id);
 
@@ -66,11 +71,13 @@ export default function EditProduct() {
       });
 
       if (response.status === 200) {
-        alert("Product updated successfully!");
+        toast.success("Product updated successfully!");
       } else {
         console.error("Failed to update product:", response.data);
+        toast.error( response.data)
       }
     } catch (error) {
+      toast.error(error.response?.data)
       console.error("Error updating product:", error.response?.data || error);
     } finally {
       setLoading(false);
@@ -123,6 +130,16 @@ export default function EditProduct() {
               required
             />
           </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Product  quantity</label>
+            <input
+              type="number"
+              value={formData.productItems}
+              onChange={(e) => setFormData({ ...formData, productItems: e.target.value })}
+              className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
+              required
+            />
+          </div>
 
           <div>
             <label className="block text-sm font-medium mb-2">Upload Product Thumbnail</label>
@@ -162,7 +179,7 @@ export default function EditProduct() {
             <button
               type="submit"
               disabled={loading}
-              className="bg-gradient-to-r from-amber-500 to-amber-600 text-white px-8 py-3 rounded-xl shadow hover:from-amber-600 hover:to-amber-700 transition disabled:opacity-50"
+              className="bg-gradient-to-r cursor-pointer from-amber-500 to-amber-600 text-white px-8 py-3 rounded-xl shadow hover:from-amber-600 hover:to-amber-700 transition disabled:opacity-50"
             >
               {loading ? "Updating..." : "Update Product"}
             </button>

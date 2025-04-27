@@ -147,6 +147,7 @@ export async function PUT(req) {
     const id = formData.get("id");
     const ProductTitle = formData.get("ProductTitle");
     const ProductPrice = formData.get("ProductPrice");
+    const productItems = formData.get("productItems");
     const ProductShortDescription = formData.get("ProductShortDescription");
     const BenefitsOfProduct = formData.get("BenefitsOfProduct");
 
@@ -154,6 +155,7 @@ export async function PUT(req) {
       !id ||
       !ProductTitle ||
       !ProductPrice ||
+      !productItems ||
       !ProductShortDescription ||
       !BenefitsOfProduct
     ) {
@@ -189,6 +191,7 @@ export async function PUT(req) {
       {
         ProductTitle,
         ProductPrice,
+        productItems,
         ProductShortDescription,
         BenefitsOfProduct,
         ProductImage,

@@ -112,7 +112,7 @@ console.log("order in owner dashboard",orders);
               <h2 className="text-lg font-semibold mb-3 ">
                 📑 Order Summary
               </h2>
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="grid w-52 grid-cols-2 gap-4 text-sm">
                 <p>Subtotal: ₹{order?.subtotal?.toFixed(2)}</p>
                 <p>Shipping: ₹{order?.shipping?.toFixed(2)}</p>
                 <p>GST (18%): ₹{(order?.subtotal * order?.gstRate).toFixed(2)}</p>
