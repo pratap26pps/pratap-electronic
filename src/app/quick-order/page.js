@@ -6,11 +6,14 @@ import { useState,useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 const page = () => {
   const [sku, setSku] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [loading, setloading] = useState(false);
-
+  const user = useSelector((state) => state.auth.signupdata || null);
+//  console.log("user in quick",user);
   const increaseQuantity = () => setQuantity(quantity + 1);
   const decreaseQuantity = () => setQuantity(quantity > 1 ? quantity - 1 : 1);
   console.log("sku before calling",sku);
@@ -18,27 +21,34 @@ const page = () => {
 
 const addToCart = async (sku, quantity = 1) => {
   setloading(true);
+      if (user?.role === "owner") {
+        toast.error("you cannot add items,you are an owner");
+        return;
+      }
   try {
     console.log("sku", sku);
     console.log("quantity", quantity);
-    
+   const userId = user?.id;
     const res = await fetch('/api/cart/add', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ sku, quantity }),
+      body: JSON.stringify({ sku, quantity, userId }),
     });
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.message);
     console.log(`${sku} added to cart`);
-  setloading(false);
+    toast.success(`${sku} added to cart`)
+  
 
-  } catch (err) {
-    console.error('Error:', err.message);
-  setloading(false);
-
+  } catch (error) {
+    console.error('Error:', error.message);
+    toast.error(error.message)
+ 
+  }finally{
+    setloading(false);
   }
 };
 
@@ -86,6 +96,7 @@ const addToCart = async (sku, quantity = 1) => {
               onChange={(e) => setSku(e.target.value)}
               placeholder="Enter SKU"
               className="mt-1 "
+              required
             />
           </div>
 
@@ -111,7 +122,10 @@ const addToCart = async (sku, quantity = 1) => {
           <Button
          onClick={() => addToCart(sku, quantity)}
           className=" w-full m-5 py-2 bg-blue-600 hover:bg-blue-700 text-white ml-1 font-bold">
-            Adding to basket
+          {
+            loading ? <div className="loader scale-50"></div>:
+           " Adding to basket"
+          } 
           </Button>
 
          <Link href="/add-cart">

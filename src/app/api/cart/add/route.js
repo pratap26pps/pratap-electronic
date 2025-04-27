@@ -2,22 +2,13 @@ import { NextResponse } from "next/server";
 import connectDB from "@/dbconfig/dbconfig";
 import Product from "@/models/productDetails";
 import Cart from "@/models/cart";
-import { getToken } from "next-auth/jwt";
 
 export async function POST(req) {
   try {
     await connectDB();
 
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-    
-    console.log("token during sku add",token)
-    if (!token) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
-
-    const userId = token.id;
     const body = await req.json();  
-    const { sku, quantity } = body;
+    const { sku, quantity ,userId} = body;
 
     if (!sku || typeof quantity !== "number") {
       return NextResponse.json(
@@ -26,27 +17,27 @@ export async function POST(req) {
       );
     }
 
-    const product = await Product.findOne({ ProductTitle: sku });
+    const product = await Product.findOne({ SKU: sku });
     if (!product) {
       return NextResponse.json({ message: "Product not found" }, { status: 404 });
     }
 
-    let cart = await Cart.findOne({ userId: userId });
+    let cart = await Cart.findOne({ userId });
 
     if (!cart) {
       cart = await Cart.create({
-        user: userId,
-        items: [{ product: product._id, quantity }],
+        userId: userId,
+        items: [{ productId: product._id, quantity }],
       });
     } else {
       const existingItem = cart.items.find(
-        (item) => item.product.toString() === product._id.toString()
+        (item) => item.productId.toString() === product._id.toString()
       );
 
       if (existingItem) {
         existingItem.quantity += quantity;
       } else {
-        cart.items.push({ product: product._id, quantity });
+        cart.items.push({ productId: product._id, quantity });
       }
 
       await cart.save();

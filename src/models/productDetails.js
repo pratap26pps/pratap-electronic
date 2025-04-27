@@ -43,6 +43,12 @@ const productDetailsSchema= new mongoose.Schema({
         type: Number,
         default: 0,
       },
+      SKU: {
+        type: String,
+        unique: true,
+        required: true,
+    },
+
    
 },{
     timestamps: true, 

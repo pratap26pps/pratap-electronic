@@ -11,6 +11,7 @@ export default function YourCart() {
   const router = useRouter();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
   const [coupon, setCoupon] = useState("");
   const cart = useSelector((state) => state.cart.cart || []);
   const user = useSelector((state) => state.auth.signupdata || null);
@@ -57,8 +58,11 @@ export default function YourCart() {
     router.push("/PlaceOrder");
   };
   const removehandler =async (productId) => {
+    setLoading2(true);
     console.log("productid during btn click",productId)
-   await dispatch(removeFromCart(productId));
+    dispatch(removeFromCart(productId));
+   dispatch(fetchCart());
+   setLoading2(false);
      
   };
 
@@ -103,7 +107,9 @@ export default function YourCart() {
                   <p className="text-lg font-bold mr-3">₹{item?.productId?.ProductPrice}</p>
                   <Button onClick={() => removehandler(item.productId._id)} 
                   className="mt-2 cursor-pointer">
-                    Remove
+              {
+                loading2 ? "Removing...":"Remove"
+              }      
                   </Button>
                 </div>
               ))}

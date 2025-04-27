@@ -4,7 +4,19 @@ import { imageuploadcloudanary } from "@/utils/imageUpload";
 import { NextResponse } from "next/server";
 import connectDB from "@/dbconfig/dbconfig";
 import BrandProduct from "@/models/BrandProduct";
+import Counter from "@/models/counter";
 connectDB();
+
+
+async function generateSKU() {
+  const counter = await Counter.findOneAndUpdate(
+    { name: "Product" },
+    { $inc: { count: 1 } },
+    { new: true, upsert: true }
+  );
+  return `PROD-${counter.count.toString().padStart(4, "0")}`; // like PROD-0005
+}
+
 
 export async function POST(req) {
   try {
@@ -49,6 +61,9 @@ export async function POST(req) {
     );
     console.log("thumbnailImage", thumbnailImage);
     // Create new product
+
+    const sku = await generateSKU();
+
     const newProduct = await Product.create({
       ProductTitle,
       ProductPrice,
@@ -56,6 +71,7 @@ export async function POST(req) {
       ProductImage: thumbnailImage.secure_url,
       BenefitsOfProduct,
       ProductShortDescription,
+      SKU: sku,
       brandcategory: LocalBrandId,
       isFeatured: true,
       views: 0,

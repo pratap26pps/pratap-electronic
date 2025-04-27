@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export async function DELETE(request, context) {
   await connectDB();
 
-  // Extract ID from dynamic route [id]
+  
   const { params } = context;
   const { id } = params;
   console.log("Deleting item with id:", id);
