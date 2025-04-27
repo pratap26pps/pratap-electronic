@@ -126,12 +126,17 @@ const loadRazorpayScript = () => {
               razorpay_signature: response.razorpay_signature,
               product: productIds,
               userId: userid,
+              grandTotal,
+              gstRate,
+              shipping,
+              subtotal,
+              discount 
             }),
           });
 
           const verifyData = await verifyRes.json();
           if (verifyData.success) {
-            toast.success("Payment successful & enrollment done!");
+            toast.success("Payment Done successfully  !");
             router.push("/OrderSuccess");
           } else {
             toast.error("Payment verification failed.");

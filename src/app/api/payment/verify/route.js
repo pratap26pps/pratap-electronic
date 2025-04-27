@@ -6,7 +6,11 @@ import { productEnrollment } from "@/app/templete/productenrollmail";
 import connectDB from "@/dbconfig/dbconfig";
 import Order from "@/models/Order";
 // Enroll the student into the product
-async function enrollCustomer(product, userId) {
+async function enrollCustomer(product, userId,   grandTotal,
+  gstRate,
+  shipping,
+  subtotal,
+  discount ) {
   try {
     const productDocs = [];
     for (const productId of product) {
@@ -39,11 +43,12 @@ async function enrollCustomer(product, userId) {
       products: productDocs,  
       paymentMethod:  "Online",
       status: "Processing",
-      subtotal: product.subtotal || 280,
-      shipping: product.shipping || 50,
-      gstRate: product.gstRate ||0.18,
-      discount: product.discount || null,
-      grandTotal: product.grandTotal || 500,
+ 
+      subtotal:  subtotal,
+      shipping:  shipping,
+      gstRate:  gstRate,
+      discount:  discount,
+      grandTotal: grandTotal,
     });
     return newOrder;
 
@@ -63,6 +68,11 @@ export async function POST(req) {
     razorpay_signature,
     product,
     userId,
+    grandTotal,
+    gstRate,
+    shipping,
+    subtotal,
+    discount 
   } = await req.json();  
   
   // Check for missing fields
@@ -91,7 +101,11 @@ export async function POST(req) {
 
   // Verify signature and process enrollment
   if (expectedSignature === razorpay_signature) {
-    await enrollCustomer(product, userId); 
+    await enrollCustomer(product, userId,   grandTotal,
+      gstRate,
+      shipping,
+      subtotal,
+      discount ); 
     return new Response(
       JSON.stringify({
         success: true,
