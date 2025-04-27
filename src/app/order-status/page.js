@@ -3,17 +3,32 @@ import React, { useState,useEffect } from "react";
 import Footer from "@/components/Footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const page = () => {
-  const [formData, setFormData] = useState({ ordernumber: "", email: "" });
-
+  const [formData, setFormData] = useState({ ordernumber: ""  });
+  const [status, setstatus] = useState( "");
+ console.log("status",status);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const orderhandler = (e) => {
+  const orderhandler =async (e) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
+    const ordernumver = formData.ordernumber
+    try{
+      const res = await axios.get(`/api/payment/codallorder/${ordernumver}`);
+      console.log("res for track order",res);
+    if(res){
+      setstatus(res?.data?.data[0]?.status)
+
+      toast.success("order tracked success");
+    }
+    }catch(error){
+     toast.error(error.message)
+    }
   };
 
     useEffect(() => {
@@ -39,23 +54,17 @@ const page = () => {
             className="text-lg px-5 py-6 rounded-xl border-2 border-gray-300 focus:ring-2 focus:ring-blue-400"
             value={formData.ordernumber}
             onChange={handleChange}
-            placeholder="Order Number"
+            placeholder="Order Id"
             required
           />
-          <Input
-            name="email"
-            className="text-lg px-5 py-6 rounded-xl border-2 border-gray-300 focus:ring-2 focus:ring-blue-400"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Email"
-            required
-          />
+  
           <Button className="w-full py-6 text-lg rounded-xl bg-blue-600 hover:bg-blue-700 transition duration-200">
             Track
           </Button>
-          <p className="text-sm text-gray-500 mt-4 italic">
-            powered by ------ 
-          </p>
+        
+          <p className="text-5xl text-amber-700">{status}</p>
+        
+      
         </form>
       </div>
       <div>
