@@ -9,8 +9,10 @@ import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Footer from "@/components/Footer";
-export default function Page({ params }) {
-  const { product } = use(params);
+import { useParams } from "next/navigation";
+export default function Page() {
+    const { product } = useParams();
+    console.log("product id in total pps",product)
   const dispatch = useDispatch();
   const router = useRouter();
   const user = useSelector((state) => state.auth.signupdata || null);
@@ -20,28 +22,25 @@ export default function Page({ params }) {
   const [coupon, setcoupon] = useState("");
   const cart = useSelector((state) => state.cart.cart || []);
 
-  const BrandProducthandler = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        `/api/productbybrand?brandId=${product}`
-      );
-      console.log(
-        "response during get product of specific brand",
-        response.data
-      );
-      setspecificproducts(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  useEffect(() => {
+ 
+    const getProductsByCategory = async (categoryId) => {
+     try {
+       const response = await axios.get(`/api/TotalProduct/${categoryId}`);
+       const data = response.data;  
+       console.log("fetching products by category:", data);
+       setspecificproducts(data.products);
+       
+     } catch (error) {
+       console.error("Error fetching products by category:", error);
+       throw error;
+     }
+   };
+   useEffect(() => {
     if (product) {
-      BrandProducthandler();
-    }
-  }, [product]);
+        getProductsByCategory(product);
+      }
+   }, [product]);
+ 
 
   const gotocart = async (productId) => {
     if (user?.role === "owner") {

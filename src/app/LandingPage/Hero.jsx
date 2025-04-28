@@ -11,6 +11,8 @@ import axios from "axios";
 const Hero = () => {
   const [News, setNews] = useState([]);
   const [loading, setloading] = useState(false);
+  const [loading2, setloading2] = useState(false);
+  const [components, setcomponents] = useState([]);
 
   const newsreport = async () => {
     setloading(true);
@@ -30,6 +32,23 @@ const Hero = () => {
     newsreport();
   }, []);
 
+    const categoryhandler = async () => {
+      setloading2(true)
+      try{
+        const response = await axios.get('/api/category');
+        console.log("responseof category  in hero",response);
+        setcomponents(response.data);
+      }catch(error){
+       toast.error("error.message")
+      }finally{
+        setloading2(false)
+      }
+    }
+      useEffect(()=>{
+        categoryhandler();
+      },[])
+      console.log("response of category  in hero",components);
+  
   return (
     <div>
       <div className="px-4 mt-36 md:px-8 lg:px-16">
@@ -41,37 +60,36 @@ const Hero = () => {
         <h2 className="text-center text-2xl font-bold mt-12">
           Featured Categories
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-          <div className="lg:ml-0 ml-8  rounded-lg shadow-md text-center">
-            <img
-              src="https://cdn11.bigcommerce.com/s-3fd3md1ghs/images/stencil/original/image-manager/drone-parts-1.jpg?t=1732813857"
-              alt="drone part"
-              className="mt-2 rounded-md"
-            />
-          </div>
-          <div className="lg:ml-0 ml-8   rounded-lg shadow-md text-center">
-            <img
-              src="https://cdn11.bigcommerce.com/s-3fd3md1ghs/images/stencil/original/image-manager/usb-and-hdmi-connectors-1.jpg?t=1732813882"
-              alt="drone part"
-              className="mt-2 rounded-md"
-            />
-          </div>
-          <div className="lg:ml-0 ml-8   rounded-lg shadow-md text-center">
-            <img
-              src="https://cdn11.bigcommerce.com/s-3fd3md1ghs/images/stencil/original/image-manager/microcontroller-website-banner-m1.jpg?t=1730219309"
-              alt="drone part"
-              className="mt-2 rounded-md"
-            />
-          </div>
-          <div className="lg:ml-0 ml-8  rounded-lg shadow-md text-center">
-            <img
-              src="https://cdn11.bigcommerce.com/s-3fd3md1ghs/images/stencil/original/image-manager/inductors-and-chokes-1.jpg?t=1732813905 "
-              alt="drone part"
-              className="mt-2 rounded-md"
-            />
-          </div>
+        <div className="flex  justify-center gap-6 mt-6">
+        {
+          components.slice(0, 4).map((name,index)=>{
+            return (
+              <div key={name._id} >
+              <Link href={`/Totalproduct/${name._id}`}>
+              <img
+          src={
+            // Provide your dynamic images if available; otherwise fallback to these sample images
+            index === 0
+              ? "https://cdn11.bigcommerce.com/s-3fd3md1ghs/images/stencil/original/image-manager/drone-parts-1.jpg?t=1732813857"
+              : index === 1
+              ? "https://cdn11.bigcommerce.com/s-3fd3md1ghs/images/stencil/original/image-manager/usb-and-hdmi-connectors-1.jpg?t=1732813882"
+              : index === 2
+              ? "https://cdn11.bigcommerce.com/s-3fd3md1ghs/images/stencil/original/image-manager/microcontroller-website-banner-m1.jpg?t=1730219309"
+              : index === 3
+              ? "https://cdn11.bigcommerce.com/s-3fd3md1ghs/images/stencil/original/image-manager/inductors-and-chokes-1.jpg?t=1732813905"
+              : "https://via.placeholder.com/300" 
+          }
+          alt={name?.name}
+          className="mt-2 rounded-md cursor-pointer"
+        />
+              </Link>  
+              </div>
+            )
+          })
+        }
         </div>
-
+  
+    
         {/* Featured, New & Popular Products */}
 
         <div className="mt-12">

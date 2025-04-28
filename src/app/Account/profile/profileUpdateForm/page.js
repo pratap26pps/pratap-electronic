@@ -2,70 +2,117 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import Footer from "@/components/Footer";
+import axios from "axios";
 export default function ProfileUpdateForm() {
+  const user = useSelector((state) => state.auth.userdetail || null);
+  console.log("user in update", user);
+
   const [formData, setFormData] = useState({
-    firstName: "Pankaj",
-    lastName: "Singh",
-    company: "Evelta",
-    phone: "8252590019",
-    email: "pankajpatna10321@gmail.com",
+    firstName: user?.firstName || "",
+    lastName: user?.lastName || "",
+    phone: user?.phone || "",
+    email: user?.email || "",
     password: "",
     confirmPassword: "",
     currentPassword: "",
   });
-
+  const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Updated Data:", formData);
+    setLoading(true);
+    try {
+      const data = await axios.put("/api/user/me", formData);
+      toast.success("Profile updated successfully!");
+      console.log("Server Response:", data);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.message || "Failed to update profile");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="max-w-lg mx-auto p-6 shadow-md rounded-xl mt-36">
-      <h2 className="text-2xl font-semibold text-gray-700 mb-4">Update Profile</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
+    <div>
+      <div className="max-w-lg mx-auto p-6 shadow-md rounded-xl mt-36">
+        <h2 className="text-2xl font-semibold text-gray-700 mb-4">
+          Update Profile
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-gray-600">
+                First Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+                className="input  border p-2 w-full"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-600">
+                Last Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                required
+                className="input border p-2 w-full"
+              />
+            </div>
+          </div>
+
           <div>
-            <label className="block text-gray-600">First Name <span className="text-red-500">*</span></label>
-            <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required className="input  border p-2 w-full" />
+            <label className="block text-gray-600">Phone Number</label>
+            <input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className="input border p-2 w-full"
+            />
           </div>
           <div>
-            <label className="block text-gray-600">Last Name <span className="text-red-500">*</span></label>
-            <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required className="input border p-2 w-full" />
+            <label className="block text-gray-600">
+              Email Address <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="input border p-2 w-full"
+            />
           </div>
-        </div>
-        <div>
-          <label className="block text-gray-600">Company</label>
-          <input type="text" name="company" value={formData.company} onChange={handleChange} className="input border p-2 w-full" />
-        </div>
-        <div>
-          <label className="block text-gray-600">Phone Number</label>
-          <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className="input border p-2 w-full" />
-        </div>
-        <div>
-          <label className="block text-gray-600">Email Address <span className="text-red-500">*</span></label>
-          <input type="email" name="email" value={formData.email} onChange={handleChange} required className="input border p-2 w-full" />
-        </div>
-        <div>
-          <label className="block text-gray-600">Current Password</label>
-          <input type="password" name="currentPassword" value={formData.currentPassword} onChange={handleChange} className="input border p-2 w-full" />
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-gray-600">New Password</label>
-            <input type="password" name="password" value={formData.password} onChange={handleChange} className="input border p-2 w-full" />
-          </div>
-          <div>
-            <label className="block text-gray-600">Confirm Password</label>
-            <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} className="input border p-2 w-full" />
-          </div>
-        </div>
-        <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition">Update Details</button>
-      </form>
-     <Link href='/Account/profile'> <button className="cursor-pointer">Back</button> </Link>
+          <button
+            type="submit"
+            className="w-full cursor-pointer bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
+          >
+          {
+            loading ?"Updating...":"Update Details"
+          } 
+          </button>
+        </form>
+        <Link href="/Account/profile">
+          {" "}
+          <button className="cursor-pointer">Back</button>{" "}
+        </Link>
+      </div>
+      <Footer />
     </div>
   );
 }
