@@ -170,13 +170,16 @@ const Hero = () => {
               item  
             ) => (
               <div key={item?._id} className="p-2 ml-8 lg:ml-0 rounded-lg shadow-md">
+                <Link href={`/blog/${item?._id}`}>
                 <img src={item?.image} alt="news" className="rounded-md" />
                 <p className="font-semibold">{item?.date}</p>
                 <p className="text-gray-500 mt-2">{item?.heading}</p>
                 <p className="text-gray-600">{item?.description}</p>
                 <p className="text-gray-500 text-sm">
                   Published by {item?.Author}
-                </p>
+                </p>  
+                </Link>
+     
               </div>
             )
           )}

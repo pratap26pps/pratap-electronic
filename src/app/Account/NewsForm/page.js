@@ -11,6 +11,9 @@ const NewsForm = () => {
     heading: '',
     description: '',
     Author: '',
+     Conclusion:'',
+     Faqs:''
+
   });
 
   const [loading, setLoading] = useState(false);
@@ -25,7 +28,9 @@ const NewsForm = () => {
     try {
       await axios.post('/api/blog', formData);
       toast.success("News posted successfully!");
-      setFormData({ image: '', date: '', heading: '', description: '', Author: '' });
+      setFormData({ image: '', date: '', heading: '', description: '', Author: '',
+        Conclusion:'',Faqs:''
+       });
     } catch (error) {
       console.log(error);
       toast.error("Failed to post news");
@@ -87,6 +92,30 @@ const NewsForm = () => {
             rows="4"
             placeholder="Enter news description..."
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
+          ></textarea>
+        </div>
+        <div>
+          <label className="block mb-2 text-sm font-semibold text-gray-700">Conclusion</label>
+          <textarea
+            name="Conclusion"
+            value={formData.Conclusion}
+            onChange={handleChange}
+            rows="4"
+            placeholder="Enter news Conclusion..."
+            className="w-full h-64  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            required
+          ></textarea>
+        </div>
+        <div>
+          <label className="block mb-2 text-sm font-semibold text-gray-700">Faqs</label>
+          <textarea
+            name="Faqs"
+            value={formData.Faqs}
+            onChange={handleChange}
+            rows="4"
+            placeholder="Enter news Faqs..."
+            className="w-full h-64  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
           ></textarea>
         </div>

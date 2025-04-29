@@ -17,6 +17,14 @@ const newsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  Conclusion: {
+    type: String,
+    required: true,
+  },
+  Faqs: {
+    type: String,
+    required: true,
+  },
   Author: {
     type: String,
     required: true,
