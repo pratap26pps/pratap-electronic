@@ -8,8 +8,28 @@ import {
   FaLock,
   FaAward,
 } from "react-icons/fa";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import toast from "react-hot-toast";
+import { useState } from "react";
+
 
 const Footer = () => {
+
+    const [user, setUser] = useState({
+      email: "",
+    });
+
+    const subscribehandler =()=>{
+        if(user.email.trim() !== ""){
+          toast.success("now! your are subscribed")
+        }
+        else{
+          toast.error("please enter your email")
+
+        }
+    }
+
   return (
     <footer className="bg-gray-900 text-white py-10">
       <div className="container mx-auto px-4 sm:px-8">
@@ -27,14 +47,22 @@ const Footer = () => {
             <div className="mt-6">
               <p className="text-gray-300 mb-2 font-medium">Subscribe to Newsletter</p>
               <div className="relative w-full sm:w-[74%]">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="w-full rounded-full py-2 pl-4 pr-10 bg-white text-black placeholder-gray-500 focus:outline-none"
-                />
-                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-600 font-bold text-xl cursor-pointer">
+                    
+                      <Label htmlFor="email">Email Address</Label>
+                      <Input
+                        id="email"
+                        placeholder="yourmail@gmail.com"
+                        type="email"
+                        onChange={(e) => setUser({ ...user, email: e.target.value })}
+                        value={user.email}
+                        required
+                      />
+                   
+                <div 
+                onClick={()=>subscribehandler()}
+                className="absolute right-3 top-1/2 mt-2 scale-150  transform -translate-y-1/2 text-green-600 font-bold text-xl cursor-pointer">
                   →
-                </span>
+                </div>
               </div>
             </div>
 

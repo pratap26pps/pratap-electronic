@@ -95,10 +95,10 @@ const Page = () => {
 
   const dashboardList = [
     { id: 1, name: "Orders", link: "/Account/profile/order" },
-    { id: 2, name: "Returns", link: "/returns" },
+    { id: 2, name: "Returns", link: "/Account/profile/returns" },
     { id: 3, name: "Messages", link: "/Contact-Us" },
     { id: 4, name: "Addresses", link: "/Account/profile/AddresesManagement" },
-    { id: 5, name: "Your List", link: "/yourlist" },
+    { id: 5, name: "Your List", link: "/Account/profile/yourlist" },
     { id: 6, name: "Account Settings", link: "/Account/profile/profileUpdateForm" },
   ];
 

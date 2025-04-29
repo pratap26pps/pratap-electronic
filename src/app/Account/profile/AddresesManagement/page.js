@@ -52,7 +52,7 @@ const AddressManagement = () => {
   const [addresses, setAddresses] = useState([
     {
       name: "Pankaj Singh",
-      company: "Evelta",
+      company: "Embproto",
       street: "HHH/5, Civil Township",
       city: "Rourkela",
       state: "Odisha",
