@@ -4,15 +4,70 @@ import { CarouselSize2 } from "@/components/corouseSpacing2";
 import { CarouselSize3 } from "@/components/corouseSpacin3";
 import Footer from "@/components/Footer";
 import Front from "./Front";
+import { setSignupdata, setUserdetail } from "@/redux/slices/userSlice";
+import { useDispatch } from "react-redux";
 import Link from "next/link";
 import { useEffect,useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 const Hero = () => {
   const [News, setNews] = useState([]);
+  const [user, setUser] = useState(null);
   const [loading, setloading] = useState(false);
   const [loading2, setloading2] = useState(false);
   const [components, setcomponents] = useState([]);
+
+  const dispatch = useDispatch();
+  //  get userdetail from token
+    const fetchUser = async () => {
+      try {
+        const res = await fetch("/api/users/me", { cache: "no-store" });
+        const data = await res.json(); 
+       console.log("data in user hero",data);
+       localStorage.setItem("token", data.token);
+        if (data.user) {
+          setUser(data.user || null);
+         dispatch(setSignupdata(data.user))
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        setUser(null);
+      }
+    };
+  
+    useEffect(() => {
+      fetchUser();
+    }, []);
+    console.log("user in hero section", user);
+  
+  // get all userdetails from get request
+  const fetchUser2 = async () => {
+    try {
+      if (!user?.email) return;
+  
+      const res = await fetch(`/api/users/signup?email=${user.email}`, {
+        method: "GET",
+        cache: "no-store"
+      });
+      const data = await res.json();
+      console.log("data in user2 hero section", data);
+  
+      if (data.user) {
+        dispatch(setUserdetail(data.user));
+      }
+    } catch (error) {
+      console.error("Error fetching user2:", error);
+    }
+  };
+  
+  useEffect(() => {
+    if (user?.email) {
+      fetchUser2();
+    }
+  }, [user]);
+
 
   const newsreport = async () => {
     setloading(true);

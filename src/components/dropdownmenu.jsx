@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export function NavigationMenuDemo() {
-  
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [components, setComponents] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -189,7 +188,10 @@ function Dropdowns({ components, brandname, loading }) {
       {/* All Categories Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger className="font-bold">
-       <div className="flex gap-1 cursor-pointer"> All Categories <RiArrowDropDownFill className="mt-1"/> </div>  
+          <div className="flex gap-1 cursor-pointer">
+            {" "}
+            All Categories <RiArrowDropDownFill className="mt-1" />{" "}
+          </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           {loading ? (
@@ -198,11 +200,19 @@ function Dropdowns({ components, brandname, loading }) {
             components.map((category) => (
               <DropdownMenuSub key={category._id}>
                 <DropdownMenuSubTrigger>
-                <Link href={`/Totalproduct/${category._id}`} className="cursor-pointer">
-                  {category.name}
-                </Link>
-                  </DropdownMenuSubTrigger>
+                  <div  className="cursor-pointer">
+                    {category.name}
+                  </div>
+                </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent>
+                  <DropdownMenuItem asChild className="px-2 py-1 font-semibold text-gray-700 dark:text-gray-200">
+                  <Link
+                    href={`/Totalproduct/${category._id}`}
+                    className="cursor-pointer"
+                  >
+                    {category.name}
+                  </Link>
+                  </DropdownMenuItem>
                   {category.subcategory?.map((sub) => (
                     <DropdownMenuItem asChild key={sub._id}>
                       <Link
@@ -223,9 +233,10 @@ function Dropdowns({ components, brandname, loading }) {
       {/* Top Manufacturers Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger className="font-bold">
-         
-       <div className="flex gap-1 cursor-pointer">  Top Manufacturers <RiArrowDropDownFill className="mt-1"/> </div>  
-
+          <div className="flex gap-1 cursor-pointer">
+            {" "}
+            Top Manufacturers <RiArrowDropDownFill className="mt-1" />{" "}
+          </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           {brandname.map((brand) => (

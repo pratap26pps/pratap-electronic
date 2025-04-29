@@ -5,17 +5,19 @@ import axios from "axios";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { useSelector } from "react-redux";
-
+import { setSignupdata, setUserdetail } from "@/redux/slices/userSlice";
+import { useDispatch } from "react-redux";
+import Cookies from "js-cookie";
 const Page = () => {
   const router = useRouter();
   const pathname = usePathname();
+  const dispatch = useDispatch();
 
   const [user, setUser] = useState(null);
+  const [signupdata, setsignupdata] = useState(null);
   const [loading, setloading] = useState(false);
   const [loading2, setloading2] = useState(false);
-
- const signupdata = useSelector((state)=>state.auth.userdetail);
+ 
  console.log("signupdata in profile",signupdata);
   
   const fetchUser = async () => {
@@ -25,6 +27,8 @@ const Page = () => {
       const data = await res.json();
       if (data.user) {
         setUser(data.user);
+       dispatch(setSignupdata(data.user))
+        
       } else {
         setUser(null);
       }
@@ -42,14 +46,45 @@ const Page = () => {
     fetchUser();
   }, []);
 
+  // get all userdetails from get request
+  const fetchUser2 = async () => {
+    try {
+      if (!user?.email) return;
+  
+      const res = await fetch(`/api/users/signup?email=${user.email}`, {
+        method: "GET",
+        cache: "no-store"
+      });
+      const data = await res.json();
+      console.log("data in user2 hero section", data);
+  
+      if (data.user) {
+        setsignupdata(data.user);
+        dispatch(setUserdetail(data.user));
+      }
+    } catch (error) {
+      console.error("Error fetching user2:", error);
+    }
+  };
+  
+  useEffect(() => {
+    if (user?.email) {
+      fetchUser2();
+    }
+  }, [user]);
+
   const logout = async () => {
     setloading2(true);
     try {
       await axios.get("/api/users/logout");
- 
+      Cookies.remove("token");
+      router.refresh();
+      
+      dispatch(setUserdetail(null));
+      dispatch(setSignupdata(null));
       router.push("/Account/Login");
       toast.success("Logged out successfully!");
-      router.refresh();
+     
       setloading2(false)
     } catch (error) {
       console.log(error.message);

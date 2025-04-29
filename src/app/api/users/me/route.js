@@ -6,7 +6,7 @@ import connectDB from "@/dbconfig/dbconfig";
 export async function GET(req) {
   try {
     const token = req.cookies.get("token")?.value;  
-    console.log("dekho wo agya",token);
+    console.log("dekho wo agya token",token);
     if (!token) {
       return NextResponse.json({ user: null });
     }

@@ -6,7 +6,6 @@ import { FaSearch } from "react-icons/fa";
 import { MdOutlineEditLocation } from "react-icons/md";
 import { FaCartArrowDown } from "react-icons/fa";
 import { NavigationMenuDemo } from "../dropdownmenu";
-import Image from "next/image";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
 import Link from "next/link";
@@ -18,77 +17,29 @@ import {
 } from "./tooltip";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { setSignupdata } from "@/redux/slices/userSlice";
 import { useEffect, useState,useRef } from "react";
+import { useSelector } from "react-redux";
+import { setSignupdata, setUserdetail } from "@/redux/slices/userSlice";
 import { useDispatch } from "react-redux";
-import { setUserdetail } from "@/redux/slices/userSlice";
+
 export default function Navbar() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const { setTheme, theme } = useTheme();
-  const [user, setUser] = useState(null);
-  const [user2, setUser2] = useState(null);
- const dispatch = useDispatch();
 
-//  get userdetail from token
-  const fetchUser = async () => {
-    try {
-      const res = await fetch("/api/users/me", { cache: "no-store" });
-      const data = await res.json(); 
-     console.log("data in user nav",data);
-     localStorage.setItem("token", data.token);
-      if (data.user) {
-        setUser(data.user || null);
-       dispatch(setSignupdata(data.user))
-      } else {
-        setUser(null);
-      }
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      setUser(null);
-    }
-  };
-
-  useEffect(() => {
-    fetchUser();
-  }, []);
-  console.log("user", user);
-
-// get all userdetails from get request
-const fetchUser2 = async () => {
-  try {
-    if (!user?.email) return;
-
-    const res = await fetch(`/api/users/signup?email=${user.email}`, {
-      method: "GET",
-      cache: "no-store"
-    });
-    const data = await res.json();
-    console.log("data in user2 nav", data);
-
-    if (data.user) {
-      dispatch(setUserdetail(data.user));
-      setUser2(data.user)
-    }
-  } catch (error) {
-    console.error("Error fetching user2:", error);
-  }
-};
-
-useEffect(() => {
-  if (user?.email) {
-    fetchUser2();
-  }
-}, [user]);
+  const user = useSelector((state) => state.auth.signupdata); 
+  const user2 = useSelector((state) => state.auth.userdetail);
  
-
 
   const logouthandler = async () => {
     try {
       await axios.get("/api/users/logout");
       Cookies.remove("token");
-      setUser(null);
-      router.refresh();
+     dispatch(setUserdetail(null));
+     dispatch(setSignupdata(null));    
+    
       router.push("/Account/Login");
+      toast.success("logout Successfull")
     } catch (error) {
       console.log(error.message);
       toast.error(error.message);
@@ -106,7 +57,7 @@ useEffect(() => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("/api/product"); // Change to your actual API endpoint
+        const response = await fetch("/api/product");  
         const data = await response.json();
         console.log("data heee", data);
         setAllProducts(data.products);
@@ -251,28 +202,33 @@ useEffect(() => {
               </TooltipTrigger>
               <TooltipContent>
                 {user ? (
-                  <div>
+                  <div className="flex flex-col items-center gap-2 mt-4">
                     <p>Welcome {user2?.firstname}</p>
                     <Link href="/Account/profile">
-                      <p className="hover:text-amber-700">Dashboard</p>
+                      <p className="px-6 py-2 rounded-full bg-amber-500 text-white hover:bg-amber-600 transition duration-300 cursor-pointer shadow-md w-full text-center">Dashboard</p>
                     </Link>
                     <div
                       onClick={logouthandler}
-                      className="cursor-pointer hover:text-amber-700"
+                     className="px-6 py-2 rounded-full bg-gray-700 text-white hover:bg-gray-800 transition duration-300 cursor-pointer shadow-md w-full text-center"
                     >
                       Logout
                     </div>
                   </div>
+                  
                 ) : (
-                  <div>
-                    <p>Create an Account</p>
-                    <Link href="/Account/Signup">
-                      <p className="hover:text-amber-700">Signup</p>
-                    </Link>
-                    <Link href="/Account/Login">
-                      <p className="hover:text-amber-700">Login</p>
-                    </Link>
-                  </div>
+                  <div className="flex flex-col items-center gap-2 mt-4">
+                  <Link href="/Account/Signup" passHref>
+                    <p  className="px-6 py-2 rounded-full bg-amber-500 text-white hover:bg-amber-600 transition duration-300 cursor-pointer shadow-md w-full text-center">
+                      Signup
+                    </p>
+                  </Link>
+                  <Link href="/Account/Login" passHref>
+                    <p className="px-6 py-2 rounded-full bg-gray-700 text-white hover:bg-gray-800 transition duration-300 cursor-pointer shadow-md w-full text-center">
+                      Login
+                    </p>
+                  </Link>
+                </div>
+                
                 )}
               </TooltipContent>
             </Tooltip>
