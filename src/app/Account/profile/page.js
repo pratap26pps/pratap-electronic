@@ -1,23 +1,23 @@
 "use client";
-import toast from "react-hot-toast";
+ 
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Button } from "@/components/ui/button";
+ import Image from "next/image";
+ 
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { setSignupdata, setUserdetail } from "@/redux/slices/userSlice";
 import { useDispatch } from "react-redux";
-import Cookies from "js-cookie";
+ 
 import Footer from "@/components/Footer";
 const Page = () => {
-  const router = useRouter();
+ 
   const pathname = usePathname();
   const dispatch = useDispatch();
 
   const [user, setUser] = useState(null);
   const [signupdata, setsignupdata] = useState(null);
   const [loading, setloading] = useState(false);
-  const [loading2, setloading2] = useState(false);
+   
  
  console.log("signupdata in profile",signupdata);
   
@@ -90,6 +90,13 @@ const Page = () => {
       {
         loading ? <span className="loader ml-[50%] mt-36"></span>:
         <div className="max-w-6xl mt-8 mx-auto shadow-lg rounded-3xl p-10">
+
+          <Image
+          alt="Profile image"
+           src="/profile.png"
+           height={45}
+           width={45}
+          />
         <h1 className="text-3xl font-semibold mb-6">
           Welcome {signupdata?.firstname} {signupdata?.lastname}
         </h1>
@@ -145,7 +152,7 @@ const Page = () => {
             })}
           </div>
         )}
-        
+
       </div>
       }
      

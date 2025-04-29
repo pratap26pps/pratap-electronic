@@ -11,24 +11,22 @@ export default function ProfileUpdateForm() {
   console.log("user in update", user);
 
   const [formData, setFormData] = useState({
-    firstName: user?.firstName || "",
-    lastName: user?.lastName || "",
-    phone: user?.phone || "",
+    firstName: user?.firstname || "",
+    lastName: user?.lastname    || "",
+    phone: user?.phonenumber || "",
     email: user?.email || "",
-    password: "",
-    confirmPassword: "",
-    currentPassword: "",
   });
   const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
+  console.log("formData in update", formData);
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const data = await axios.put("/api/user/me", formData);
+      const data = await axios.put("/api/users/me", formData);
       toast.success("Profile updated successfully!");
       console.log("Server Response:", data);
     } catch (error) {
