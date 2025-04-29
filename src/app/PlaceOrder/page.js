@@ -59,6 +59,11 @@ const loadRazorpayScript = () => {
       return;
     }
     const productIds = cart.map((item) => item.productId._id);
+    if (!productIds) {
+      toast.error("product is not here");
+      setloading(false);
+      return;
+    }
     const userid = user?._id;
 
     if (paymentMethod === "COD") {
@@ -85,6 +90,9 @@ const loadRazorpayScript = () => {
         }
       } catch (err) {
         console.error("COD Error:", err.message);
+        toast.error(err.message);
+        setloading(false);
+
       }
       return;
     }
@@ -157,6 +165,8 @@ const loadRazorpayScript = () => {
       setloading(false);
     } catch (error) {
       console.error("Payment Error:", error.message);
+      toast.error(error.message);
+
     }
     setloading(false);
   };

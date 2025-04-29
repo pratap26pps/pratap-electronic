@@ -13,7 +13,7 @@ export async function POST(req) {
     const { product } = body;
     console.log("product for payment capture",product)
     
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
 
     if (!token) {

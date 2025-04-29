@@ -74,26 +74,7 @@ const Page = () => {
     }
   }, [user]);
 
-  const logout = async () => {
-    setloading2(true);
-    try {
-      await axios.get("/api/users/logout");
-      Cookies.remove("token");
-      router.refresh();
-      
-      dispatch(setUserdetail(null));
-      dispatch(setSignupdata(null));
-      router.push("/Account/Login");
-      toast.success("Logged out successfully!");
-     
-      setloading2(false)
-    } catch (error) {
-      console.log(error.message);
-      toast.error(error.message);
-      setloading2(false)
-    }
-  };
-
+ 
   const dashboardList = [
     { id: 1, name: "Orders", link: "/Account/profile/order" },
     { id: 2, name: "Returns", link: "/Account/profile/returns" },
@@ -164,20 +145,7 @@ const Page = () => {
             })}
           </div>
         )}
-
-        <div className="mt-10  text-right">
-          <Button
-            onClick={logout}
-            className="bg-red-600 hover:bg-red-700 cursor-pointer text-white px-6 py-3 rounded-xl shadow-md transition"
-          >
-            {
-              loading2 ?
-              <div className="loader scale-50"></div>:
-              "Logout"
-            }
-            
-          </Button>
-        </div>
+        
       </div>
       }
      

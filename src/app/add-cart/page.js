@@ -5,6 +5,7 @@ import { fetchCart, removeFromCart } from "@/redux/slices/cartSlice";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
  
 
 export default function YourCart() {
@@ -43,6 +44,10 @@ export default function YourCart() {
   const grandTotal = subtotal + shipping + gst - discount;
 
   const paymenthandler = () => {
+    if(cart.length === 0){
+      toast.error("product is missing");
+      return;
+    }
     const orderData = {
       cartItems: cart,
       coupon,
