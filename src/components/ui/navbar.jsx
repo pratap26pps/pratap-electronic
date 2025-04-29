@@ -21,6 +21,11 @@ import { useEffect, useState,useRef } from "react";
 import { useSelector } from "react-redux";
 import { setSignupdata, setUserdetail } from "@/redux/slices/userSlice";
 import { useDispatch } from "react-redux";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+} from "@/components/ui/dropdown-menu";
 
 export default function Navbar() {
   const router = useRouter();
@@ -195,12 +200,24 @@ useEffect(() => {
 
             <Tooltip>
               <TooltipTrigger asChild>
+                <Link href="/add-cart">
+                  <FaCartArrowDown className="text-xl cursor-pointer" />
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>My Cart</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          
+          <DropdownMenu>
+              <DropdownMenuTrigger asChild>
                 <FaUserPlus
                   className="text-xl hidden lg:block cursor-pointer"
                   onClick={() => setIsOpen(!isOpen)}
                 />
-              </TooltipTrigger>
-              <TooltipContent>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
                 {user ? (
                   <div className="flex flex-col items-center gap-2 mt-4">
                     <p>Welcome {user2?.firstname}</p>
@@ -230,20 +247,8 @@ useEffect(() => {
                 </div>
                 
                 )}
-              </TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link href="/add-cart">
-                  <FaCartArrowDown className="text-xl cursor-pointer" />
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>My Cart</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
           {/* Theme Toggle */}
           <div

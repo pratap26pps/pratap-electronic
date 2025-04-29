@@ -21,6 +21,7 @@ export function NavigationMenuDemo() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [components, setComponents] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loading2, setloading2] = useState(false);
   const [brandname, setBrandname] = useState([]);
   const router = useRouter();
 
@@ -47,11 +48,15 @@ export function NavigationMenuDemo() {
 
   useEffect(() => {
     const fetchBrands = async () => {
+      setloading2(true)
       try {
         const response = await axios.get("/api/TopManufacturing");
         setBrandname(response.data);
       } catch (error) {
         toast.error(error.message);
+      } finally{
+        setloading2(false);
+
       }
     };
     fetchBrands();
@@ -119,6 +124,7 @@ export function NavigationMenuDemo() {
             components={components}
             brandname={brandname}
             loading={loading}
+            loading2={loading2}
           />
         </div>
 
@@ -182,7 +188,7 @@ export function NavigationMenuDemo() {
 }
 
 // Separate dropdowns into a subcomponent
-function Dropdowns({ components, brandname, loading }) {
+function Dropdowns({ components, brandname, loading ,loading2}) {
   return (
     <div className="flex flex-col mt-1 md:flex-row gap-4">
       {/* All Categories Dropdown */}
@@ -239,13 +245,17 @@ function Dropdowns({ components, brandname, loading }) {
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          {brandname.map((brand) => (
-            <DropdownMenuItem asChild key={brand._id}>
-              <Link href={`/brand/${brand._id}`} className="cursor-pointer">
-                {brand.name}
-              </Link>
-            </DropdownMenuItem>
-          ))}
+          { loading2 ? <div className="p-2">Loading...</div>:
+            (  brandname.map((brand) => (
+              <DropdownMenuItem asChild key={brand._id}>
+                <Link href={`/brand/${brand._id}`} className="cursor-pointer">
+                  {brand.name}
+                </Link>
+              </DropdownMenuItem>
+            )))
+          }
+  
+
         </DropdownMenuContent>
       </DropdownMenu>
 

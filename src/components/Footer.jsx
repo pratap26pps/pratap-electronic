@@ -1,3 +1,6 @@
+"use client"
+import Link from "next/link";
+import { useState } from "react";
 import {
   FaFacebook,
   FaTwitter,
@@ -11,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
-import { useState } from "react";
+
 
 
 const Footer = () => {
@@ -105,9 +108,9 @@ const Footer = () => {
             <div>
               <h3 className="text-lg font-semibold">My Account</h3>
               <ul className="mt-2 space-y-2">
-                <li className="text-gray-400 cursor-default"><a href="add-cart">Cart</a> </li>
+                <li className="text-gray-400 cursor-default"><a href="/add-cart">Cart</a> </li>
                 <li className="text-gray-400 cursor-default"><a href="">CheckOut</a> </li>
-                <li className="text-gray-400 cursor-default"><a href="Account/profile">My Account</a> </li>
+                <li className="text-gray-400 cursor-default"><a href="/Account/profile">My Account</a> </li>
               </ul>
             </div>
 
@@ -115,7 +118,7 @@ const Footer = () => {
             <div>
               <h3 className="text-lg font-semibold">Services </h3>
               <div className="flex space-x-4 mt-2">
-                <a href="https://www.facebook.com/" className="text-gray-400 hover:text-white"><FaFacebook size={24} /></a>
+                <Link href="https://www.facebook.com/" className="text-gray-400 hover:text-white"><FaFacebook size={24} /></Link>
                 <a href="https://twitter.com/" className="text-gray-400 hover:text-white"><FaTwitter size={24} /></a>
                 <a href="https://www.instagram.com/" className="text-gray-400 hover:text-white"><FaInstagram size={24} /></a>
                 <a href="https://www.linkedin.com/" className="text-gray-400 hover:text-white"><FaLinkedin size={24} /></a>

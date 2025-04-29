@@ -8,6 +8,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { setSignupdata, setUserdetail } from "@/redux/slices/userSlice";
 import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
+import Footer from "@/components/Footer";
 const Page = () => {
   const router = useRouter();
   const pathname = usePathname();
@@ -103,7 +104,8 @@ const Page = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-36 px-6">
+    <div>
+   <div className="min-h-screen pt-36 px-6">
       {
         loading ? <span className="loader ml-[50%] mt-36"></span>:
         <div className="max-w-6xl mt-8 mx-auto shadow-lg rounded-3xl p-10">
@@ -180,7 +182,13 @@ const Page = () => {
       }
      
     </div>
+    <div>
+      <Footer/>
+    </div>
+    </div>
+ 
   );
 };
 
 export default Page;
+
