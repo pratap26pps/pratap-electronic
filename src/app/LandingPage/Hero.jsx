@@ -169,7 +169,7 @@ const Hero = () => {
             (
               item  
             ) => (
-              <div key={item?._id} className="p-2 ml-8 lg:ml-0 rounded-lg shadow-md">
+              <div key={item?._id} className="p-2 ml-8 bg-emerald-950 lg:ml-0 rounded-lg shadow-md">
                 <Link href={`/blog/${item?._id}`}>
                 <img src={item?.image} alt="news" className="rounded-md" />
                 <p className="font-semibold">{item?.date}</p>
