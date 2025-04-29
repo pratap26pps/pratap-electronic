@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import { useParams } from 'next/navigation';
+import Footer from '@/components/Footer';
 const page = () => {
     const params = useParams();
     const { id } = params;
@@ -50,16 +51,20 @@ const page = () => {
             <p className="text-gray-600">{News?.description}</p>
       <h2 className="text-center  text-2xl font-bold mt-12">Conclusion</h2>
 
-            <p className="text-gray-600">Conclusion{News?.Conclusion}</p>
+            <p className="text-gray-600 w-3/4">Conclusion{News?.Conclusion}</p>
             <h2 className="text-center  text-2xl font-bold mt-12">Faqs</h2>
 
-            <p className="text-gray-600">{News?.Faqs}</p>
+            <p className="text-gray-600 w-3/4">{News?.Faqs}</p>
 
             <p className="text-gray-500 text-sm">Published by {News?.Author}</p>
           </div>
         
        
       }
+      <div className='mt-7'>
+      <Footer/>
+
+      </div>
       
     </div>
   )
