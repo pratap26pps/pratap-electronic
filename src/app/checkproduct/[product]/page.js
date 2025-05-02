@@ -9,7 +9,8 @@ import { setAddCart, setRemoveCart } from "@/redux/slices/cartSlice";
 import toast from "react-hot-toast";
 import Footer from "@/components/Footer";
 import { useSelector } from "react-redux";
-export default function Page({ params}) {
+import { CarouselSize4 } from "@/components/corouseSpacing4";
+export default function Page({ params }) {
   const { product } = use(params);
   const dispatch = useDispatch();
   const [specificproducts, setSpecificProducts] = useState({});
@@ -17,7 +18,7 @@ export default function Page({ params}) {
   const [loading, setLoading] = useState(false);
   const user = useSelector((state) => state.auth.signupdata || null);
 
-  const [position, setPosition] = useState({ x: '50%', y: '50%' });
+  const [position, setPosition] = useState({ x: "50%", y: "50%" });
 
   const handleMouseMove = (e) => {
     const { left, top, width, height } = e.target.getBoundingClientRect();
@@ -44,10 +45,10 @@ export default function Page({ params}) {
   }, [product]);
 
   const gotoCart = async () => {
-        if (user?.role === "owner") {
-          toast.error("you cannot add items,you are an owner");
-          return;
-        }
+    if (user?.role === "owner") {
+      toast.error("you cannot add items,you are an owner");
+      return;
+    }
     try {
       const res = await axios.get("/api/cart", { withCredentials: true });
       let cartItems = res.data.items || [];
@@ -107,31 +108,48 @@ export default function Page({ params}) {
             <span className="loader"></span>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
- <div
-      className="relative w-[300px] h-[300px] overflow-hidden rounded-xl shadow-lg mx-auto"
-      onMouseMove={handleMouseMove}
-    >
-      <img
-        src={specificproducts.ProductImage}
-        alt="Product"
-        className="w-full h-full object-contain transition-transform duration-300 ease-in-out"
-        style={{
-          transformOrigin: `${position.x} ${position.y}`,
-          transform: 'scale(1.5)',
-        }}
-      />
-    </div>
-
-
-            <div className="p-6 mb-4 rounded-xl shadow-lg border border-gray-100 space-y-4">
-              <h2 className="text-xl font-bold text-gray-800">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
+            <div
+              className="relative w-[300px] h-[300px] overflow-hidden rounded-xl shadow-lg mx-auto"
+              onMouseMove={handleMouseMove}
+            >
+              <img
+                src={specificproducts.ProductImage}
+                alt="Product"
+                className="w-full h-full object-contain transition-transform duration-300 ease-in-out"
+                style={{
+                  transformOrigin: `${position.x} ${position.y}`,
+                  transform: "scale(1.5)",
+                }}
+              />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold ">
                 {specificproducts.ProductTitle}
               </h2>
               <p className="text-gray-600">
                 {specificproducts.ProductShortDescription}
               </p>
+              <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                <div className="p-4 rounded-xl shadow-md bg-white hover:shadow-lg transition duration-300">
+                  <h3 className="text-lg font-semibold text-green-700">
+                    ✅ 100% Original Products
+                  </h3>
+                </div>
+                <div className="p-4 rounded-xl shadow-md bg-white hover:shadow-lg transition duration-300">
+                  <h3 className="text-lg font-semibold text-blue-700">
+                    🧾 GST Invoice
+                  </h3>
+                </div>
+                <div className="p-4 rounded-xl shadow-md bg-white hover:shadow-lg transition duration-300">
+                  <h3 className="text-lg font-semibold text-yellow-600">
+                    💰 Earn 3% Cashback
+                  </h3>
+                </div>
+              </div>
+            </div>
 
+            <div className="p-6 mb-4 lg:ml-0 ml-10  w-72 rounded-xl shadow-lg border border-gray-100 space-y-4">
               <p className="text-2xl text-red-500 font-bold">
                 ₹{specificproducts.ProductPrice}
                 <span className="text-sm text-gray-400 font-normal ml-1">
@@ -165,7 +183,11 @@ export default function Page({ params}) {
           </div>
         )}
       </div>
-
+      {/* related product */}
+     <div className="mt-20 mb-7">
+      <span className="flex justify-center text-4xl">Related Product</span>
+      <CarouselSize4/>
+     </div>
       <Footer />
     </>
   );

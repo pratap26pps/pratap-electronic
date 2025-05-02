@@ -25,7 +25,7 @@ export default function Home() {
       const userRes = await fetch("/api/users/me", { cache: "no-store" });
       const userData = await userRes.json();
       if (userData.user) {
-       
+        localStorage.setItem("userData", JSON.stringify(userData.user));
         dispatch(setSignupdata(userData.user));
       }
   

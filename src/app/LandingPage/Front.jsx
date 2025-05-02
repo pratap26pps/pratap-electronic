@@ -1,23 +1,29 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 
-// Dynamically import the Lottie web component (NOT used as JSX)
+ 
 const LottiePlayer = dynamic(() => import("@lottiefiles/lottie-player"), {
   ssr: false,
 });
 
 const Front = () => {
-  // Optional: preload the player
+  const [isopen,setIsMenuOpen] = useState(false);
   useEffect(() => {
     import("@lottiefiles/lottie-player");
   }, []);
 
+ 
   return (
-    <section className="  px-4 sm:px-10 lg:px-20">
+     <>
+     {
+      isopen ?      
+       <div className="cursor-pointer hover:text-green-500" onClick={()=>setIsMenuOpen(false)}>Show Front Section</div>
+      :
+      <section className="  px-4 sm:px-10 lg:px-20">
       <div className="max-w-7xl mx-auto flex flex-col-reverse lg:flex-row items-center gap-10">
         {/* TEXT */}
         <motion.div
@@ -57,6 +63,9 @@ const Front = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           {/* Use custom element tag directly */}
+      <div className="cursor-pointer hover:text-red-600
+       flex justify-end items-end" onClick={()=>setIsMenuOpen(true)}>Close</div>
+
           <lottie-player
             autoplay
             loop
@@ -67,6 +76,8 @@ const Front = () => {
         </motion.div>
       </div>
     </section>
+     }  
+     </>
   );
 };
 
