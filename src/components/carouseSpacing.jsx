@@ -18,9 +18,7 @@ import { useSelector } from "react-redux";
 
 export function CarouselSize() {
  
-   
-  const [loading2, setLoading2] = useState(false);
-
+  const [loading, setloading] = useState(false);
   const user = useSelector((state) => state.auth.signupdata || null);
   const products = useSelector((state) => state.product.FeatureProductdetails || null);
   
@@ -33,7 +31,7 @@ export function CarouselSize() {
  
 
   const toggleCartItem = async (productId) => {
-    setLoading2(true);
+    setloading(true);
              if(user?.role ==="owner"){
                toast.error("you cannot add items,you are an owner");
                return;
@@ -68,13 +66,13 @@ export function CarouselSize() {
           ...prev,
           [productId]: !prev[productId],
         }));
-        setLoading2(false);
+    setloading(false);
 
       } catch (error) {
               toast.error("You must be logged in to perform this action")
         
         console.error("Cart operation failed:", error);
-        setLoading2(false);
+    setloading(false);
 
       }
     
@@ -131,21 +129,13 @@ export function CarouselSize() {
             </Link>
               {/* Buttons */}
               <div className="flex flex-col gap-2 mt-4">
-             
-                  <button
+                
+                <button
                   onClick={() => toggleCartItem(item._id)}
                   className="bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-300 shadow-md font-semibold text-white"
                 >
-                  {cartItems[item._id] ? "Remove from Cart" :     <div>
-                    {
-                      loading2 ? <div className="loader scale-50"></div>:
-                    "Add to Cart"
-                    }
-                    </div>}
+                  {cartItems[item._id] ? "Remove from Cart" : "Add To Cart"}
                 </button>
-
-              
-              
       
                 <button className="border-2 p-2 font-semibold shadow rounded-lg focus:outline-none hover:text-orange-300 hover:border-orange-300">
                   ADD TO wishlist

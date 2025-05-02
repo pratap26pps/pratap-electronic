@@ -16,9 +16,8 @@ import {
 import { useSelector } from "react-redux";
 import Link from "next/link";
 export function CarouselSize2() {
-  
-    const [loading2, setLoading2] = useState(false);
-  
+ 
+  const [loading, setloading] = useState(false);
   const [cartItems, setCartItems] = useState({});
   const dispatch = useDispatch();
    const user = useSelector((state) => state.auth.signupdata || null);
@@ -29,7 +28,7 @@ export function CarouselSize2() {
 
  
   const toggleCartItem = async (productId) => {
-    setLoading2(true);
+    setloading(true);
            if(user?.role ==="owner"){
              toast.error("you cannot add items,you are an owner");
              return;
@@ -65,12 +64,12 @@ export function CarouselSize2() {
           ...prev,
           [productId]: !prev[productId],
         }));
-        setLoading2(false);
+        setloading(false);
       } catch (error) {
               toast.error("You must be logged in to perform this action")
         
         console.error("Cart operation failed:", error);
-        setLoading2(false);
+        setloading(false);
       }
     
   };
@@ -130,12 +129,7 @@ export function CarouselSize2() {
                          onClick={() => toggleCartItem(item._id)}
                          className="bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-300 shadow-md font-semibold text-white"
                        >
-                         {cartItems[item._id] ? "Remove from Cart" :    <div>
-                    {
-                      loading2 ? <div className="loader scale-50"></div>:
-                    "Add to Cart"
-                    }
-                    </div>}
+                         {cartItems[item._id] ? "Remove from Cart" : "Add To Cart"}
                        </button>
              
                        <button className="border-2 p-2 font-semibold shadow rounded-lg focus:outline-none hover:text-orange-300 hover:border-orange-300">
