@@ -37,7 +37,7 @@ export async function PUT(req) {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded._id;
+    const userId = decoded.id;
 
     const updatedUser = await User.findByIdAndUpdate(userId, body, {
       new: true,

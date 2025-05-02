@@ -2,6 +2,7 @@ import connectDB from "@/dbconfig/dbconfig";
 import User from "@/models/userModel";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import Address from "@/models/address";
 connectDB(); // Ensure database connection
 
 export async function POST(req) {
@@ -70,7 +71,8 @@ export async function GET(req) {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
     
-   const existingUser = await User.findOne({ email });
+   const existingUser = await User.findOne({ email }).populate("addresses");
+   console.log("Populated addresses:", existingUser.addresses);
     if (!existingUser) {
       return NextResponse.json({ error: "User not exists." }, { status: 400 });
     }

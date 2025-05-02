@@ -45,6 +45,12 @@ const userSchema = new mongoose.Schema({
             ref: "Product",
           },
         ],
+        addresses: [
+          {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Address",
+          },
+        ],
       forgotpasswordToken:String,
       verifypasswordTokenExpiry:Date,
       verifyTokenExpiry:Date,
