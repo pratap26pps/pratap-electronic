@@ -16,6 +16,7 @@ export default function Page({ params }) {
   const [specificproducts, setSpecificProducts] = useState({});
   const [addToCart, setAddToCart] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
   const user = useSelector((state) => state.auth.signupdata || null);
 
   const [position, setPosition] = useState({ x: "50%", y: "50%" });
@@ -45,6 +46,7 @@ export default function Page({ params }) {
   }, [product]);
 
   const gotoCart = async () => {
+    setLoading2(true)
     if (user?.role === "owner") {
       toast.error("you cannot add items,you are an owner");
       return;
@@ -89,6 +91,8 @@ export default function Page({ params }) {
     } catch (error) {
       toast.error("You must be logged in to perform this action.");
       console.error("Cart operation failed:", error);
+    }finally{
+      setLoading2(false)
     }
   };
 
@@ -173,7 +177,13 @@ export default function Page({ params }) {
                       : "bg-orange-500 hover:bg-orange-600"
                   }`}
                 >
-                  {addToCart ? "Remove from Cart" : "Add to Cart"}
+                  {addToCart ? "Remove from Cart" : 
+                  <div>
+                    {
+                      loading2 ? <div className="loader scale-50"></div>:
+                    "Add to Cart"
+                    }
+                    </div>}
                 </button>
                 <button className="px-5 py-2 rounded-lg border-2 border-gray-300 font-semibold hover:border-orange-400 hover:text-orange-400 transition">
                   Add to Wishlist

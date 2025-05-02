@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
+import Footer from "@/components/Footer";
  
 
 export default function YourCart() {
@@ -143,7 +144,8 @@ export default function YourCart() {
   
 
   return (
-    <div className="container mx-auto p-6 gap-6 mt-36">
+    <>
+      <div className="container mx-auto p-6 gap-6 mt-36">
       <div className="grid grid-cols-1 md:grid-cols-3">
         {/* Cart Items */}
         <div className="md:col-span-2 p-6 rounded-lg shadow">
@@ -233,6 +235,10 @@ export default function YourCart() {
           </div>
         </div>
       </div>
-    </div>
+    </div> 
+    <Footer/>
+    
+    </>
+ 
   );
 }

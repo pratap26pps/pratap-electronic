@@ -23,6 +23,8 @@ export default function Page({ params }) {
   const [cartItems, setCartItems] = useState({});
   const [loading, setloading] = useState(false);
   const [loading1, setloading1] = useState(false);
+  const [loading2, setLoading2] = useState(false);
+
   const [coupon, setcoupon] = useState("");
 
   const [selectedBrands, setSelectedBrands] = useState([]);
@@ -66,6 +68,7 @@ export default function Page({ params }) {
   };
 
   const gotocart = async (productId) => {
+    setLoading2(true)
     if (user?.role === "owner") {
       toast.error("you cannot add items,you are an owner");
       return;
@@ -111,6 +114,8 @@ export default function Page({ params }) {
       toast.error("You must be logged in to perform this action");
 
       console.error("Cart operation failed:", error);
+    }finally{
+      setLoading2(false)
     }
   };
 
@@ -297,7 +302,12 @@ export default function Page({ params }) {
                       onClick={() => gotocart(p._id)}
                       className="bg-orange-400 hover:bg-orange-300 text-white font-semibold py-2 rounded-lg transition shadow-md"
                     >
-                      {cartItems[p._id] ? "Remove from Cart" : "Add To Cart"}
+                      {cartItems[p._id] ? "Remove from Cart" :     <div>
+                    {
+                      loading2 ? <div className="loader scale-50"></div>:
+                    "Add to Cart"
+                    }
+                    </div>}
                     </button>
 
                     <button className="border-2 border-gray-300 hover:border-orange-300 text-gray-700 hover:text-orange-400 font-semibold py-2 rounded-lg transition shadow-md">
@@ -369,7 +379,12 @@ export default function Page({ params }) {
                         onClick={() => gotocart(p._id)}
                         className="bg-orange-400 hover:bg-orange-300 text-white font-semibold py-2 rounded-lg transition shadow-md"
                       >
-                        {cartItems[p._id] ? "Remove from Cart" : "Add To Cart"}
+                        {cartItems[p._id] ? "Remove from Cart" :     <div>
+                    {
+                      loading2 ? <div className="loader scale-50"></div>:
+                    "Add to Cart"
+                    }
+                    </div>}
                       </button>
 
                       <button className="border-2 border-gray-300 hover:border-orange-300 text-gray-700 hover:text-orange-400 font-semibold py-2 rounded-lg transition shadow-md">
