@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Footer from "@/components/Footer";
 import axios from "axios";
+import toast from "react-hot-toast";
  
  
 
@@ -18,6 +19,8 @@ export default function ContactUs( ) {
     issueType:"",
     message: "",
   });
+  const [loading, setloading] = useState(false)
+  
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,13 +28,18 @@ export default function ContactUs( ) {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
+    setloading(true)
     console.log("Form submitted:", formData);
     try{
       const response =await axios.post("/api/Contact",{data:formData})
       console.log("contact data",response.data)
-
+      if(response){
+        toast.success("Message Sent Successfull")
+      }
     }catch(error){
       console.log("error",error.message)
+    }finally{
+      setloading(false)
     }
   };
 
@@ -143,7 +151,11 @@ export default function ContactUs( ) {
           </div>
 
           <Button type="submit" className="w-full">
-            Submit
+            {
+              loading? <div className="loader scale-50"></div>:
+              "Submit"
+            }
+          
           </Button>
         </form>
          </div>
