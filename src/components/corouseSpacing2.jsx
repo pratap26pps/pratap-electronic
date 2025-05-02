@@ -16,28 +16,15 @@ import {
 import { useSelector } from "react-redux";
 import Link from "next/link";
 export function CarouselSize2() {
-  const [products, setProducts] = useState([]);
+ 
   const [loading, setloading] = useState(false);
   const [cartItems, setCartItems] = useState({});
   const dispatch = useDispatch();
    const user = useSelector((state) => state.auth.signupdata || null);
+   const products = useSelector((state) => state.product.NewProductdetails || []);
  
 
-  const getproductdetails = async () => {
-    try {
-      const result = await axios.get("/api/product");
-      console.log("result", result.data);
-      if (result) {
-        setProducts(result.data.popularProducts);
-      }
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    }
-  };
 
-  useEffect(() => {
-    getproductdetails();
-  }, []);
 
  
   const toggleCartItem = async (productId) => {

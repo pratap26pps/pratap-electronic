@@ -4,139 +4,48 @@ import { CarouselSize2 } from "@/components/corouseSpacing2";
 import { CarouselSize3 } from "@/components/corouseSpacin3";
 import Footer from "@/components/Footer";
 import Front from "./Front";
-import { setSignupdata, setUserdetail } from "@/redux/slices/userSlice";
-import { useDispatch } from "react-redux";
+ 
 import Link from "next/link";
-import { useEffect,useState } from "react";
-import toast from "react-hot-toast";
-import axios from "axios";
+import { useEffect } from "react";
+ 
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-
+import { useSelector } from "react-redux";
 
 const LottiePlayer = dynamic(() => import("@lottiefiles/lottie-player"), {
   ssr: false,
 });
 
 
-const Hero = () => {
+const Hero = ({ isLoading }) => {
 
     useEffect(() => {
       import("@lottiefiles/lottie-player");
     }, []);
-
-  const [News, setNews] = useState([]);
-  const [user, setUser] = useState(null);
-  const [loading, setloading] = useState(false);
-  const [loading2, setloading2] = useState(false);
-  const [components, setcomponents] = useState([]);
-
-  const dispatch = useDispatch();
-  //  get userdetail from token
-    const fetchUser = async () => {
-      try {
-        const res = await fetch("/api/users/me", { cache: "no-store" });
-        const data = await res.json(); 
-       console.log("data in user hero",data);
-       localStorage.setItem("token", data.token);
-        if (data.user) {
-          setUser(data.user || null);
-         dispatch(setSignupdata(data.user))
-        } else {
-          setUser(null);
-        }
-      } catch (error) {
-        console.error("Error fetching user:", error);
-        setUser(null);
-      }
-    };
-  
-    useEffect(() => {
-      fetchUser();
-    }, []);
-    console.log("user in hero section", user);
-  
-  // get all userdetails from get request
-  const fetchUser2 = async () => {
-    try {
-      if (!user?.email) return;
-  
-      const res = await fetch(`/api/users/signup?email=${user.email}`, {
-        method: "GET",
-        cache: "no-store"
-      });
-      const data = await res.json();
-      console.log("data in user2 hero section", data);
-  
-      if (data.user) {
-        dispatch(setUserdetail(data.user));
-      }
-    } catch (error) {
-      console.error("Error fetching user2:", error);
-    }
-  };
-  
-  useEffect(() => {
-    if (user?.email) {
-      fetchUser2();
-    }
-  }, [user]);
-
-
-  const newsreport = async () => {
-    setloading(true);
-    try {
-      const response = await axios.get("/api/blog");
-      if (response) {
-        setNews(response.data);
-      }
-    } catch (error) {
-      toast.error(error.message);
-      console.log("error during fetch news", error.message);
-    } finally {
-      setloading(false);
-    }
-  };
-  useEffect(() => {
-    newsreport();
-  }, []);
-
-    const categoryhandler = async () => {
-      setloading2(true)
-      try{
-        const response = await axios.get('/api/category');
-        console.log("responseof category  in hero",response);
-        setcomponents(response.data);
-      }catch(error){
-       toast.error("error.message")
-      }finally{
-        setloading2(false)
-      }
-    }
-      useEffect(()=>{
-        categoryhandler();
-      },[])
-      console.log("response of category  in hero",components);
-  
-  return (
-    <>
-    {
-      loading2 ? 
+ 
+  const News = useSelector((state) => state.product.newsdata || []);
+  const components = useSelector((state) => state.product.Categorydetails || []);
+    
+  if (isLoading) {
+    return (
       <motion.div
-      className="flex-1 mt-40 flex justify-center"
-      initial={{ scale: 0.8, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      transition={{ duration: 0.8, delay: 0.2 }}
-    >
-      {/* Use custom element tag directly */}
-      <lottie-player
-        autoplay
-        loop
-        mode="normal"
-        src="/elephant.json"
-        style={{ width: "300px", height: "300px" }}
-      ></lottie-player>
-    </motion.div>:
+        className="flex-1 mt-40 flex justify-center"
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
+        <lottie-player
+          autoplay
+          loop
+          mode="normal"
+          src="/elephant.json"
+          style={{ width: "300px", height: "300px" }}
+        ></lottie-player>
+      </motion.div>
+    );
+  }
+
+  return (
     <div>  
     <div className="px-4 mt-36 md:px-8 lg:px-16">
       {/* Hero Section */}
@@ -225,10 +134,7 @@ const Hero = () => {
       </Link>
     </div>
     <Footer />
-  </div>
-    }
-    </>
-
+    </div>
   );
 };
 

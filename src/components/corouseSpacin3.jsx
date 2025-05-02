@@ -16,29 +16,16 @@ import {
 } from "@/components/ui/carousel";
 import Link from "next/link";
 export function CarouselSize3() {
-  const [products, setProducts] = useState([]);
+ 
     const [loading, setloading] = useState(false);
   const user = useSelector((state) => state.auth.signupdata || null);
+  const products = useSelector((state) => state.product.PopularProductdetails || []);
   
   const [cartItems, setCartItems] = useState({});
   const dispatch = useDispatch();
   
 
-  const getproductdetails = async () => {
-    try {
-      const result = await axios.get("/api/product");
-      console.log("result", result.data);
-      if (result) {
-        setProducts(result.data.newProducts);
-      }
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    }
-  };
 
-  useEffect(() => {
-    getproductdetails();
-  }, []);
  
 
   const toggleCartItem = async (productId) => {

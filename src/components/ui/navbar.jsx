@@ -57,22 +57,11 @@ export default function Navbar() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [allProducts, setAllProducts] = useState([]);
+ 
+    const allProducts = useSelector((state) => state.product.Productdetails || []);
+  
+ 
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch("/api/product");  
-        const data = await response.json();
-        console.log("data heee", data);
-        setAllProducts(data.products);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    fetchProducts();
-  }, []);
 
   const handleSearchChange = (e) => {
     const value = e.target.value.toLowerCase();

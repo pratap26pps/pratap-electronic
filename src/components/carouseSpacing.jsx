@@ -17,29 +17,16 @@ import {
 import { useSelector } from "react-redux";
 
 export function CarouselSize() {
-  const [products, setProducts] = useState([]);
+ 
   const [loading, setloading] = useState(false);
   const user = useSelector((state) => state.auth.signupdata || null);
+  const products = useSelector((state) => state.product.FeatureProductdetails || null);
   
   const [cartItems, setCartItems] = useState({});
   const dispatch = useDispatch();
  
 
-  const getproductdetails = async () => {
-    try {
-      const result = await axios.get("/api/product");
-      console.log("result", result.data);
-      if (result) {
-        setProducts(result.data.featuredProducts);
-      }
-    } catch (error) {
-      console.error("Failed to fetch product details:", error);
-    }
-  };
-
-  useEffect(() => {
-    getproductdetails();
-  }, []);
+ 
 
  
 
@@ -142,12 +129,17 @@ export function CarouselSize() {
             </Link>
               {/* Buttons */}
               <div className="flex flex-col gap-2 mt-4">
-                <button
+                {
+                  loading? <div className="loader scale-50"></div>:
+                  <button
                   onClick={() => toggleCartItem(item._id)}
                   className="bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-300 shadow-md font-semibold text-white"
                 >
                   {cartItems[item._id] ? "Remove from Cart" : "Add To Cart"}
                 </button>
+                
+                }
+              
       
                 <button className="border-2 p-2 font-semibold shadow rounded-lg focus:outline-none hover:text-orange-300 hover:border-orange-300">
                   ADD TO wishlist
