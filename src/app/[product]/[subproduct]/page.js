@@ -66,25 +66,25 @@ export default function Page({ params }) {
   };
 
   // check state of add to cart
-    useEffect(() => {
-      const checkIfInCart = async () => {
-        if (!specificproducts?._id) return;
-        try {
-          const res = await axios.get("/api/cart", { withCredentials: true });
-          const cartItems = res.data.items || [];
-    
-          const isInCart = cartItems.some(
-            (item) => item.productId._id === specificproducts._id
-          );
-    
-          setAddToCart(isInCart);
-        } catch (error) {
-          console.error("Failed to check cart:", error);
-        }
-      };
-    
-      checkIfInCart();
-    }, [specificproducts]);
+     useEffect(() => {
+       const fetchCart = async () => {
+         try {
+           const res = await axios.get("/api/cart", { withCredentials: true });
+           const items = res.data.items || [];
+     
+           const cartMap = {};
+           for (const item of items) {
+             cartMap[item.productId._id] = true;
+           }
+     
+           setCartItems(cartMap);
+         } catch (error) {
+           console.error("Error fetching cart items:", error);
+         }
+       };
+     
+       fetchCart();
+     }, []);
 
   const gotocart = async (productId) => {
     if (user?.role === "owner") {
