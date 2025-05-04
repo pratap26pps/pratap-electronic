@@ -43,6 +43,27 @@ export default function Page({ params }) {
     }
   }, [product]);
 
+    // check state of add to cart
+      useEffect(() => {
+        const checkIfInCart = async () => {
+          if (!specificproducts?._id) return;
+          try {
+            const res = await axios.get("/api/cart", { withCredentials: true });
+            const cartItems = res.data.items || [];
+      
+            const isInCart = cartItems.some(
+              (item) => item.productId._id === specificproducts._id
+            );
+      
+            setAddToCart(isInCart);
+          } catch (error) {
+            console.error("Failed to check cart:", error);
+          }
+        };
+      
+        checkIfInCart();
+      }, [specificproducts]);
+
   const gotocart = async (productId) => {
     if (user?.role === "owner") {
       toast.error("you cannot add items,you are an owner");
@@ -56,7 +77,7 @@ export default function Page({ params }) {
       if (!productToToggle) return;
 
       const alreadyInCart = cartItems.some(
-        (item) => item.productId === productId
+        (item) => item.productId._id === productId
       );
 
       if (!alreadyInCart) {
@@ -69,7 +90,7 @@ export default function Page({ params }) {
         dispatch(setAddCart(productToToggle));
       } else {
         const updatedItems = cartItems.filter(
-          (item) => item.productId !== productId
+          (item) => item.productId._id !== productId
         );
 
         await axios.put("/api/cart", { items: updatedItems });

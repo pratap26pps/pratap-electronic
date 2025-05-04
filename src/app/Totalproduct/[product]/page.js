@@ -41,6 +41,25 @@ export default function Page() {
       }
    }, [product]);
  
+     useEffect(() => {
+       const fetchCart = async () => {
+         try {
+           const res = await axios.get("/api/cart", { withCredentials: true });
+           const items = res.data.items || [];
+     
+           const cartMap = {};
+           for (const item of items) {
+             cartMap[item.productId._id] = true;
+           }
+     
+           setCartItems(cartMap);
+         } catch (error) {
+           console.error("Error fetching cart items:", error);
+         }
+       };
+     
+       fetchCart();
+     }, []);
 
   const gotocart = async (productId) => {
     if (user?.role === "owner") {
@@ -55,7 +74,7 @@ export default function Page() {
       if (!productToToggle) return;
 
       const alreadyInCart = cartItems.some(
-        (item) => item.productId === productId
+        (item) => item.productId._id === productId
       );
 
       if (!alreadyInCart) {
@@ -68,7 +87,7 @@ export default function Page() {
         dispatch(setAddCart(productToToggle));
       } else {
         const updatedItems = cartItems.filter(
-          (item) => item.productId !== productId
+          (item) => item.productId._id !== productId
         );
 
         await axios.put("/api/cart", { items: updatedItems });
@@ -92,7 +111,7 @@ export default function Page() {
   const gstRate = 0.18;
 
   const subtotal = cart.reduce(
-    (acc, item) => acc + item.productId?.ProductPrice * item.quantity,
+    (acc, item) => acc + item.ProductPrice * item.quantity,
     0
   );
 
@@ -220,7 +239,7 @@ export default function Page() {
                   <div className="flex flex-col gap-2 mt-4">
                     <button
                       onClick={() => gotocart(p._id)}
-                      className="bg-orange-400 hover:bg-orange-300 text-white font-semibold py-2 rounded-lg transition shadow-md"
+                      className="bg-orange-400 hover:bg-orange-700 text-white font-semibold py-2 rounded-lg transition shadow-md"
                     >
                       {cartItems[p._id] ? "Remove from Cart" : "Add To Cart"}
                     </button>
@@ -253,17 +272,17 @@ export default function Page() {
                       className="flex justify-between items-center"
                     >
                       <img
-                        src={item.productId.ProductImage}
+                        src={item?.ProductImage}
                         height={34}
                         width={34}
                       ></img>
                       <span className="truncate w-2/3">
-                        {item.productId.ProductTitle}
+                        {item?.ProductTitle}
                       </span>
                       <span className="truncate w-2/3">
-                        {item.productId.ProductPrice}
+                        {item?.ProductPrice}
                       </span>
-                      <span> {item.quantity}</span>
+                      <span> {item?.quantity}</span>
                     </div>
                   ))}
                 </div>

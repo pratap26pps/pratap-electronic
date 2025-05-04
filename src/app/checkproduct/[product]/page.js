@@ -45,6 +45,27 @@ export default function Page({ params }) {
     }
   }, [product]);
 
+  useEffect(() => {
+    const checkIfInCart = async () => {
+      if (!specificproducts?._id) return;
+      try {
+        const res = await axios.get("/api/cart", { withCredentials: true });
+        const cartItems = res.data.items || [];
+  
+        const isInCart = cartItems.some(
+          (item) => item.productId._id === specificproducts._id
+        );
+  
+        setAddToCart(isInCart);
+      } catch (error) {
+        console.error("Failed to check cart:", error);
+      }
+    };
+  
+    checkIfInCart();
+  }, [specificproducts]);
+  
+
   const gotoCart = async () => {
     setLoading2(true)
     if (user?.role === "owner") {
@@ -56,7 +77,7 @@ export default function Page({ params }) {
       let cartItems = res.data.items || [];
 
       const isInCart = cartItems.some(
-        (item) => item.productId === specificproducts._id
+        (item) => item.productId._id === specificproducts._id
       );
 
       if (!isInCart) {
@@ -72,7 +93,6 @@ export default function Page({ params }) {
           { withCredentials: true }
         );
         dispatch(setAddCart(specificproducts));
-        toast.success("Product added to cart!");
         setAddToCart(true);
       } else {
         const updatedItems = cartItems.filter(
@@ -85,7 +105,6 @@ export default function Page({ params }) {
           { withCredentials: true }
         );
         dispatch(setRemoveCart(specificproducts._id));
-        toast.success("Product removed from cart!");
         setAddToCart(false);
       }
     } catch (error) {

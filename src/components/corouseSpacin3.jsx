@@ -19,12 +19,32 @@ export function CarouselSize3() {
  
     const [loading, setloading] = useState(false);
   const user = useSelector((state) => state.auth.signupdata || null);
+  
   const products = useSelector((state) => state.product.PopularProductdetails || []);
   
   const [cartItems, setCartItems] = useState({});
   const dispatch = useDispatch();
   
-
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        const res = await axios.get("/api/cart", { withCredentials: true });
+        const items = res.data.items || [];
+  
+        const cartMap = {};
+        for (const item of items) {
+          cartMap[item.productId._id] = true;
+        }
+  
+        setCartItems(cartMap);
+      } catch (error) {
+        console.error("Error fetching cart items:", error);
+      }
+    };
+  
+    fetchCart();
+  }, []);
+  
 
  
 
@@ -38,12 +58,12 @@ export function CarouselSize3() {
       try {
         const res = await axios.get("/api/cart", { withCredentials: true });
         let currentCartItems = res.data.items || [];
-
+        // console.log("currentCartItems",currentCartItems);
         const product = products.find((p) => p._id === productId);
         if (!product) return;
 
         const alreadyInCart = currentCartItems.some(
-          (item) => item.productId === productId
+          (item) => item.productId._id === productId
         );
 
         if (!alreadyInCart) {
@@ -55,7 +75,7 @@ export function CarouselSize3() {
           dispatch(setAddCart(product));
         } else {
           const updatedItems = currentCartItems.filter(
-            (item) => item.productId !== productId
+            (item) => item.productId._id !== productId
           );
           await axios.put("/api/cart", { items: updatedItems });
           dispatch(setRemoveCart(product._id));
@@ -130,7 +150,7 @@ export function CarouselSize3() {
                      <div className="flex flex-col gap-2 mt-4">
                        <button
                          onClick={() => toggleCartItem(item._id)}
-                         className="bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-300 shadow-md font-semibold text-white"
+                         className="bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-700 shadow-md font-semibold text-white"
                        >
                          {cartItems[item._id] ? "Remove from Cart" : "Add To Cart"}
                        </button>

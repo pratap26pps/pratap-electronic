@@ -25,7 +25,26 @@ export function CarouselSize() {
   const [cartItems, setCartItems] = useState({});
   const dispatch = useDispatch();
  
-
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        const res = await axios.get("/api/cart", { withCredentials: true });
+        const items = res.data.items || [];
+  
+        const cartMap = {};
+        for (const item of items) {
+          cartMap[item.productId._id] = true;
+        }
+  
+        setCartItems(cartMap);
+      } catch (error) {
+        console.error("Error fetching cart items:", error);
+      }
+    };
+  
+    fetchCart();
+  }, []);
+  
  
 
  
@@ -44,7 +63,7 @@ export function CarouselSize() {
         if (!product) return;
 
         const alreadyInCart = currentCartItems.some(
-          (item) => item.productId === productId
+          (item) => item.productId._id === productId
         );
 
         if (!alreadyInCart) {
@@ -56,7 +75,7 @@ export function CarouselSize() {
           dispatch(setAddCart(product));
         } else {
           const updatedItems = currentCartItems.filter(
-            (item) => item.productId !== productId
+            (item) => item.productId._id !== productId
           );
           await axios.put("/api/cart", { items: updatedItems });
           dispatch(setRemoveCart(product._id));
@@ -132,7 +151,7 @@ export function CarouselSize() {
                 
                 <button
                   onClick={() => toggleCartItem(item._id)}
-                  className="bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-300 shadow-md font-semibold text-white"
+                  className="bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-700 shadow-md font-semibold text-white"
                 >
                   {cartItems[item._id] ? "Remove from Cart" : "Add To Cart"}
                 </button>
