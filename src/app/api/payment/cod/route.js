@@ -17,9 +17,11 @@ export async function POST(req) {
       shipping,
       subtotal,
       discount,
-      selectedAddressId
+      selectedAddressId,
+      quantity
     } = body;
     console.log("userId", userId);
+    console.log("Quantity from request body:", quantity);
     if (
       !product ||
       !grandTotal ||
@@ -27,6 +29,7 @@ export async function POST(req) {
       !shipping ||
       !subtotal ||
       !selectedAddressId ||
+      !quantity||
       !Array.isArray(product) ||
       product.length === 0
     ) {
@@ -35,6 +38,7 @@ export async function POST(req) {
         { status: 400 }
       );
     }
+    
 
     const products = await Product.find({ _id: { $in: product } });
     console.log("product", products);
@@ -56,8 +60,9 @@ export async function POST(req) {
       discount,
       grandTotal,
       selectedAddressId,
+      quantity: quantity || 1,
     });
-
+    console.log("New Order before saving:", newOrder);
     await newOrder.save();
     const populatedOrder = await Order.findById(newOrder._id)
     .populate("products")

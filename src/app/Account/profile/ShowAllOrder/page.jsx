@@ -98,6 +98,7 @@ const Page = () => {
                           <p className="text-1xl text-green-500">
                             price: {product?.ProductPrice}
                           </p>
+                       
                         </div>
                       ))}
                     </div>
@@ -158,6 +159,10 @@ const Page = () => {
                           Discount: -₹{order?.discount.toFixed(2)}
                         </p>
                       )}
+                        <p>
+                            ProductQuantity: 
+                            {order?.quantity}
+                          </p>
                       <p className="col-span-2 font-semibold text-lg mt-2">
                         Grand Total: ₹{order?.grandTotal?.toFixed(2)}
                       </p>

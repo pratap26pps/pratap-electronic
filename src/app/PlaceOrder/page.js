@@ -38,6 +38,9 @@ const gstRate = orderDetails?.gstRate;
 const shipping = orderDetails?.shipping;
 const subtotal = orderDetails?.subtotal;
 const discount = orderDetails?.discount || "";
+const quantity = orderDetails?.cartItems[0]?.quantity || 1;
+console.log("quantity",quantity);
+
 
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {
@@ -88,7 +91,8 @@ const loadRazorpayScript = () => {
             shipping,
             subtotal,
             discount,
-            selectedAddressId 
+            selectedAddressId,
+            quantity
           }),
         });
         const data = await res.json();
@@ -118,7 +122,16 @@ const loadRazorpayScript = () => {
       const res = await fetch("/api/payment/capture", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ product: productIds,}),
+        body: JSON.stringify({ product: productIds,
+          userId: userid,
+          grandTotal,
+          gstRate,
+          shipping,
+          subtotal,
+          discount,
+          selectedAddressId,
+          quantity
+        }),
       });
 
       const data = await res.json();
@@ -149,7 +162,8 @@ const loadRazorpayScript = () => {
               shipping,
               subtotal,
               discount,
-              selectedAddressId
+              selectedAddressId,
+              quantity
             }),
           });
 

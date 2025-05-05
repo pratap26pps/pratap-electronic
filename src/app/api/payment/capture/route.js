@@ -1,7 +1,5 @@
 import { instance } from "@/utils/razorpay";
 import Product from "@/models/productDetails";
-import jwt from "jsonwebtoken";
-import { cookies } from "next/headers"; 
 import connectDB from "@/dbconfig/dbconfig";
 import mongoose from "mongoose";
    
@@ -10,27 +8,26 @@ export async function POST(req) {
 
   try {
     const body = await req.json();
-    const { product } = body;
+    const { product, userId,
+      grandTotal,
+      gstRate,
+      shipping,
+      subtotal,
+      discount,
+      selectedAddressId,
+      quantity } = body;
     console.log("product for payment capture",product)
-    
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
-
-    if (!token) {
-      return Response.json({ success: false, message: "Unauthorized" }, { status: 401 });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded._id;
-
-    if (!product || product.length === 0) {
+    if (
+      !product || product.length === 0 ||
+      !userId || !grandTotal || !gstRate || !shipping || !subtotal || !selectedAddressId || !quantity
+    ) {
       return Response.json(
-        { success: false, message: "Please provide product IDs" },
+        { success: false, message: "Missing required fields" },
         { status: 400 }
       );
     }
 
-    let totalAmount = 0;
+   
     const uid = new mongoose.Types.ObjectId(userId);
 
     for (const productId of product) {
@@ -48,15 +45,13 @@ export async function POST(req) {
           { status: 400 }
         );
       }
-      totalAmount += items.ProductPrice;
     }
 
     const options = {
-      amount: totalAmount * 100,
+      amount: Math.round(grandTotal * 100), // Razorpay takes amount in paise
       currency: "INR",
-      receipt: Math.random(Date.now()).toString(),
+      receipt: "order_rcptid_" + Math.floor(Math.random() * 1000000),
     };
-
 
     const paymentResponse = await instance.orders.create(options);
   console.log("payment receipt",paymentResponse);

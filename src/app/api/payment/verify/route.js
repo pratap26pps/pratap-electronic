@@ -14,7 +14,9 @@ async function enrollCustomer(
   shipping,
   subtotal,
   discount,
-  selectedAddressId
+  selectedAddressId,
+  quantity
+
 ) {
   try {
     const productDocs = [];
@@ -53,6 +55,8 @@ async function enrollCustomer(
       discount,
       selectedAddressId,
       grandTotal,
+      quantity
+
     });
     return newOrder;
   } catch (error) {
@@ -76,6 +80,8 @@ export async function POST(req) {
     subtotal,
     discount,
     selectedAddressId,
+    quantity
+
   } = await req.json();
 
   // Check for missing fields
@@ -112,7 +118,9 @@ export async function POST(req) {
       shipping,
       subtotal,
       discount,
-      selectedAddressId
+      selectedAddressId,
+      quantity
+
     );
 
     return new Response(

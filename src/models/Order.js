@@ -11,6 +11,7 @@ const orderSchema = new mongoose.Schema(
     shipping: Number,
     gstRate: Number,
     discount: Number,
+    quantity: Number,
     grandTotal: Number,
   },
   { timestamps: true }
