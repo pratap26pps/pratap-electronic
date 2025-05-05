@@ -17,6 +17,7 @@ export async function POST(req) {
       shipping,
       subtotal,
       discount,
+      selectedAddressId
     } = body;
     console.log("userId", userId);
     if (
@@ -25,6 +26,7 @@ export async function POST(req) {
       !gstRate ||
       !shipping ||
       !subtotal ||
+      !selectedAddressId ||
       !Array.isArray(product) ||
       product.length === 0
     ) {
@@ -53,6 +55,7 @@ export async function POST(req) {
       gstRate,
       discount,
       grandTotal,
+      selectedAddressId,
     });
 
     await newOrder.save();

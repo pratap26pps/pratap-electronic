@@ -11,6 +11,15 @@ const PlaceOrder = () => {
   const cart = useSelector((state) => state.cart.cart);
   const user = useSelector((state) => state.auth.userdetail);
   console.log("user in orderplace", user);
+
+  const [selectedAddressId, setSelectedAddressId] = useState(
+    user?.addresses?.[0]?._id || null
+  );
+
+  const handleAddressChange = (e) => {
+    setSelectedAddressId(e.target.value);
+  };
+
   console.log("cart in orderplace", cart);
   const [paymentMethod, setPaymentMethod] = useState("");
   const [loading, setloading] = useState(false);
@@ -78,7 +87,8 @@ const loadRazorpayScript = () => {
             gstRate,
             shipping,
             subtotal,
-            discount 
+            discount,
+            selectedAddressId 
           }),
         });
         const data = await res.json();
@@ -108,7 +118,7 @@ const loadRazorpayScript = () => {
       const res = await fetch("/api/payment/capture", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ product: productIds }),
+        body: JSON.stringify({ product: productIds,}),
       });
 
       const data = await res.json();
@@ -138,7 +148,7 @@ const loadRazorpayScript = () => {
               gstRate,
               shipping,
               subtotal,
-              discount 
+              discount,
             }),
           });
 
@@ -192,19 +202,50 @@ const loadRazorpayScript = () => {
         </div>
 
         {/* Shipping Info */}
-        <div>
-          <h2 className="text-lg font-semibold mb-2">Shipping</h2>
-          <div className="flex gap-1">
-            <p>Name:{user?.firstname}</p>
-            <p>{user?.lastname}</p>
-          </div>
-          <p>Contact No.{user?.phonenumber}</p>
-          <p>City:{user?.city}</p>
-          <p>State:{user?.state}</p>
-          <p>Country:{user?.country}</p>
-          {/* <p>Express Shipping ₹{shippingFee.toFixed(2)}</p> */}
-          <button className="text-blue-500 text-sm underline mt-2">Edit</button>
+        <div className="p-4">
+      <h2 className="text-xl font-semibold mb-4">Select Delivery Address</h2>
+
+      {user?.addresses?.length > 1 ? (
+        <div className="space-y-4">
+          {user.addresses.map((address) => (
+            <label
+              key={address._id}
+              className={`block border p-4 rounded cursor-pointer ${
+                selectedAddressId === address._id
+                  ? "border-blue-500 bg-blue-900"
+                  : "border-gray-400"
+              }`}
+            >
+              <input
+                type="radio"
+                name="address"
+                value={address._id}
+                checked={selectedAddressId === address._id}
+                onChange={handleAddressChange}
+                className="mr-2"
+              />
+              <div>
+                <p className="font-medium">{address.name}</p>
+                <p>{address.street}, {address.city}, {address.state}, {address.pincode}</p>
+                <p>{address.country}</p>
+                <p>Phone: {address.phone}</p>
+              </div>
+            </label>
+          ))}
         </div>
+      ) : user?.addresses?.length === 1 ? (
+        <div className="border p-4 rounded ">
+          <p className="font-medium">{user.addresses[0].name}</p>
+          <p>{user.addresses[0].street}, {user.addresses[0].city}, {user.addresses[0].state}, {user.addresses[0].pincode}</p>
+          <p>{user.addresses[0].country}</p>
+          <p>Phone: {user.addresses[0].phone}</p>
+        </div>
+      ) : (
+        <p>No address found. Please add one in your profile.</p>
+      )}
+
+      {/* You can use selectedAddressId when placing the order */}
+    </div>
 
         {/* Billing Info */}
 
