@@ -1,25 +1,25 @@
 import Order from "@/models/Order";
 import connectDB from "@/dbconfig/dbconfig";
 import { NextResponse } from "next/server";
+ 
 
 export async function GET(req, { params }) {
   try {
     await connectDB();
     const { id } = params;
 
-    const order = await Order.findById(id)
+    const orders = await Order.find({_id:id})
       .populate("products")
-      .populate("selectedAddressId");
+      .sort({ createdAt: -1 });
 
-    if (!order) {
+    if (!orders || orders.length === 0) {
       return NextResponse.json(
-        { success: false, message: "Order not found" },
+        { success: false, message: "No orders found for this user" },
         { status: 404 }
       );
     }
-
     return NextResponse.json(
-      { success: true, message: "Order fetched successfully", data: order },
+      { success: true, message: "order fetched done", data: orders },
       { status: 200 }
     );
   } catch (error) {
@@ -30,7 +30,6 @@ export async function GET(req, { params }) {
     );
   }
 }
-
 
 
 export async function DELETE(req, { params }) {

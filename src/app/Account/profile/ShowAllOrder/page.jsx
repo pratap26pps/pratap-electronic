@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-
+import toast from "react-hot-toast";
 import Link from "next/link";
 const Page = () => {
   const [orders, setOrders] = useState([]);
@@ -30,6 +30,27 @@ const Page = () => {
   useEffect(() => {
     fetchOrders();
   }, []);
+
+  const cancilorder = async (orderId) => {
+    try {
+      const res = await fetch(`/api/order/cancel`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        toast.success("Order cancelled successfully");
+        // Optionally: refresh order list or update UI
+      } else {
+        toast.error(data.message || "Failed to cancel order");
+      }
+    } catch (error) {
+      toast.error("Error cancelling order");
+      console.error(error);
+    }
+  };
 
   return (
     <div className="max-w-6xl mt-36 mx-auto py-12 px-4 sm:px-6 lg:px-8">
@@ -98,27 +119,22 @@ const Page = () => {
                           <p className="text-1xl text-green-500">
                             price: {product?.ProductPrice}
                           </p>
-                       
                         </div>
                       ))}
                     </div>
-                       
-                {/*address summary  */}
 
-                <div>
-                  <h2 className="text-lg font-semibold mb-3 ">Address</h2>
+                    {/*address summary  */}
+
+                    <div>
+                      <h2 className="text-lg font-semibold mb-3 ">Address</h2>
                       <div className=" border rounded-md p-4 w-40  shadow-sm">
-                        <p className="font-medium">
-                        </p>
-                          {order?.selectedAddressId?.name}
+                        <p className="font-medium"></p>
+                        {order?.selectedAddressId?.name}
 
-                        <p className="text-sm">
-                        </p>
-                          {order?.selectedAddressId?.street}
-                        <p className="text-sm">
-                          {" "}
-                        </p>
-                          {order?.selectedAddressId?.phone}
+                        <p className="text-sm"></p>
+                        {order?.selectedAddressId?.street}
+                        <p className="text-sm"> </p>
+                        {order?.selectedAddressId?.phone}
                         <p className="text-sm">
                           {" "}
                           {order?.selectedAddressId?.city}
@@ -129,50 +145,56 @@ const Page = () => {
                         </p>
                         <p className="text-sm">
                           {" "}
-                          { order?.selectedAddressId?.pincode}
+                          {order?.selectedAddressId?.pincode}
                         </p>
                         <p className="text-sm">
                           {" "}
-                          { order?.selectedAddressId?.country}
+                          {order?.selectedAddressId?.country}
                         </p>
                       </div>
-                  
-                 
-                </div>
+                    </div>
 
                     {/* Order Summary */}
                     <div>
-                    <h2 className="text-lg font-semibold mb-3 ">
+                      <h2 className="text-lg font-semibold mb-3 ">
                         📑 Order Summary
                       </h2>
                       <div className="mt-8">
-                    
-                    <div className="grid w-52 grid-cols-2 gap-4 text-sm">
-                      <p>Subtotal: ₹{order?.subtotal?.toFixed(2)}</p>
-                      <p>Shipping: ₹{order?.shipping?.toFixed(2)}</p>
-                      <p>
-                        GST (18%): ₹
-                        {(order?.subtotal * order?.gstRate).toFixed(2)}
-                      </p>
-                      {order.discount > 0 && (
-                        <p className="text-green-600">
-                          Discount: -₹{order?.discount.toFixed(2)}
-                        </p>
-                      )}
-                        <p>
-                            ProductQuantity: 
+                        <div className="grid w-52 grid-cols-2 gap-4 text-sm">
+                          <p>Subtotal: ₹{order?.subtotal?.toFixed(2)}</p>
+                          <p>Shipping: ₹{order?.shipping?.toFixed(2)}</p>
+                          <p>
+                            GST (18%): ₹
+                            {(order?.subtotal * order?.gstRate).toFixed(2)}
+                          </p>
+                          {order.discount > 0 && (
+                            <p className="text-green-600">
+                              Discount: -₹{order?.discount.toFixed(2)}
+                            </p>
+                          )}
+                          <p className="text-green-600">
+                          Quantity:
                             {order?.quantity}
                           </p>
-                      <p className="col-span-2 font-semibold text-lg mt-2">
-                        Grand Total: ₹{order?.grandTotal?.toFixed(2)}
-                      </p>
+                          <p className="text-green-600">
+                          Status:
+                            {order?.status}
+                          </p>
+                          <p className="col-span-2 font-semibold text-lg mt-2">
+                            Grand Total: ₹{order?.grandTotal?.toFixed(2)}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                    </div>
-               
                   </div>
                 </div>
-
+                {/* cancil-order */}
+                <button
+                  onClick={() => cancilorder(order._id)}
+                  className="px-5 py-2 rounded-2xl bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold shadow-md hover:scale-105 transition-transform duration-300"
+                >
+                  Cancel Order
+                </button>
               </div>
             ))
           )}
