@@ -141,7 +141,7 @@ export default function Page({ params }) {
   const gstRate = 0.18;
 
   const subtotal = cart.reduce(
-    (acc, item) => acc + item.productId?.ProductPrice * item.quantity,
+    (acc, item) => acc + item.ProductPrice * item.quantity,
     0
   );
 
@@ -424,15 +424,15 @@ export default function Page({ params }) {
                       className="flex justify-between items-center"
                     >
                       <img
-                        src={item?.productId?.ProductImage}
+                        src={item?.ProductImage}
                         height={34}
                         width={34}
                       ></img>
                       <span className="truncate w-2/3">
-                        {item?.productId?.ProductTitle}
+                        {item?.ProductTitle}
                       </span>
                       <span className="truncate w-2/3">
-                        {item?.productId?.ProductPrice}
+                        {item?.ProductPrice}
                       </span>
                       <span>{item?.quantity}</span>
                     </div>

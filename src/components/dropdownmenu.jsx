@@ -248,7 +248,7 @@ function Dropdowns({ components, brandname, loading ,loading2}) {
           { loading2 ? <div className="p-2">Loading...</div>:
             (  brandname.map((brand) => (
               <DropdownMenuItem asChild key={brand._id}>
-                <Link href={`/brand/${brand._id}`} className="cursor-pointer">
+                <Link href={`/${brand._id}`} className="cursor-pointer">
                   {brand.name}
                 </Link>
               </DropdownMenuItem>
