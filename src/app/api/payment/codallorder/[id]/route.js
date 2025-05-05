@@ -7,18 +7,48 @@ export async function GET(req, { params }) {
     await connectDB();
     const { id } = params;
 
-    const orders = await Order.find({_id:id})
+    const order = await Order.findById(id)
       .populate("products")
-      .sort({ createdAt: -1 });
+      .populate("selectedAddressId");
 
-    if (!orders || orders.length === 0) {
+    if (!order) {
       return NextResponse.json(
-        { success: false, message: "No orders found for this user" },
+        { success: false, message: "Order not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      { success: true, message: "Order fetched successfully", data: order },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("GET API Error:", error.message);
+    return NextResponse.json(
+      { success: false, message: "Server error" },
+      { status: 500 }
+    );
+  }
+}
+
+
+
+export async function DELETE(req, { params }) {
+  try {
+    await connectDB();
+    const { id } = params;
+
+    const deleteorders = await Order.findByIdAndDelete(id)
+    
+
+    if (!deleteorders) {
+      return NextResponse.json(
+        { success: false, message: "delete order are not found" },
         { status: 404 }
       );
     }
     return NextResponse.json(
-      { success: true, message: "order fetched done", data: orders },
+      { success: true, message: "order fetched done", data: deleteorders },
       { status: 200 }
     );
   } catch (error) {

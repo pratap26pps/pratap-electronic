@@ -8,6 +8,7 @@ export async function GET(req) {
 
     const orders = await Order.find()
       .populate("products")
+      .populate("selectedAddressId")
       .sort({ createdAt: -1 });
 
     if (!orders || orders.length === 0) {

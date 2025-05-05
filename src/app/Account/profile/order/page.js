@@ -91,7 +91,7 @@ console.log("user in dashboard",user);
               <h2 className="text-lg font-semibold mb-3 ">
                 📦 Products
               </h2>
-           <div className="lg:flex flex-col lg:flex-row justify-evenly">
+           <div className="lg:flex flex-col lg:flex-row justify-evenly gap-x-4">
 
                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {order?.products?.map((product) => (
@@ -115,6 +115,43 @@ console.log("user in dashboard",user);
                   </div>
                 ))}
               </div>
+
+                   {/*address summary  */}
+
+                   <div>
+                  <h2 className="text-lg font-semibold mb-3 ">Address</h2>
+                      <div className=" border rounded-md p-4 w-40  shadow-sm">
+                        <p className="font-medium">
+                        </p>
+                          {order?.selectedAddressId?.name}
+
+                        <p className="text-sm">
+                        </p>
+                          {order?.selectedAddressId?.street}
+                        <p className="text-sm">
+                          {" "}
+                        </p>
+                          {order?.selectedAddressId?.phone}
+                        <p className="text-sm">
+                          {" "}
+                          {order?.selectedAddressId?.city}
+                        </p>
+                        <p className="text-sm">
+                          {" "}
+                          {order?.selectedAddressId?.state}
+                        </p>
+                        <p className="text-sm">
+                          {" "}
+                          { order?.selectedAddressId?.pincode}
+                        </p>
+                        <p className="text-sm">
+                          {" "}
+                          { order?.selectedAddressId?.country}
+                        </p>
+                      </div>
+                  
+                 
+                </div>
                
                  {/* Order Summary */}
             <div className="mt-8">

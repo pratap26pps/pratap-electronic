@@ -6,11 +6,16 @@ import { productEnrollment } from "@/app/templete/productenrollmail";
 import connectDB from "@/dbconfig/dbconfig";
 import Order from "@/models/Order";
 // Enroll the student into the product
-async function enrollCustomer(product, userId,   grandTotal,
+async function enrollCustomer(
+  product,
+  userId,
+  grandTotal,
   gstRate,
   shipping,
   subtotal,
-  discount ) {
+  discount,
+  selectedAddressId
+) {
   try {
     const productDocs = [];
     for (const productId of product) {
@@ -20,8 +25,7 @@ async function enrollCustomer(product, userId,   grandTotal,
         { new: true }
       );
 
-      if (!items)
-        throw new Error("Product not found");
+      if (!items) throw new Error("Product not found");
       productDocs.push(items._id);
       // Add the product to the user's courses
       const user = await User.findByIdAndUpdate(
@@ -40,23 +44,21 @@ async function enrollCustomer(product, userId,   grandTotal,
     // After enrolling in products, create an Order
     const newOrder = await Order.create({
       user: userId,
-      products: productDocs,  
-      paymentMethod:  "Online",
+      products: productDocs,
+      paymentMethod: "Online",
       status: "Processing",
- 
-      subtotal:  subtotal,
-      shipping:  shipping,
-      gstRate:  gstRate,
-      discount:  discount,
-      grandTotal: grandTotal,
+      subtotal,
+      shipping,
+      gstRate,
+      discount,
+      selectedAddressId,
+      grandTotal,
     });
     return newOrder;
-
   } catch (error) {
     throw new Error(error.message || "An error occurred while enrolling");
   }
 }
-
 
 export async function POST(req) {
   // Connecting to the database
@@ -72,9 +74,10 @@ export async function POST(req) {
     gstRate,
     shipping,
     subtotal,
-    discount 
-  } = await req.json();  
-  
+    discount,
+    selectedAddressId,
+  } = await req.json();
+
   // Check for missing fields
   if (
     !razorpay_order_id ||
@@ -101,11 +104,17 @@ export async function POST(req) {
 
   // Verify signature and process enrollment
   if (expectedSignature === razorpay_signature) {
-    await enrollCustomer(product, userId,   grandTotal,
+    await enrollCustomer(
+      product,
+      userId,
+      grandTotal,
       gstRate,
       shipping,
       subtotal,
-      discount ); 
+      discount,
+      selectedAddressId
+    );
+
     return new Response(
       JSON.stringify({
         success: true,
@@ -123,5 +132,3 @@ export async function POST(req) {
     );
   }
 }
-
-

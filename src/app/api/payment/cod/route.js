@@ -59,9 +59,9 @@ export async function POST(req) {
     });
 
     await newOrder.save();
-    const populatedOrder = await Order.findById(newOrder._id).populate(
-      "products"
-    );
+    const populatedOrder = await Order.findById(newOrder._id)
+    .populate("products")
+    .populate("selectedAddressId");
     return NextResponse.json(
       {
         success: true,
@@ -96,6 +96,7 @@ export async function GET(req) {
       user: new mongoose.Types.ObjectId(userId),
     })
       .populate("products")
+      .populate("selectedAddressId")
       .sort({ createdAt: -1 });
 
     if (!orders || orders.length === 0) {

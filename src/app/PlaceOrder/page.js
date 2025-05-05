@@ -62,8 +62,8 @@ const loadRazorpayScript = () => {
       setloading(false);
       return;
     }
-    if (!user) {
-      toast.error("user id is not here");
+    if (!user && !selectedAddressId) {
+      toast.error("user id and address is not here");
       setloading(false);
       return;
     }
@@ -74,7 +74,7 @@ const loadRazorpayScript = () => {
       return;
     }
     const userid = user?._id;
-
+ 
     if (paymentMethod === "COD") {
       try {
         const res = await fetch("/api/payment/cod", {
@@ -149,6 +149,7 @@ const loadRazorpayScript = () => {
               shipping,
               subtotal,
               discount,
+              selectedAddressId
             }),
           });
 
