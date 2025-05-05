@@ -24,7 +24,9 @@ export default function Page() {
 
  
     const getProductsByCategory = async (categoryId) => {
+      setLoading(true);
      try {
+       
        const response = await axios.get(`/api/TotalProduct/${categoryId}`);
        const data = response.data;  
        console.log("fetching products by category:", data);
@@ -33,6 +35,8 @@ export default function Page() {
      } catch (error) {
        console.error("Error fetching products by category:", error);
        throw error;
+     }finally{
+      setLoading(false);
      }
    };
    useEffect(() => {
