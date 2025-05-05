@@ -45,22 +45,22 @@ export function NavigationMenuDemo() {
     };
     fetchCategories();
   }, []);
+  const fetchBrands = async () => {
+    setloading2(true)
+    try {
+      const response = await axios.get("/api/TopManufacturing");
+      setBrandname(response.data);
+    } catch (error) {
+      toast.error(error.message);
+    } finally{
+      setloading2(false);
 
+    }
+  };
   useEffect(() => {
-    const fetchBrands = async () => {
-      setloading2(true)
-      try {
-        const response = await axios.get("/api/TopManufacturing");
-        setBrandname(response.data);
-      } catch (error) {
-        toast.error(error.message);
-      } finally{
-        setloading2(false);
 
-      }
-    };
-    fetchBrands();
-  }, []);
+   if(components) fetchBrands();
+  }, [components]);
 
   useEffect(() => {
     const fetchProducts = async () => {
