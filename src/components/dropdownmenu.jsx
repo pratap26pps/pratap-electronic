@@ -32,35 +32,28 @@ export function NavigationMenuDemo() {
   const searchContainerRef = useRef(null);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchData = async () => {
       setLoading(true);
+      setloading2(true);
       try {
-        const response = await axios.get("/api/TotalProduct");
-        setComponents(response.data.data);
+        const categoryResponse = await axios.get("/api/TotalProduct");
+        setComponents(categoryResponse.data.data);
+  
+     if(categoryResponse) {
+      const brandResponse = await axios.get("/api/TopManufacturing");
+        setBrandname(brandResponse.data);
+     }
       } catch (error) {
         toast.error(error.message);
       } finally {
         setLoading(false);
+        setloading2(false);
       }
     };
-    fetchCategories();
+  
+    fetchData();
   }, []);
-  const fetchBrands = async () => {
-    setloading2(true)
-    try {
-      const response = await axios.get("/api/TopManufacturing");
-      setBrandname(response.data);
-    } catch (error) {
-      toast.error(error.message);
-    } finally{
-      setloading2(false);
-
-    }
-  };
-  useEffect(() => {
-
-   if(components) fetchBrands();
-  }, [components]);
+  
 
   useEffect(() => {
     const fetchProducts = async () => {
