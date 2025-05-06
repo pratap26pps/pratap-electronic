@@ -15,20 +15,21 @@ async function enrollCustomer(
   subtotal,
   discount,
   selectedAddressId,
-  quantity
+
 
 ) {
   try {
     const productDocs = [];
-    for (const productId of product) {
-      const items = await Product.findByIdAndUpdate(
+    for (const item of product) {
+      const { productId, quantity } = item;
+
+      const updatedProduct = await Product.findByIdAndUpdate(
         productId,
         { $push: { CustomerId: userId } },
         { new: true }
       );
 
-      if (!items) throw new Error("Product not found");
-      productDocs.push(items._id);
+      if (!updatedProduct) throw new Error("Product not found");
       // Add the product to the user's courses
       const user = await User.findByIdAndUpdate(
         userId,
@@ -39,10 +40,17 @@ async function enrollCustomer(
       // Send an enrollment confirmation email
       await mailSender(
         user.email,
-        `Successfully purchased into ${items.ProductName}`,
-        productEnrollment(items.ProductName, user.firstname)
+        `Successfully purchased ${updatedProduct.ProductName}`,
+        productEnrollment(updatedProduct.ProductName, user.firstname)
       );
+
+      productDocs.push({
+        productId: updatedProduct._id,
+        quantity: quantity || 1, 
+      });
     }
+
+  
     // After enrolling in products, create an Order
     const newOrder = await Order.create({
       user: userId,
@@ -55,7 +63,6 @@ async function enrollCustomer(
       discount,
       selectedAddressId,
       grandTotal,
-      quantity
 
     });
     return newOrder;
@@ -80,7 +87,6 @@ export async function POST(req) {
     subtotal,
     discount,
     selectedAddressId,
-    quantity
 
   } = await req.json();
 
@@ -119,8 +125,6 @@ export async function POST(req) {
       subtotal,
       discount,
       selectedAddressId,
-      quantity
-
     );
 
     return new Response(

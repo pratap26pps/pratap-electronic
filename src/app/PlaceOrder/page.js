@@ -38,8 +38,6 @@ const gstRate = orderDetails?.gstRate;
 const shipping = orderDetails?.shipping;
 const subtotal = orderDetails?.subtotal;
 const discount = orderDetails?.discount || "";
-const quantity = orderDetails?.cartItems[0]?.quantity || 1;
-console.log("quantity",quantity);
 
 
 const loadRazorpayScript = () => {
@@ -56,7 +54,7 @@ const loadRazorpayScript = () => {
   });
 };
 
-
+ 
 
   const paymentcapturehandler = async () => {
     setloading(true);
@@ -70,8 +68,12 @@ const loadRazorpayScript = () => {
       setloading(false);
       return;
     }
-    const productIds = cart.map((item) => item.productId._id);
-    if (!productIds) {
+    const products = orderDetails?.cartItems?.map((item) =>({
+      productId:item.productId,
+      quantity:item.quantity
+    }) );
+    console.log("products in place order",products)
+    if (!products.length) {
       toast.error("product is not here");
       setloading(false);
       return;
@@ -84,15 +86,14 @@ const loadRazorpayScript = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            product: productIds,
+            product: products,
             userId: userid,
             grandTotal,
             gstRate,
             shipping,
             subtotal,
             discount,
-            selectedAddressId,
-            quantity
+            selectedAddressId
           }),
         });
         const data = await res.json();
@@ -122,7 +123,7 @@ const loadRazorpayScript = () => {
       const res = await fetch("/api/payment/capture", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ product: productIds,
+        body: JSON.stringify({ product: products,
           userId: userid,
           grandTotal,
           gstRate,
@@ -130,7 +131,6 @@ const loadRazorpayScript = () => {
           subtotal,
           discount,
           selectedAddressId,
-          quantity
         }),
       });
 
@@ -144,7 +144,7 @@ const loadRazorpayScript = () => {
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_order_id: response.razorpay_order_id,
             razorpay_signature: response.razorpay_signature,
-            product: productIds,
+            product: products,
             userId: userid,
           });
           
@@ -155,7 +155,7 @@ const loadRazorpayScript = () => {
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_order_id: response.razorpay_order_id,
               razorpay_signature: response.razorpay_signature,
-              product: productIds,
+              product: products,
               userId: userid,
               grandTotal,
               gstRate,
@@ -163,7 +163,6 @@ const loadRazorpayScript = () => {
               subtotal,
               discount,
               selectedAddressId,
-              quantity
             }),
           });
 

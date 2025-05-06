@@ -93,21 +93,24 @@ const Page = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                       {order?.products?.map((product) => (
                         <div
-                          key={product?._id}
+                          key={product?.productId?._id}
                           className=" border rounded-md p-4 shadow-sm"
                         >
                           <img
-                            src={product?.ProductImage}
-                            alt={product?.ProductImage}
+                            src={product?.productId?.ProductImage}
+                            alt={product?.productId?.ProductImage}
                             className="w-full h-40 object-contain mb-3 rounded-md"
                           />
-                          <p className="font-medium">{product?.ProductTitle}</p>
+                          <p className="font-medium">{product?.productId?.ProductTitle}</p>
 
                           <p className="text-sm text-gray-600">
-                            {product?.ProductShortDescription}
+                            {product?.productId?.ProductShortDescription}
                           </p>
                           <p className="text-xl text-green-500">
-                            price: {product?.ProductPrice}
+                            price: {product?.productId?.ProductPrice}
+                          </p>
+                          <p className="text-xl text-green-500">
+                            quantity: {product?.quantity}
                           </p>
                         
                         </div>
@@ -163,10 +166,6 @@ const Page = () => {
                             Discount: -₹{order?.discount.toFixed(2)}
                           </p>
                         )}
-                         <p>
-                            ProductQuantity:
-                            {order?.quantity}
-                          </p>
                         <p className="col-span-2 font-semibold text-lg mt-2">
                           Grand Total: ₹{order?.grandTotal?.toFixed(2)}
                         </p>

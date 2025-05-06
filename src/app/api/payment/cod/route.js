@@ -18,10 +18,9 @@ export async function POST(req) {
       subtotal,
       discount,
       selectedAddressId,
-      quantity
     } = body;
     console.log("userId", userId);
-    console.log("Quantity from request body:", quantity);
+ 
     if (
       !product ||
       !grandTotal ||
@@ -29,7 +28,6 @@ export async function POST(req) {
       !shipping ||
       !subtotal ||
       !selectedAddressId ||
-      !quantity||
       !Array.isArray(product) ||
       product.length === 0
     ) {
@@ -40,9 +38,12 @@ export async function POST(req) {
     }
     
 
-    const products = await Product.find({ _id: { $in: product } });
-    console.log("product", products);
-    if (!products || products.length === 0) {
+      // Validate each product exists
+      const productIds = product.map((p) => p.productId);
+      const dbProducts = await Product.find({ _id: { $in: productIds } });
+
+    console.log("dbProducts", dbProducts);
+    if (!dbProducts || dbProducts.length === 0) {
       return NextResponse.json(
         { success: false, message: "Products not found" },
         { status: 404 }
@@ -51,7 +52,10 @@ export async function POST(req) {
 
     const newOrder = new Order({
       user: new mongoose.Types.ObjectId(userId),
-      products,
+      products: product.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+      })),
       paymentMethod: "COD",
       status: "Processing",
       subtotal,
@@ -60,12 +64,11 @@ export async function POST(req) {
       discount,
       grandTotal,
       selectedAddressId,
-      quantity: quantity || 1,
     });
     console.log("New Order before saving:", newOrder);
     await newOrder.save();
     const populatedOrder = await Order.findById(newOrder._id)
-    .populate("products")
+    .populate("products.productId")
     .populate("selectedAddressId");
     return NextResponse.json(
       {
@@ -100,8 +103,8 @@ export async function GET(req) {
     const orders = await Order.find({
       user: new mongoose.Types.ObjectId(userId),
     })
-      .populate("products")
-      .populate("selectedAddressId")
+    .populate("products.productId")
+     .populate("selectedAddressId")
       .sort({ createdAt: -1 });
 
     if (!orders || orders.length === 0) {

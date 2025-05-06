@@ -2,24 +2,31 @@ import { instance } from "@/utils/razorpay";
 import Product from "@/models/productDetails";
 import connectDB from "@/dbconfig/dbconfig";
 import mongoose from "mongoose";
-   
+
 export async function POST(req) {
   await connectDB();
 
   try {
     const body = await req.json();
-    const { product, userId,
+    const {
+      product,
+      userId,
       grandTotal,
       gstRate,
       shipping,
       subtotal,
-      discount,
       selectedAddressId,
-      quantity } = body;
-    console.log("product for payment capture",product)
+    } = body;
+    console.log("product for payment capture", product);
     if (
-      !product || product.length === 0 ||
-      !userId || !grandTotal || !gstRate || !shipping || !subtotal || !selectedAddressId || !quantity
+      !product ||
+      product.length === 0 ||
+      !userId ||
+      !grandTotal ||
+      !gstRate ||
+      !shipping ||
+      !subtotal ||
+      !selectedAddressId
     ) {
       return Response.json(
         { success: false, message: "Missing required fields" },
@@ -27,17 +34,17 @@ export async function POST(req) {
       );
     }
 
-   
     const uid = new mongoose.Types.ObjectId(userId);
 
-    for (const productId of product) {
+    for (const item of product) {
+      const { productId, quantity } = item;
       const items = await Product.findById(productId);
       if (!items) {
         return Response.json(
           { success: false, message: "Product not found" },
           { status: 404 }
         );
-    }
+      }
       const enrolled = items.studentsEnrolled || [];
       if (Array.isArray(enrolled) && enrolled.includes(uid)) {
         return Response.json(
@@ -54,16 +61,19 @@ export async function POST(req) {
     };
 
     const paymentResponse = await instance.orders.create(options);
-  console.log("payment receipt",paymentResponse);
+    console.log("payment receipt", paymentResponse);
     return Response.json(
-      { success: true, message: {
-        key: process.env.RAZORPAY_KEY, 
-        amount: paymentResponse.amount,
-        currency: paymentResponse.currency,
-        name: "EmbProto",
-        description: "Order Payment",
-        order_id: paymentResponse.id,
-      }, },
+      {
+        success: true,
+        message: {
+          key: process.env.RAZORPAY_KEY,
+          amount: paymentResponse.amount,
+          currency: paymentResponse.currency,
+          name: "EmbProto",
+          description: "Order Payment",
+          order_id: paymentResponse.id,
+        },
+      },
       { status: 200 }
     );
   } catch (error) {
