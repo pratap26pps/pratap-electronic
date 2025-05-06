@@ -21,7 +21,7 @@ const Front = () => {
      <>
      {
       isopen ?      
-       <div className="cursor-pointer hover:text-green-500" onClick={()=>setIsMenuOpen(false)}>Show Front Section</div>
+       <div className="cursor-pointer ml-5 hover:text-green-500" onClick={()=>setIsMenuOpen(false)}>Show Front Section</div>
       :
       <section className="  px-4 sm:px-10 lg:px-20">
       <div className="max-w-7xl mx-auto flex flex-col-reverse lg:flex-row items-center gap-10">

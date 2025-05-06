@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import Front from "./Front";
  
 import Link from "next/link";
-import { useEffect } from "react";
+import {useState, useEffect } from "react";
  
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
@@ -22,7 +22,7 @@ const Hero = ({ isLoading }) => {
     useEffect(() => {
       import("@lottiefiles/lottie-player");
     }, []);
- 
+   const [isopen,setIsMenuOpen] = useState(false);
   const News = useSelector((state) => state.product.newsdata || []);
   const components = useSelector((state) => state.product.Categorydetails || []);
     
@@ -53,10 +53,14 @@ const Hero = ({ isLoading }) => {
       <Front />
 
       {/* Featured Categories */}
+      {
+      isopen ?      
+       <div className="cursor-pointer ml-5 mt-3 hover:text-green-500" onClick={()=>setIsMenuOpen(false)}>Show Featured Category</div>
+      :<div>
       <h2 className="text-center text-2xl font-bold mt-12">
         Featured Categories
       </h2>
-      <div className="flex  justify-center gap-6 mt-6">
+      <div className="grid  lg:grid-cols-4 grid-cols-2 gap-6 mt-6">
       {
         components.slice(0, 4).map((name,index)=>{
           return (
@@ -79,11 +83,17 @@ const Hero = ({ isLoading }) => {
         className="mt-2 rounded-md cursor-pointer"
       />
             </Link>  
+     
             </div>
           )
         })
       }
+             <div className="cursor-pointer hover:text-red-600" 
+             onClick={()=>setIsMenuOpen(true)}>Close</div>
       </div>
+      </div>
+      }
+
 
   
       {/* Featured, New & Popular Products */}

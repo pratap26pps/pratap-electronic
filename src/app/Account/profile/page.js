@@ -2,17 +2,21 @@
  
 import React, { useState, useEffect } from "react";
  import Image from "next/image";
- 
+import { Button } from "@/components/ui/button"; 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { setSignupdata, setUserdetail } from "@/redux/slices/userSlice";
 import { useDispatch } from "react-redux";
- 
+import axios from "axios"; 
+import Cookies from "js-cookie";
 import Footer from "@/components/Footer";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 const Page = () => {
  
   const pathname = usePathname();
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const [user, setUser] = useState(null);
   const [signupdata, setsignupdata] = useState(null);
@@ -84,6 +88,20 @@ const Page = () => {
     { id: 6, name: "Account Settings", link: "/Account/profile/profileUpdateForm" },
   ];
 
+  const logouthandler=async()=>{
+     try {
+          await axios.get("/api/users/logout");
+          Cookies.remove("token");
+         dispatch(setUserdetail(null));
+         dispatch(setSignupdata(null));     
+          router.push("/Account/Login");
+          toast.success("logout Successfull")
+        } catch (error) {
+          console.log(error.message);
+          toast.error(error.message);
+        }
+  }
+
   return (
     <div>
    <div className="min-h-screen pt-36 px-6">
@@ -152,10 +170,10 @@ const Page = () => {
             })}
           </div>
         )}
-
+   <Button onClick={()=>logouthandler()} className='lg:ml-[90%] mt-4 cursor-pointer'>Logout</Button>
       </div>
       }
-     
+  
     </div>
     <div>
       <Footer/>
