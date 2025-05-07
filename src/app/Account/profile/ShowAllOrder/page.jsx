@@ -99,6 +99,12 @@ const Page = () => {
                         ₹{order?.grandTotal?.toFixed(2)}
                       </span>
                     </p>
+                    <p className="font-medium">
+                      Status:{" "}
+                      <span className="text-lg text-green-600 font-bold">
+                      {order?.status}
+                      </span>
+                    </p>
                   </div>
                 </div>
 
@@ -106,7 +112,7 @@ const Page = () => {
                 <div>
                   <h2 className="text-lg font-semibold mb-3 ">📦 Products</h2>
                   <div className="lg:flex flex-col lg:flex-row justify-between gap-x-5">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
                       {order?.products?.map((product) => (
                         <div
                           key={product?._id}
@@ -182,10 +188,6 @@ const Page = () => {
                             </p>
                           )}
                       
-                          <p className="text-green-600">
-                          Status:
-                            {order?.status}
-                          </p>
                           <p className="col-span-2 font-semibold text-lg mt-2">
                             Grand Total: ₹{order?.grandTotal?.toFixed(2)}
                           </p>
@@ -197,7 +199,7 @@ const Page = () => {
                 {/* cancil-order */}
                 <button
                   onClick={() => cancilorder(order._id)}
-                  className="px-5 py-2 rounded-2xl bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold shadow-md hover:scale-105 transition-transform duration-300"
+                  className="px-5 py-2 cursor-pointer rounded-2xl bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold shadow-md hover:scale-105 transition-transform duration-300"
                 >
                 {
                loading2 ? <div className="loader scale-50"></div>:"Cancel Order"
