@@ -15,6 +15,7 @@ async function enrollCustomer(
   subtotal,
   discount,
   selectedAddressId,
+  gstin
 
 
 ) {
@@ -70,6 +71,7 @@ async function enrollCustomer(
       discount,
       selectedAddressId,
       grandTotal,
+      gstin
 
     });
     return newOrder;
@@ -94,6 +96,7 @@ export async function POST(req) {
     subtotal,
     discount,
     selectedAddressId,
+    gstin
 
   } = await req.json();
 
@@ -132,6 +135,7 @@ export async function POST(req) {
       subtotal,
       discount,
       selectedAddressId,
+      gstin
     );
 
     return new Response(

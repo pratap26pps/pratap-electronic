@@ -9,7 +9,7 @@ export async function POST(req) {
   try {
     // Parse request bodya
     const reqBody = await req.json();
-    const { firstname, lastname, email, password, confirmpassword, phonenumber, state, country, city } = reqBody;
+    const { firstname, lastname, email, password, confirmpassword,gstno} = reqBody;
  
     // Validate required fields
     if (!firstname || !lastname || !email || !password || !confirmpassword) {
@@ -40,11 +40,8 @@ export async function POST(req) {
       lastname,
       email,
       password: hashedPassword,
-      phonenumber,
       role,
-      state,
-      country,
-      city,
+      gstno
     });
 
     await newUser.save();

@@ -12,7 +12,7 @@ export default function ProfileUpdateForm() {
 
   const [formData, setFormData] = useState({
     firstname: user?.firstname || "",
-    lastname: user?.lastname    || "",
+    lastname: user?.lastname || "",
     gstno: user?.gstno || "",
     email: user?.email || "",
   });
@@ -21,10 +21,19 @@ export default function ProfileUpdateForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   console.log("formData in update", formData);
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    const gstRegex =
+      /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+
+    if (formData.gstno && !gstRegex.test(formData.gstno)) {
+      toast.error("Please type correct GSTIN");
+      setLoading(false);
+      return;
+    }
+
     try {
       const data = await axios.put("/api/users/me", formData);
       toast.success("Profile updated successfully!");
@@ -73,21 +82,20 @@ export default function ProfileUpdateForm() {
             </div>
           </div>
 
- 
           <div>
-            <label className="block text-gray-600">GST Number</label>
+            <label for="gstin">GSTIN Number:</label>
             <input
               type="text"
-              name="gstno"
               value={formData.gstno}
+              name="gstno"
+              maxlength="15"
               onChange={handleChange}
+              title="Enter a valid 15-character GSTIN (e.g., 22AAAAA0000A1Z5)"
               className="input border p-2 w-full"
             />
           </div>
           <div>
-            <label className="block text-gray-600">
-              Email Address
-            </label>
+            <label className="block text-gray-600">Email Address</label>
             <input
               type="email"
               name="email"
@@ -97,19 +105,17 @@ export default function ProfileUpdateForm() {
             />
           </div>
           <button
-            type="submit"  disabled={loading}
+            type="submit"
+            disabled={loading}
             className="w-full cursor-pointer bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
           >
-          {
-            loading ?"Updating...":"Update Details"
-          } 
+            {loading ? "Updating..." : "Update Details"}
           </button>
         </form>
         <Link href="/Account/profile">
           {" "}
           <button className="cursor-pointer mt-3 flex gap-2">
-          <FaArrowAltCircleLeft className="mt-1"/>   Back
-             
+            <FaArrowAltCircleLeft className="mt-1" /> Back
           </button>{" "}
         </Link>
       </div>

@@ -25,6 +25,10 @@ const orderSchema = new mongoose.Schema(
     gstRate: Number,
     discount: Number,
     grandTotal: Number,
+    gstin: {
+      type: String,
+      trim: true
+    }
   },
   { timestamps: true }
 );

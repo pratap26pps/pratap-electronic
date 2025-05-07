@@ -91,6 +91,9 @@ const Page = () => {
                     <p className="text-sm text-gray-500">
                       Payment Method: {order?.paymentMethod}
                     </p>
+                    <p className="text-sm text-gray-500">
+                      GSTIN Number: {order?.gstin}
+                    </p>
                   </div>
                   <div className="text-sm text-gray-500 mt-4 md:mt-0">
                     <p className="font-medium">

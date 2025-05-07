@@ -18,6 +18,7 @@ export async function POST(req) {
       subtotal,
       discount,
       selectedAddressId,
+      gstin,
     } = body;
     console.log("userId", userId);
  
@@ -64,6 +65,7 @@ export async function POST(req) {
       discount,
       grandTotal,
       selectedAddressId,
+      gstin
     });
     console.log("New Order before saving:", newOrder);
     await newOrder.save();

@@ -63,6 +63,14 @@ export default function SignupFormDemo() {
       setLoading(false);
       return;
     }
+    const gstRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+
+    if ( user.gstno && !gstRegex.test(user.gstno)) {
+      toast.error("Please type correct GSTIN");
+      setLoading(false);
+
+      return;
+    }
 
     dispatch(setSignupdata(user));
 
@@ -198,16 +206,18 @@ export default function SignupFormDemo() {
           {/* GSTIN */}
           <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
             <LabelInputContainer>
-              <Label htmlFor="state">GSTIN</Label>
+              <Label htmlFor="state">GSTIN Number</Label>
               <Input
                 id="gstno"
                 name="gstno"
                 type="text"
                 value={user.gstno}
-                onChange={(e) => setUser({ ...user, state: e.target.value })}
+                maxlength="15"
+                title="Enter a valid 15-character GSTIN (e.g., 22AAAAA0000A1Z5)"
+                onChange={(e) => setUser({ ...user, gstno: e.target.value.toUpperCase() })}
               />
             </LabelInputContainer>
-             
+    
           </div>
 
           {/* ERROR MESSAGE */}

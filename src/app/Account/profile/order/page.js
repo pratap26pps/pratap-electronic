@@ -75,6 +75,9 @@ const Page = () => {
                     <p className="text-sm text-gray-500">
                       Payment Method: {order?.paymentMethod}
                     </p>
+                    <p className="text-sm text-gray-500">
+                      GSTIN Number: {order?.gstin}
+                    </p>
                   </div>
                   <div className="text-sm text-gray-500 mt-4 md:mt-0">
                     <p className="font-medium">
@@ -96,7 +99,7 @@ const Page = () => {
                 <div>
                   <h2 className="text-lg font-semibold mb-3 ">📦 Products</h2>
                   <div className="lg:flex flex-col lg:flex-row justify-evenly gap-x-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
                       {order?.products?.map((product) => (
                         <div
                           key={product?.productId?._id}

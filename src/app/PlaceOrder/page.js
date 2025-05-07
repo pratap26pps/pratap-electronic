@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import React from "react";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 const PlaceOrder = () => {
   const router = useRouter();
@@ -38,6 +39,7 @@ const gstRate = orderDetails?.gstRate;
 const shipping = orderDetails?.shipping;
 const subtotal = orderDetails?.subtotal;
 const discount = orderDetails?.discount || "";
+const gstin = user?.gstno || "";
 
 
 const loadRazorpayScript = () => {
@@ -93,7 +95,8 @@ const loadRazorpayScript = () => {
             shipping,
             subtotal,
             discount,
-            selectedAddressId
+            selectedAddressId,
+            gstin
           }),
         });
         const data = await res.json();
@@ -163,6 +166,7 @@ const loadRazorpayScript = () => {
               subtotal,
               discount,
               selectedAddressId,
+              gstin
             }),
           });
 
@@ -255,7 +259,13 @@ const loadRazorpayScript = () => {
           <p>Phone: {user.addresses[0].phone}</p>
         </div>
       ) : (
+        <div>
         <p>No address found. Please add one in your profile.</p>
+      <Link  href="/Account/profile/AddresesManagement"> 
+      <Button className="cursor-pointer">Add Address</Button> 
+      </Link>
+
+        </div>
       )}
 
       {/* You can use selectedAddressId when placing the order */}
