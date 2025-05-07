@@ -28,6 +28,13 @@ export async function PUT(req) {
     console.log("body in me ", body);
     const cookieStore =await cookies();
     const token = cookieStore.get("token")?.value;
+    
+    if (!body.firstname || !body.lastname || !body.email) {
+      return NextResponse.json(
+        { success: false, message: "Missing required fields" },
+        { status: 400 }
+      );
+    }
 
     if (!token) {
       return NextResponse.json(

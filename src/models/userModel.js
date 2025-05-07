@@ -16,20 +16,10 @@ const userSchema = new mongoose.Schema({
         required:true,
         type:String
     }, 
-    phonenumber:{
-        required:true,
-        type:Number
-    },state:{
-        required:true,
-        type:String
-    },
-      country:{
-        required:true,
-        type:String
-      } ,city:{
-        required:true,
-        type:String
-      },  
+    gstno:{
+      type:String,
+      default: null,
+  } ,  
       isVarified:{
         type:Boolean,
         default:false

@@ -1,5 +1,5 @@
 "use client";
-
+import { FaArrowAltCircleLeft } from "react-icons/fa";
 import { useState } from "react";
 import Link from "next/link";
 import { useSelector } from "react-redux";
@@ -11,9 +11,9 @@ export default function ProfileUpdateForm() {
   console.log("user in update", user);
 
   const [formData, setFormData] = useState({
-    firstName: user?.firstname || "",
-    lastName: user?.lastname    || "",
-    phone: user?.phonenumber || "",
+    firstname: user?.firstname || "",
+    lastname: user?.lastname    || "",
+    gstno: user?.gstno || "",
     email: user?.email || "",
   });
   const [loading, setLoading] = useState(false);
@@ -51,8 +51,8 @@ export default function ProfileUpdateForm() {
               </label>
               <input
                 type="text"
-                name="firstName"
-                value={formData.firstName}
+                name="firstname"
+                value={formData.firstname}
                 onChange={handleChange}
                 required
                 className="input  border p-2 w-full"
@@ -64,8 +64,8 @@ export default function ProfileUpdateForm() {
               </label>
               <input
                 type="text"
-                name="lastName"
-                value={formData.lastName}
+                name="lastname"
+                value={formData.lastname}
                 onChange={handleChange}
                 required
                 className="input border p-2 w-full"
@@ -73,31 +73,31 @@ export default function ProfileUpdateForm() {
             </div>
           </div>
 
+ 
           <div>
-            <label className="block text-gray-600">Phone Number</label>
+            <label className="block text-gray-600">GST Number</label>
             <input
-              type="tel"
-              name="phone"
-              value={formData.phone}
+              type="text"
+              name="gstno"
+              value={formData.gstno}
               onChange={handleChange}
               className="input border p-2 w-full"
             />
           </div>
           <div>
             <label className="block text-gray-600">
-              Email Address <span className="text-red-500">*</span>
+              Email Address
             </label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              required
               className="input border p-2 w-full"
             />
           </div>
           <button
-            type="submit"
+            type="submit"  disabled={loading}
             className="w-full cursor-pointer bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
           >
           {
@@ -107,7 +107,10 @@ export default function ProfileUpdateForm() {
         </form>
         <Link href="/Account/profile">
           {" "}
-          <button className="cursor-pointer">Back</button>{" "}
+          <button className="cursor-pointer mt-3 flex gap-2">
+          <FaArrowAltCircleLeft className="mt-1"/>   Back
+             
+          </button>{" "}
         </Link>
       </div>
       <Footer />

@@ -4,20 +4,20 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 const dummyReturns = [
-  {
-    id: 1,
-    productName: "Wireless Headphones",
-    reason: "Damaged on arrival",
-    date: "2025-04-20",
-    status: "Pending",
-  },
-  {
-    id: 2,
-    productName: "Fitness Tracker",
-    reason: "Wrong size",
-    date: "2025-04-18",
-    status: "Processed",
-  },
+  // {
+  //   id: 1,
+  //   productName: "Wireless Headphones",
+  //   reason: "Damaged on arrival",
+  //   date: "2025-04-20",
+  //   status: "Pending",
+  // },
+  // {
+  //   id: 2,
+  //   productName: "Fitness Tracker",
+  //   reason: "Wrong size",
+  //   date: "2025-04-18",
+  //   status: "Processed",
+  // },
 ];
 
 const ReturnsPage = () => {

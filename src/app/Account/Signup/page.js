@@ -29,10 +29,7 @@ export default function SignupFormDemo() {
     email: "",
     password: "",
     confirmpassword: "",
-    phonenumber: "",
-    state: "",
-    country: "",
-    city: "",
+    gstno:""
   });
 
   const [error, setError] = useState(null);
@@ -63,12 +60,6 @@ export default function SignupFormDemo() {
 
     if (user.password !== user.confirmpassword) {
       toast.error("Passwords do not match");
-      setLoading(false);
-      return;
-    }
-
-    if (!/^\d{10}$/.test(user.phonenumber)) {
-      toast.error("Phone number must be exactly 10 digits");
       setLoading(false);
       return;
     }
@@ -119,7 +110,7 @@ export default function SignupFormDemo() {
           {/* NAME */}
           <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
             <LabelInputContainer>
-              <Label htmlFor="firstname">First name</Label>
+              <Label htmlFor="firstname">First name <span className="text-red-500">*</span></Label>
               <Input
                 id="firstname"
                 type="text"
@@ -131,7 +122,7 @@ export default function SignupFormDemo() {
               />
             </LabelInputContainer>
             <LabelInputContainer>
-              <Label htmlFor="lastname">Last name</Label>
+              <Label htmlFor="lastname">Last name <span className="text-red-500">*</span></Label>
               <Input
                 id="lastname"
                 type="text"
@@ -144,7 +135,7 @@ export default function SignupFormDemo() {
 
           {/* EMAIL */}
           <LabelInputContainer className="mb-4">
-            <Label htmlFor="email">Email Address</Label>
+            <Label htmlFor="email">Email Address <span className="text-red-500">*</span></Label>
             <Input
               id="email"
               type="email"
@@ -159,13 +150,14 @@ export default function SignupFormDemo() {
             <LabelInputContainer>
             <div className="flex justify-between">
 
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Password <span className="text-red-500">*</span></Label>
               <span
                 className="text-white mr-4 cursor-pointer"
                 onClick={() => setshowpassword((prev) => !prev)}
               >
                 {showpassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
-              </span></div>
+              </span>
+              </div>
               <Input
                 id="password"
                 type={showpassword ? "text" : "password"}
@@ -179,7 +171,7 @@ export default function SignupFormDemo() {
             </LabelInputContainer>
             <LabelInputContainer>
               <div className="flex justify-between"> 
-              <Label htmlFor="confirmpassword">Confirm Password</Label>
+              <Label htmlFor="confirmpassword">Confirm Password <span className="text-red-500">*</span></Label>
               <span
                 className="text-white mr-4 cursor-pointer"
                 onClick={() => setshowconfirmpassword((prev) => !prev)}
@@ -201,61 +193,21 @@ export default function SignupFormDemo() {
               />
             </LabelInputContainer>
           </div>
+ 
 
-          {/* PHONE & COUNTRY */}
+          {/* GSTIN */}
           <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
             <LabelInputContainer>
-              <Label htmlFor="phonenumber">Phone No</Label>
-              <div className="flex">
-                <Input
-                  disabled
-                  value="+91"
-                  className="w-16 bg-gray-100 border border-gray-300 rounded-md text-center"
-                />
-                <Input
-                  id="phonenumber"
-                  type="number"
-                  pattern="[0-9]{10}"
-                  maxLength={10}
-                  value={user.phonenumber}
-                  onChange={(e) =>
-                    setUser({ ...user, phonenumber: e.target.value })
-                  }
-                  required
-                />
-              </div>
-            </LabelInputContainer>
-            <LabelInputContainer>
-              <Label htmlFor="country">Country</Label>
+              <Label htmlFor="state">GSTIN</Label>
               <Input
-                id="country"
+                id="gstno"
+                name="gstno"
                 type="text"
-                value={user.country}
-                onChange={(e) => setUser({ ...user, country: e.target.value })}
-              />
-            </LabelInputContainer>
-          </div>
-
-          {/* STATE & CITY */}
-          <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
-            <LabelInputContainer>
-              <Label htmlFor="state">State</Label>
-              <Input
-                id="state"
-                type="text"
-                value={user.state}
+                value={user.gstno}
                 onChange={(e) => setUser({ ...user, state: e.target.value })}
               />
             </LabelInputContainer>
-            <LabelInputContainer>
-              <Label htmlFor="city">City</Label>
-              <Input
-                id="city"
-                type="text"
-                value={user.city}
-                onChange={(e) => setUser({ ...user, city: e.target.value })}
-              />
-            </LabelInputContainer>
+             
           </div>
 
           {/* ERROR MESSAGE */}
