@@ -1,4 +1,4 @@
-
+import Product from "@/models/productDetails";
 import connectDB from "@/dbconfig/dbconfig";
 import Order from "@/models/Order";
 
@@ -15,21 +15,39 @@ export async function POST(req) {
       );
     }
 
-    const updatedOrder = await Order.findByIdAndUpdate(
-      orderId,
-      { status: "Cancelled" },
-      { new: true }
-    );
+        // Fetch order with products
+        const order = await Order.findById(orderId).populate("products.productId");
 
-    if (!updatedOrder) {
-      return Response.json(
-        { success: false, message: "Order not found" },
-        { status: 404 }
+        if (!order) {
+          return Response.json(
+            { success: false, message: "Order not found" },
+            { status: 404 }
+          );
+        }
+        if (order.status === "Cancelled") {
+          return Response.json(
+            { success: false, message: "Order already cancelled" },
+            { status: 400 }
+          );
+        }
+    // Restore stock quantities
+    for (const item of order.products) {
+      const productId = item.productId._id;
+      const quantity = item.quantity;
+
+      await Product.findByIdAndUpdate(
+        productId,
+        { $inc: { productItems: quantity } },
+        { new: true }
       );
     }
 
+    // Update order status to Cancelled
+    order.status = "Cancelled";
+    await order.save();
+
     return Response.json(
-      { success: true, message: "Order cancelled", order: updatedOrder },
+      { success: true, message: "Order cancelled and stock updated", order },
       { status: 200 }
     );
   } catch (error) {

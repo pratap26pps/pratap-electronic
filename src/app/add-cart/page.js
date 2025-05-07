@@ -84,7 +84,20 @@ export default function YourCart() {
       ...item,
       quantity: quantities[item._id] || 1,
     }));
-
+    console.log("product in updatedCartItems", updatedCartItems);
+    // validation for quantity 
+    for (const item of updatedCartItems) {
+      const { productId, quantity } = item;
+      
+      if (quantity > productId.productItems) {
+        toast.error(
+          `Only ${productId.productItems} item(s) available for "${productId.ProductTitle}"`
+        );
+        return;
+      }
+    }
+    
+  
     const orderData = {
       cartItems: updatedCartItems,
       coupon,

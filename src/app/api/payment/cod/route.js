@@ -67,6 +67,16 @@ export async function POST(req) {
     });
     console.log("New Order before saving:", newOrder);
     await newOrder.save();
+
+        // Decrement stock
+        for (const item of product) {
+          await Product.findByIdAndUpdate(
+            item.productId,
+            { $inc: { productItems: -item.quantity } },
+            { new: true }
+          );
+        }
+        
     const populatedOrder = await Order.findById(newOrder._id)
     .populate("products.productId")
     .populate("selectedAddressId");

@@ -7,6 +7,7 @@ import Link from "next/link";
 const Page = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setloading] = useState(false);
+  const [loading2, setloading2] = useState(false);
   console.log("order in owner dashboard", orders);
 
   const fetchOrders = async () => {
@@ -32,6 +33,8 @@ const Page = () => {
   }, []);
 
   const cancilorder = async (orderId) => {
+    setloading2(true);
+
     try {
       const res = await fetch(`/api/order/cancel`, {
         method: "POST",
@@ -49,6 +52,9 @@ const Page = () => {
     } catch (error) {
       toast.error("Error cancelling order");
       console.error(error);
+    }finally{
+    setloading2(false);
+
     }
   };
 
@@ -107,17 +113,20 @@ const Page = () => {
                           className=" border rounded-md p-4 shadow-sm"
                         >
                           <img
-                            src={product?.ProductImage}
-                            alt={product?.ProductImage}
+                            src={product?.productId?.ProductImage}
+                            alt={product?.productId?.ProductImage}
                             className="w-full h-40 object-contain mb-3 rounded-md"
                           />
-                          <p className="font-medium">{product?.ProductTitle}</p>
+                          <p className="font-medium">{product?.productId?.ProductTitle}</p>
 
                           <p className="text-sm text-gray-600 w-full">
-                            {product?.ProductShortDescription}
+                            {product?.productId?.ProductShortDescription}
                           </p>
                           <p className="text-1xl text-green-500">
-                            price: {product?.ProductPrice}
+                            price: {product?.productId?.ProductPrice}
+                          </p>
+                          <p className="text-1xl text-green-500">
+                            quantity: {product?.quantity}
                           </p>
                         </div>
                       ))}
@@ -172,10 +181,7 @@ const Page = () => {
                               Discount: -₹{order?.discount.toFixed(2)}
                             </p>
                           )}
-                          <p className="text-green-600">
-                          Quantity:
-                            {order?.quantity}
-                          </p>
+                      
                           <p className="text-green-600">
                           Status:
                             {order?.status}
@@ -193,7 +199,10 @@ const Page = () => {
                   onClick={() => cancilorder(order._id)}
                   className="px-5 py-2 rounded-2xl bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold shadow-md hover:scale-105 transition-transform duration-300"
                 >
-                  Cancel Order
+                {
+               loading2 ? <div className="loader scale-50"></div>:"Cancel Order"
+                }
+                 
                 </button>
               </div>
             ))

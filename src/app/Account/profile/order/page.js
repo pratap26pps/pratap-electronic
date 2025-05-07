@@ -83,6 +83,12 @@ const Page = () => {
                         ₹{order?.grandTotal?.toFixed(2)}
                       </span>
                     </p>
+                    <p className="font-medium">
+                      Status:{" "}
+                      <span className="text-lg text-green-600 font-bold">
+                      {order?.status}
+                      </span>
+                    </p>
                   </div>
                 </div>
 

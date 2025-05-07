@@ -7,7 +7,7 @@ export async function GET(req) {
     await connectDB();
 
     const orders = await Order.find()
-      .populate("products")
+      .populate("products.productId")
       .populate("selectedAddressId")
       .sort({ createdAt: -1 });
 

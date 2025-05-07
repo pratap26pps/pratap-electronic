@@ -44,6 +44,13 @@ async function enrollCustomer(
         productEnrollment(updatedProduct.ProductName, user.firstname)
       );
 
+    //  decrease the stock
+    await Product.findByIdAndUpdate(
+      productId,
+      { $inc: { productItems: -quantity } },
+      { new: true }
+    );
+
       productDocs.push({
         productId: updatedProduct._id,
         quantity: quantity || 1, 
