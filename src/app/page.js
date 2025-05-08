@@ -13,6 +13,7 @@ import {
 } from "@/redux/slices/productSlice";
 import axios from "axios";
 import Hero from "./LandingPage/Hero";
+import { addToWishlist } from "@/redux/slices/wishlist";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -46,6 +47,18 @@ export default function Home() {
         });
         const detailData = await detailRes.json();
         if (detailData.user) dispatch(setUserdetail(detailData.user));
+      }
+      const userId = JSON.parse(localStorage.getItem("userData"))?.id;
+      if (userId) {
+        const detailwislist = await fetch(`/api/wishlist/${userId}`, {
+          method: "GET",
+          cache: "no-store",
+        });
+        const detailData = await detailwislist.json();
+        console.log("detailData",detailData)
+        if (detailData?.items?.length > 0) {
+          dispatch(addToWishlist(detailData.items));
+        }
       }
   
       if (storedNews && storedCategory && storedProduct) {

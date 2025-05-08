@@ -10,15 +10,16 @@ import toast from "react-hot-toast";
 import Footer from "@/components/Footer";
 import { useSelector } from "react-redux";
 import { CarouselSize4 } from "@/components/corouseSpacing4";
+import { addToWishlist } from "@/redux/slices/wishlist";
 export default function Page({ params }) {
-  const { product } = use(params);
+  const { product } = use(params);  
   const dispatch = useDispatch();
   const [specificproducts, setSpecificProducts] = useState({});
   const [addToCart, setAddToCart] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loading2, setLoading2] = useState(false);
   const user = useSelector((state) => state.auth.signupdata || null);
-
+console.log("user in checkoutproduct",user)
   const [position, setPosition] = useState({ x: "50%", y: "50%" });
 
   const handleMouseMove = (e) => {
@@ -114,6 +115,28 @@ export default function Page({ params }) {
       setLoading2(false)
     }
   };
+  const wishhandler = async () => {
+    if (!user?.id || !specificproducts?._id) {
+      toast.error("User or product missing");
+      return;
+    }
+  
+    try {
+      const response = await axios.post('/api/wishlist', {
+        userId: user.id,
+        productId: specificproducts._id,
+      });
+  
+      if (response) {
+        dispatch(addToWishlist(response.data));
+        toast.success("Added to the wishlist");
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+
+    }
+  };
+  
 
   return (
     <>
@@ -204,7 +227,9 @@ export default function Page({ params }) {
                     }
                     </div>}
                 </button>
-                <button className="px-5 py-2 rounded-lg border-2 border-gray-300 font-semibold hover:border-orange-400 hover:text-orange-400 transition">
+                <button
+                onClick={wishhandler}
+                className="px-5 py-2 rounded-lg border-2 border-gray-300 font-semibold hover:border-orange-400 hover:text-orange-400 transition">
                   Add to Wishlist
                 </button>
               </div>

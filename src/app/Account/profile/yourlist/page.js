@@ -1,66 +1,158 @@
-"use client"
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
-import Link from 'next/link';
-import Footer from '@/components/Footer';
-const YourListPage = () => {
-  const [lists, setLists] = useState([]);
-  const [newListName, setNewListName] = useState('');
+"use client";
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { removeFromWishlist } from "@/redux/slices/wishlist";
+import { setAddCart, setRemoveCart } from "@/redux/slices/cartSlice";
+import axios from "axios";
+import { Button } from "@/components/ui/button";
+import Footer from "@/components/Footer";
+import toast from "react-hot-toast";
 
-  const addNewList = () => {
-    if (newListName.trim() === '') return;
-    setLists([...lists, { name: newListName, items: [] }]);
-    setNewListName('');
+const YourListPage = () => {
+  const [addToCartIds, setAddToCartIds] = useState([]);
+  const [loadingIds, setLoadingIds] = useState([]);
+  const wishlistItems = useSelector((state) => state.wishlist.items);
+  const user = useSelector((state) => state.auth.signupdata || null);
+ const userId = user?.id;
+ console.log("userId",userId)
+  const dispatch = useDispatch();
+
+  const toggleCart = async (product) => {
+    const productId = product.productId._id;
+    setLoadingIds((prev) => [...prev, productId]);
+
+    try {
+      const res = await axios.get("/api/cart", { withCredentials: true });
+      let cartItems = res.data.items || [];
+
+      const isInCart = cartItems.some(
+        (item) => item.productId._id === productId
+      );
+
+      if (!isInCart) {
+        cartItems.push({
+          productId,
+          price: product.productId.ProductPrice,
+          quantity: 1,
+        });
+
+        await axios.put(
+          "/api/cart",
+          { items: cartItems },
+          { withCredentials: true }
+        );
+        dispatch(setAddCart(product.productId));
+        setAddToCartIds((prev) => [...prev, productId]);
+      } else {
+        const updatedItems = cartItems.filter(
+          (item) => item.productId._id !== productId
+        );
+
+        await axios.put(
+          "/api/cart",
+          { items: updatedItems },
+          { withCredentials: true }
+        );
+        dispatch(setRemoveCart(productId));
+        setAddToCartIds((prev) => prev.filter((id) => id !== productId));
+      }
+    } catch (error) {
+      toast.error("You must be logged in to perform this action.");
+      console.error("Cart operation failed:", error);
+    } finally {
+      setLoadingIds((prev) => prev.filter((id) => id !== productId));
+    }
   };
+  const removehandler = (userId, productId, itemId) => async () => {
+    try {
+      const response = await axios.delete("/api/wishlist", {
+        data: { userId, productId }
+      });
+  
+      if (response.status === 200) {
+        dispatch(removeFromWishlist(itemId || productId));
+        toast.success("Removed successfully");
+      }
+    }catch(error){
+      toast.error(error.response?.data?.message || "Failed to remove item");
+    }
+  }
 
   return (
     <>
-     <div className=" mx-auto mt-40 flex flex-col  justify-center items-center px-4">
-      
-      <div className='flex w-full '>
-       <Link href="/Account/profile"> <Button className="cursor-pointer">Back</Button></Link> 
-      <h1 className="text-3xl font-bold mb-6 mx-auto">Your Lists</h1>
-      </div>
-
-      
-      <div className="flex gap-2 mb-6">
-        <Input
-          placeholder="New List Name"
-          value={newListName}
-          onChange={(e) => setNewListName(e.target.value)}
-        />
-        <Button onClick={addNewList}>New List</Button>
-      </div>
-
-      {lists.length === 0 ? (
-        <p className="text-gray-500">You have no lists, add one now.</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-32 gap-y-5">
-          {lists.map((list, index) => (
-            <Card key={index} className="p-4 w-[180%]">
-              <h2 className="text-xl font-semibold mb-2">{list.name}</h2>
-              <p className="text-gray-500 mb-2">Items: {list.items.length}</p>
-              <Button
-                variant="destructive"
-                onClick={() =>
-                  setLists(lists.filter((_, i) => i !== index))
-                }
-              >
-                Delete List
-              </Button>
-            </Card>
-          ))}
+      <div className="mx-auto mt-40 flex flex-col justify-center items-center px-4">
+        <div className="flex w-full ">
+          <Button asChild>
+            <a href="/Account/profile">Back</a>
+          </Button>
+          <h1 className="text-3xl font-bold mb-6 mx-auto">Your Wishlist</h1>
         </div>
-      )}
-    </div>
-   <div className='mt-16'>
-    <Footer /> 
 
-   </div>
+        {wishlistItems.length === 0 ? (
+          <p className="text-gray-500">Your wishlist is empty.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-x-3 gap-y-5">
+            {wishlistItems.map((item) => {
+              const productId = item?.productId?._id;
+              const inCart = addToCartIds.includes(productId);
+              const isLoading = loadingIds.includes(productId);
+
+              return (
+                <div key={item._id} className="p-4 border rounded-lg shadow-sm">
+                  {item.productId.ProductImage && (
+                    <img
+                      src={item.productId.ProductImage}
+                      alt={item.productId.ProductTitle}
+                      className="w-32 h-32 object-cover mt-2"
+                    />
+                  )}
+                  <h2 className="text-xl font-semibold">
+                    {item.productId.ProductTitle}
+                  </h2>
+                  <p className="text-gray-600">
+                    {item.productId.ProductShortDescription}
+                  </p>
+                  <p className="text-gray-600">
+                    ₹{item.productId.ProductPrice}
+                  </p>
+                  <p className="text-green-500">
+                    In Stock: {item.productId.productItems}
+                  </p>
+                  <div className="flex flex-col lg:flex-row gap-2 mt-2">
+                    <Button
+                      variant="destructive"
+                      onClick={removehandler(userId, item.productId._id, item._id)}
+                    >
+                      Remove
+                    </Button>
+                    <button
+                      onClick={() => toggleCart(item)}
+                      className={`px-5 py-2 rounded-lg text-white font-semibold shadow hover:shadow-lg transition ${
+                        inCart
+                          ? "bg-red-500 hover:bg-red-600"
+                          : "bg-orange-500 hover:bg-orange-600"
+                      }`}
+                    >
+                      {isLoading ? (
+                        <div className="loader scale-50"></div>
+                      ) : inCart ? (
+                        "Remove from Cart"
+                      ) : (
+                        "Add to Cart"
+                      )}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      <div className="mt-16">
+        <Footer />
+      </div>
     </>
-  
   );
 };
 

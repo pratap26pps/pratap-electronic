@@ -6,14 +6,10 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { useTheme } from "next-themes";
 import Navbar from "@/components/ui/navbar";
 import CartInit from "@/components/CartInit";
-import { Toaster, ToastBar } from "react-hot-toast";
-
+import { Toaster  } from "react-hot-toast";
 
 export default function RootLayout({ children }) {
-
   const { theme } = useTheme();
-
-
 
   return (
     <html
@@ -33,14 +29,14 @@ export default function RootLayout({ children }) {
 
             <CartInit />
             {children}
-            <Toaster>
-              {(t) => (
-                <ToastBar
-                  toast={t}
-                  style={{ background: "#333", color: "#fff" }}
-                />
-              )}
-            </Toaster>
+            <Toaster
+              toastOptions={{
+                style: {
+                  background: "#333",
+                  color: "#fff",
+                },
+              }}
+            />
           </ThemeProvider>
         </Provider>
       </body>
