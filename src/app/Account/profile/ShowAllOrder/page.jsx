@@ -8,6 +8,7 @@ const Page = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setloading] = useState(false);
   const [loading2, setloading2] = useState(false);
+  const [loading3, setloading3] = useState(false);
   console.log("order in owner dashboard", orders);
 
   const fetchOrders = async () => {
@@ -54,6 +55,31 @@ const Page = () => {
       console.error(error);
     }finally{
     setloading2(false);
+
+    }
+  };
+  const deliveryorder = async (orderId) => {
+    setloading3(true);
+
+    try {
+      const res = await fetch(`/api/order/delivery`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        toast.success("Order delivery successfully");
+        // Optionally: refresh order list or update UI
+      } else {
+        toast.error(data.message || "Failed to delivery order");
+      }
+    } catch (error) {
+      toast.error("Error delivery order");
+      console.error(error);
+    }finally{
+    setloading3(false);
 
     }
   };
@@ -200,6 +226,8 @@ const Page = () => {
                   </div>
                 </div>
                 {/* cancil-order */}
+                <div className="flex justify-between">
+              
                 <button
                   onClick={() => cancilorder(order._id)}
                   className="px-5 py-2 cursor-pointer rounded-2xl bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold shadow-md hover:scale-105 transition-transform duration-300"
@@ -209,6 +237,16 @@ const Page = () => {
                 }
                  
                 </button>
+                <button
+                  onClick={() => deliveryorder(order._id)}
+                  className="px-5 py-2 cursor-pointer rounded-2xl bg-gradient-to-r from-green-500 to-pink-700 text-white font-semibold shadow-md hover:scale-105 transition-transform duration-300"
+                >
+                {
+               loading3 ? <div className="loader scale-50"></div>:"Confirm Delivery"
+                }
+                 
+                </button>
+                  </div>
               </div>
             ))
           )}
