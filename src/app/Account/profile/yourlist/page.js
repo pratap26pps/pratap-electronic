@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { removeFromWishlist } from "@/redux/slices/wishlist";
 import { setAddCart, setRemoveCart } from "@/redux/slices/cartSlice";
@@ -11,11 +11,41 @@ import toast from "react-hot-toast";
 const YourListPage = () => {
   const [addToCartIds, setAddToCartIds] = useState([]);
   const [loadingIds, setLoadingIds] = useState([]);
-  const wishlistItems = useSelector((state) => state.wishlist.items);
+  const [loading, setLoading] = useState(false);
+ const [wishlistItems, setWishlistItems] = useState([]);
+
+ 
   const user = useSelector((state) => state.auth.signupdata || null);
  const userId = user?.id;
  console.log("userId",userId)
   const dispatch = useDispatch();
+
+
+useEffect(() => {
+  const fetchWishlist = async () => {
+    if (userId) {
+      setLoading(true);
+      try {
+
+        const res = await fetch(`/api/wishlist/${userId}`, {
+          method: "GET",
+          cache: "no-store",
+        });
+        const detailData = await res.json();
+        if (detailData?.items?.length > 0) {
+          setWishlistItems(detailData.items);
+        }
+      } catch (err) {
+        console.error("Failed to fetch wishlist:", err);
+      } finally{
+           setLoading(false);
+      }
+    } 
+  };
+  fetchWishlist();
+}, [userId]);
+
+
 
   const toggleCart = async (product) => {
     const productId = product.productId._id;
@@ -80,15 +110,20 @@ const YourListPage = () => {
 
   return (
     <>
-      <div className="mx-auto mt-40 flex flex-col justify-center items-center px-4">
+ 
+  <div className="mx-auto mt-40 flex flex-col justify-center items-center px-4">
         <div className="flex w-full ">
           <Button asChild>
             <a href="/Account/profile">Back</a>
           </Button>
           <h1 className="text-3xl font-bold mb-6 mx-auto">Your Wishlist</h1>
         </div>
+        {
+          loading?<div className="loader"></div>:
 
-        {wishlistItems.length === 0 ? (
+        
+      <div>
+     {wishlistItems.length === 0 ? (
           <p className="text-gray-500">Your wishlist is empty.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-x-3 gap-y-5">
@@ -148,7 +183,9 @@ const YourListPage = () => {
           </div>
         )}
       </div>
-
+        }
+      </div>
+    
       <div className="mt-16">
         <Footer />
       </div>

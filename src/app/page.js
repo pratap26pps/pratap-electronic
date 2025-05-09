@@ -2,7 +2,6 @@
 import { useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { setSignupdata, setUserdetail } from "@/redux/slices/userSlice";
 import { setNewsDetails } from "@/redux/slices/productSlice";
 import {
   setCategoryDetails,
@@ -13,53 +12,21 @@ import {
 } from "@/redux/slices/productSlice";
 import axios from "axios";
 import Hero from "./LandingPage/Hero";
-import { addToWishlist } from "@/redux/slices/wishlist";
-
+import { setSignupdata } from "@/redux/slices/userSlice";
 export default function Home() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
 
- 
-
   const loadAllData = async () => {
     try {
-      const storedUser = localStorage.getItem("userData");
+          const res = await fetch("/api/users/me", { cache: "no-store" });
+            const data = await res.json();
+            if (data.user)  dispatch(setSignupdata(data.user))
+              
       const storedNews = localStorage.getItem("newsData");
       const storedCategory = localStorage.getItem("categoryData");
       const storedProduct = localStorage.getItem("productData");
-  
-      if (storedUser) {
-        dispatch(setSignupdata(JSON.parse(storedUser)));
-      } else {
-        const userRes = await fetch("/api/users/me", { cache: "no-store" });
-        const userData = await userRes.json();
-        if (userData.user) {
-          localStorage.setItem("userData", JSON.stringify(userData.user));
-          dispatch(setSignupdata(userData.user));
-        }
-      }
-  
-      const email = JSON.parse(localStorage.getItem("userData"))?.email;
-      if (email) {
-        const detailRes = await fetch(`/api/users/signup?email=${email}`, {
-          method: "GET",
-          cache: "no-store",
-        });
-        const detailData = await detailRes.json();
-        if (detailData.user) dispatch(setUserdetail(detailData.user));
-      }
-      const userId = JSON.parse(localStorage.getItem("userData"))?.id;
-      if (userId) {
-        const detailwislist = await fetch(`/api/wishlist/${userId}`, {
-          method: "GET",
-          cache: "no-store",
-        });
-        const detailData = await detailwislist.json();
-        console.log("detailData",detailData)
-        if (detailData?.items?.length > 0) {
-          dispatch(addToWishlist(detailData.items));
-        }
-      }
+   
   
       if (storedNews && storedCategory && storedProduct) {
         dispatch(setNewsDetails(JSON.parse(storedNews)));

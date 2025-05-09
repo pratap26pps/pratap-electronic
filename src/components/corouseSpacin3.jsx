@@ -15,6 +15,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Link from "next/link";
+import { addToWishlist } from "@/redux/slices/wishlist";
+
 export function CarouselSize3() {
  
     const [loading, setloading] = useState(false);
@@ -97,6 +99,28 @@ export function CarouselSize3() {
     
   };
 
+   const wishhandler = async (id) => {
+      if (!user?.id || !id) {
+        toast.error("User or product missing");
+        return;
+      }
+    
+      try {
+        const response = await axios.post('/api/wishlist', {
+          userId: user.id,
+          productId:  id,
+        });
+    
+        if (response) {
+          dispatch(addToWishlist(response.data));
+          toast.success("Added to the wishlist");
+        }
+      } catch (error) {
+        toast.error(error?.response?.data?.message || "Something went wrong");
+  
+      }
+    };
+
   return (
     <Carousel opts={{ align: "start" }} className="">
       <CarouselContent>
@@ -155,7 +179,10 @@ export function CarouselSize3() {
                          {cartItems[item._id] ? "Remove from Cart" : "Add To Cart"}
                        </button>
              
-                       <button className="border-2 p-2 font-semibold shadow rounded-lg focus:outline-none hover:text-orange-300 hover:border-orange-300">
+                       <button
+                                          onClick={()=>wishhandler(item._id)}
+
+                       className="border-2 p-2 font-semibold shadow rounded-lg focus:outline-none hover:text-orange-300 hover:border-orange-300">
                          ADD TO wishlist
                        </button>
                      </div>

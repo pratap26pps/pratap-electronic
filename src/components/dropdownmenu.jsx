@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { FaBars, FaTimes, FaSearch } from "react-icons/fa";
 import { RiArrowDropDownFill } from "react-icons/ri";
-import { cn } from "@/lib/utils";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
