@@ -33,8 +33,7 @@ export default function Navbar() {
   const { setTheme, theme } = useTheme();
 
   const user = useSelector((state) => state.auth.signupdata); 
-  const user2 = useSelector((state) => state.auth.userdetail);
- 
+  console.log("user",user) 
 
   const logouthandler = async () => {
     try {
@@ -209,7 +208,7 @@ useEffect(() => {
               <DropdownMenuContent>
                 {user ? (
                   <div className="flex flex-col items-center gap-2 mt-4">
-                    <p>Welcome {user2?.firstname}</p>
+                    <p>Welcome {user?.name}</p>
                     <Link href="/Account/profile">
                       <p className="px-6 py-2 rounded-full bg-amber-500 text-white hover:bg-amber-600 transition duration-300 cursor-pointer shadow-md w-full text-center">Dashboard</p>
                     </Link>

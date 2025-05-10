@@ -18,13 +18,9 @@ const wishlistSlice = createSlice({
           }
         });
       },
-      
-    removeFromWishlist: (state, action ) => {
-      state.items = state.items.filter(item => item._id !== action.payload);
-    },
   },
 });
 
-export const { addToWishlist, removeFromWishlist } = wishlistSlice.actions;
+export const { addToWishlist } = wishlistSlice.actions;
  
 export const wishlistReducer = wishlistSlice.reducer;

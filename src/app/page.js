@@ -22,11 +22,12 @@ export default function Home() {
           const res = await fetch("/api/users/me", { cache: "no-store" });
             const data = await res.json();
             if (data.user)  dispatch(setSignupdata(data.user))
+    
               
       const storedNews = localStorage.getItem("newsData");
       const storedCategory = localStorage.getItem("categoryData");
       const storedProduct = localStorage.getItem("productData");
-   
+      
   
       if (storedNews && storedCategory && storedProduct) {
         dispatch(setNewsDetails(JSON.parse(storedNews)));
@@ -66,6 +67,8 @@ export default function Home() {
   useEffect(() => {
     loadAllData();
   }, []);
+
+ 
      
  
   return (
