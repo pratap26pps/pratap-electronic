@@ -10,6 +10,9 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Footer from "@/components/Footer";
 import { useParams } from "next/navigation";
+import { addToWishlist } from "@/redux/slices/wishlist";
+
+
 export default function Page() {
     const { product } = useParams();
     console.log("product id in total pps",product)
@@ -108,6 +111,29 @@ export default function Page() {
       console.error("Cart operation failed:", error);
     }
   };
+
+
+   const wishhandler = async (id) => {
+        if (!user?.id || !id) {
+          toast.error("User or product missing");
+          return;
+        }
+      
+        try {
+          const response = await axios.post('/api/wishlist', {
+            userId: user.id,
+            productId:id,
+          });
+      
+          if (response) {
+            dispatch(addToWishlist(response.data));
+            toast.success("Added to the wishlist");
+          }
+        } catch (error) {
+          toast.error(error?.response?.data?.message || "Something went wrong");
+    
+        }
+      };
 
   const items = cart.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -248,7 +274,9 @@ export default function Page() {
                       {cartItems[p._id] ? "Remove from Cart" : "Add To Cart"}
                     </button>
 
-                    <button className="border-2 border-gray-300 hover:border-orange-300 text-gray-700 hover:text-orange-400 font-semibold py-2 rounded-lg transition shadow-md">
+                    <button
+                       onClick={()=>wishhandler(p._id)}
+                    className="border-2 border-gray-300 hover:border-orange-300 text-gray-700 hover:text-orange-400 font-semibold py-2 rounded-lg transition shadow-md">
                       Add to Wishlist
                     </button>
                   </div>

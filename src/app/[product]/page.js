@@ -9,6 +9,9 @@ import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Footer from "@/components/Footer";
+import { addToWishlist } from "@/redux/slices/wishlist";
+
+
 export default function Page({ params }) {
   const { product } = use(params);
   const dispatch = useDispatch();

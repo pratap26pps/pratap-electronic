@@ -99,9 +99,9 @@ const Footer = () => {
             <div>
               <h3 className="text-lg font-semibold">Information</h3>
               <ul className="mt-2 space-y-2">
-                <li><a href="order-status" className="text-gray-400 hover:text-white">Track your Order</a></li>
+                <li><a href="/order-status" className="text-gray-400 hover:text-white">Track your Order</a></li>
                 <li><a href="https://www.youtube.com/@pratap26pps" className="text-gray-400 hover:text-white">Videos</a></li>
-                <li><a href="about-us" className="text-gray-400 hover:text-white">About Us</a></li>
+                <li><a href="/about-us" className="text-gray-400 hover:text-white">About Us</a></li>
               </ul>
             </div>
 
@@ -109,7 +109,7 @@ const Footer = () => {
               <h3 className="text-lg font-semibold">My Account</h3>
               <ul className="mt-2 space-y-2">
                 <li className="text-gray-400 cursor-default"><a href="/add-cart">Cart</a> </li>
-                <li className="text-gray-400 cursor-default"><a href="">CheckOut</a> </li>
+               
                 <li className="text-gray-400 cursor-default"><a href="/Account/profile">My Account</a> </li>
               </ul>
             </div>
