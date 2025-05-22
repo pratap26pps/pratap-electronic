@@ -218,6 +218,11 @@ export default function Page() {
             <span className="loader ml-[50%] mt-36"></span>
           ) : (
             <div className="grid lg:w-[71%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+                   {specificproducts.length === 0 && (
+                  <div className="text-center text-gray-500 text-lg">
+                    No products found for this category.
+                  </div>
+                )}
               {specificproducts.map((p) => (
                 <div
                   key={p._id}

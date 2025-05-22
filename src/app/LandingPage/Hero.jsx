@@ -25,6 +25,8 @@ const Hero = ({ isLoading }) => {
    const [isopen,setIsMenuOpen] = useState(false);
   const News = useSelector((state) => state.product.newsdata || []);
   const components = useSelector((state) => state.product.Categorydetails || []);
+  const products = useSelector((state) => state.product.productdetails || []);
+
     
   if (isLoading) {
     return (
@@ -98,18 +100,34 @@ const Hero = ({ isLoading }) => {
   
       {/* Featured, New & Popular Products */}
 
-      <div className="mt-12">
-        <h2 className="text-center text-2xl font-bold">Featured Products</h2>
-        <CarouselSize />
-      </div>
-      <div className="mt-12">
-        <h2 className="text-center text-2xl font-bold">Popular Products</h2>
-        <CarouselSize2 />
-      </div>
-      <div className="mt-12">
-        <h2 className="text-center text-2xl font-bold">New Products</h2>
-        <CarouselSize3 />
-      </div>
+ {/* Featured, New & Popular Products */}
+<div className="mt-12">
+  <h2 className="text-center text-2xl font-bold">Featured Products</h2>
+  {products.length === 0 ? (
+    <p className="text-center text-gray-500 mt-4">No products available</p>
+  ) : (
+    <CarouselSize />
+  )}
+</div>
+
+<div className="mt-12">
+  <h2 className="text-center text-2xl font-bold">Popular Products</h2>
+  {products.length === 0 ? (
+    <p className="text-center text-gray-500 mt-4">No products available</p>
+  ) : (
+    <CarouselSize2 />
+  )}
+</div>
+
+<div className="mt-12">
+  <h2 className="text-center text-2xl font-bold">New Products</h2>
+  {products.length === 0 ? (
+    <p className="text-center text-gray-500 mt-4">No products available</p>
+  ) : (
+    <CarouselSize3 />
+  )}
+</div>
+
 
       {/* Latest News */}
 

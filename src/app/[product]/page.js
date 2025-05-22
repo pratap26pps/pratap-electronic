@@ -11,7 +11,6 @@ import { useRouter } from "next/navigation";
 import Footer from "@/components/Footer";
 import { addToWishlist } from "@/redux/slices/wishlist";
 
-
 export default function Page({ params }) {
   const { product } = use(params);
   const dispatch = useDispatch();
@@ -46,26 +45,26 @@ export default function Page({ params }) {
     }
   }, [product]);
 
-    // check state of add to cart
-    useEffect(() => {
-      const fetchCart = async () => {
-        try {
-          const res = await axios.get("/api/cart", { withCredentials: true });
-          const items = res.data.items || [];
-    
-          const cartMap = {};
-          for (const item of items) {
-            cartMap[item.productId._id] = true;
-          }
-    
-          setCartItems(cartMap);
-        } catch (error) {
-          console.error("Error fetching cart items:", error);
+  // check state of add to cart
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        const res = await axios.get("/api/cart", { withCredentials: true });
+        const items = res.data.items || [];
+
+        const cartMap = {};
+        for (const item of items) {
+          cartMap[item.productId._id] = true;
         }
-      };
-    
-      fetchCart();
-    }, []);
+
+        setCartItems(cartMap);
+      } catch (error) {
+        console.error("Error fetching cart items:", error);
+      }
+    };
+
+    fetchCart();
+  }, []);
 
   const gotocart = async (productId) => {
     if (user?.role === "owner") {
@@ -111,27 +110,26 @@ export default function Page({ params }) {
     }
   };
 
-   const wishhandler = async (id) => {
-      if (!user?.id || !id) {
-        toast.error("User or product missing");
-        return;
+  const wishhandler = async (id) => {
+    if (!user?.id || !id) {
+      toast.error("User or product missing");
+      return;
+    }
+
+    try {
+      const response = await axios.post("/api/wishlist", {
+        userId: user.id,
+        productId: id,
+      });
+
+      if (response) {
+        dispatch(addToWishlist(response.data));
+        toast.success("Added to the wishlist");
       }
-    
-      try {
-        const response = await axios.post('/api/wishlist', {
-          userId: user.id,
-          productId: id,
-        });
-    
-        if (response) {
-          dispatch(addToWishlist(response.data));
-          toast.success("Added to the wishlist");
-        }
-      } catch (error) {
-        toast.error(error?.response?.data?.message || "Something went wrong");
-  
-      }
-    };
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
+  };
 
   const items = cart.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -216,6 +214,12 @@ export default function Page({ params }) {
             <span className="loader ml-[50%] mt-36"></span>
           ) : (
             <div className="grid lg:w-[71%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+                {specificproducts.length === 0 && (
+                  <div className="text-center text-gray-500 text-lg">
+                    No products found for this brand.
+                  </div>
+                )}
+
               {specificproducts.map((p) => (
                 <div
                   key={p._id}
@@ -273,9 +277,9 @@ export default function Page({ params }) {
                     </button>
 
                     <button
-                                           onClick={()=>wishhandler(p._id)}
-
-                    className="border-2 border-gray-300 hover:border-orange-300 text-gray-700 hover:text-orange-400 font-semibold py-2 rounded-lg transition shadow-md">
+                      onClick={() => wishhandler(p._id)}
+                      className="border-2 border-gray-300 hover:border-orange-300 text-gray-700 hover:text-orange-400 font-semibold py-2 rounded-lg transition shadow-md"
+                    >
                       Add to Wishlist
                     </button>
                   </div>

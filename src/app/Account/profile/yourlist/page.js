@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { removeFromWishlist } from "@/redux/slices/wishlist";
+// import { removeFromWishlist } from "@/redux/slices/wishlist";
 import { setAddCart, setRemoveCart } from "@/redux/slices/cartSlice";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
@@ -20,16 +20,19 @@ const YourListPage = () => {
   console.log("userId", userId);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const stored = localStorage.getItem("wishlistItems");
-    if (stored) {
-      try {
-        setWishlistItems(JSON.parse(stored));
-      } catch (err) {
-        console.error("Invalid wishlist in localStorage", err);
-      }
+useEffect(() => {
+  const fetchWishlist = async () => {
+    if (!userId) return;
+    try {
+      const res = await axios.get(`/api/wishlist/${userId}`);
+      setWishlistItems(res.data.items);  
+    } catch (error) {
+      console.error("Failed to fetch wishlist:", error);
     }
-  }, []);
+  };
+
+  fetchWishlist();
+}, [userId]);
 
   const toggleCart = async (product) => {
     const productId = product.productId._id;
@@ -118,39 +121,40 @@ const YourListPage = () => {
 
               return (
                 <div key={item._id} className="p-4 border rounded-lg shadow-sm">
-                  {item.productId.ProductImage && (
+                  {item?.productId?.ProductImage && (
                     <img
-                      src={item.productId.ProductImage}
-                      alt={item.productId.ProductTitle}
+                      src={item?.productId?.ProductImage}
+                      alt={item?.productId?.ProductTitle}
                       className="w-32 h-32 object-cover mt-2"
                     />
                   )}
                   <h2 className="text-xl font-semibold">
-                    {item.productId.ProductTitle}
+                    {item?.productId?.ProductTitle}
                   </h2>
                   <p className="text-gray-600">
-                    {item.productId.ProductShortDescription}
+                    {item?.productId?.ProductShortDescription}
                   </p>
                   <p className="text-gray-600">
-                    ₹{item.productId.ProductPrice}
+                    ₹{item?.productId?.ProductPrice}
                   </p>
                   <p className="text-green-500">
-                    In Stock: {item.productId.productItems}
+                    In Stock: {item?.productId?.productItems}
                   </p>
-                  <div className="flex flex-col lg:flex-row gap-2 mt-2">
+                  <div className="flex  flex-col lg:flex-row gap-2 mt-2">
                     <Button
+                    className="cursor-pointer"
                       variant="destructive"
                       onClick={removehandler(
                         userId,
-                        item.productId._id,
-                        item._id
+                        item?.productId?._id,
+                        item?._id
                       )}
                     >
                       Remove
                     </Button>
-                    <button
+                    <Button
                       onClick={() => toggleCart(item)}
-                      className={`px-5 py-2 rounded-lg text-white font-semibold shadow hover:shadow-lg transition ${
+                      className={`px-5 cursor-pointer py-2 rounded-lg text-white font-semibold shadow hover:shadow-lg transition ${
                         inCart
                           ? "bg-red-500 hover:bg-red-600"
                           : "bg-orange-500 hover:bg-orange-600"
@@ -163,7 +167,7 @@ const YourListPage = () => {
                       ) : (
                         "Add to Cart"
                       )}
-                    </button>
+                    </Button>
                   </div>
                 </div>
               );
