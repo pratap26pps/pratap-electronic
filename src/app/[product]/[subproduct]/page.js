@@ -13,8 +13,13 @@ import { addToWishlist } from "@/redux/slices/wishlist";
 
 export default function Page({ params }) {
 
-  const { subproduct } = use(params);
-  const { product } = use(params);
+ const { product, subproduct } = use(params);
+
+  const decodedProduct = decodeURIComponent(product);
+  const decodedSubproduct = decodeURIComponent(subproduct);
+  console.log("decodedProduct", decodedProduct);
+  console.log("decodedSubproduct", decodedSubproduct);
+
   const dispatch = useDispatch();
   const router = useRouter();
   const [brandname, setproducts] = useState([]);
@@ -41,7 +46,7 @@ export default function Page({ params }) {
     setloading1(true);
     try {
       const response = await axios.get(
-        `/api/brandProduct?subcategoryId=${subproduct}`
+        `/api/brandProduct?subcategoryId=${decodedSubproduct}`
       );
       console.log("response during get brand", response.data);
       setproducts(response.data);
@@ -203,8 +208,8 @@ export default function Page({ params }) {
               </h1>
             </Link>
             <h1 className="mr-2">/</h1>
-            <h1>{product}/</h1>
-            <h1>{subproduct}</h1>
+            <h1>{decodedProduct}/</h1>
+            <h1>{decodedSubproduct}</h1>
           </div>
         </div>
 
@@ -280,8 +285,8 @@ export default function Page({ params }) {
                 </h1>
               </Link>
               <h1 className="mr-2">/</h1>
-              <h1>{product}/</h1>
-              <h1>{subproduct}</h1>
+              <h1>{decodedProduct}/</h1>
+              <h1>{decodedSubproduct}</h1>
             </div>
           </div>
 
