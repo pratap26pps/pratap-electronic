@@ -6,6 +6,7 @@ import { RiArrowDropDownFill } from "react-icons/ri";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -21,8 +22,10 @@ export function NavigationMenuDemo() {
   const [components, setComponents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loading2, setloading2] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
   const [brandname, setBrandname] = useState([]);
   const router = useRouter();
+  const user = useSelector((state) => state.auth.signupdata);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -37,11 +40,11 @@ export function NavigationMenuDemo() {
       try {
         const categoryResponse = await axios.get("/api/TotalProduct");
         setComponents(categoryResponse.data.data);
-  
-     if(categoryResponse) {
-      const brandResponse = await axios.get("/api/TopManufacturing");
-        setBrandname(brandResponse.data);
-     }
+
+        if (categoryResponse) {
+          const brandResponse = await axios.get("/api/TopManufacturing");
+          setBrandname(brandResponse.data);
+        }
       } catch (error) {
         toast.error(error.message);
       } finally {
@@ -49,10 +52,9 @@ export function NavigationMenuDemo() {
         setloading2(false);
       }
     };
-  
+
     fetchData();
   }, []);
-  
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -100,6 +102,49 @@ export function NavigationMenuDemo() {
     setFilteredProducts([]);
   };
 
+  const handleDelete = async (id) => {
+    try {
+      setDeletingId(id);
+      await axios.delete(`/api/TopManufacturing/${id}`);
+      toast.success("Brand deleted successfully");
+      setBrandname((prev) => prev.filter((brand) => brand._id !== id));
+    } catch (error) {
+      toast.error("Delete failed", error);
+    } finally {
+      setDeletingId(null);
+    }
+  };
+    const handleDelete2 = async (id) => {
+    try {
+      setDeletingId(id);
+      await axios.delete(`/api/subCategory/${id}`);
+      toast.success("subCategory deleted successfully");
+         setComponents((prev) =>
+      prev.map((category) => ({
+        ...category,
+        subcategory: category.subcategory?.filter((sub) => sub._id !== id),
+      }))
+    );
+    } catch (error) {
+      toast.error("Delete failed", error);
+    } finally {
+      setDeletingId(null);
+    }
+  };
+      const handleDelete3 = async (id) => {
+    try {
+      setDeletingId(id);
+      await axios.delete(`/api/category/${id}`);
+      toast.success("Category deleted successfully");
+      setComponents((prev) => prev.filter((sub) => sub._id !== id));
+    } catch (error) {
+      toast.error("Delete failed", error);
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+
   return (
     <div className="w-full">
       {/* Top Navbar */}
@@ -117,6 +162,10 @@ export function NavigationMenuDemo() {
             brandname={brandname}
             loading={loading}
             loading2={loading2}
+            handleDelete={handleDelete}
+            handleDelete2={handleDelete2}
+            handleDelete3={handleDelete3}
+            user={user}
           />
         </div>
 
@@ -172,6 +221,11 @@ export function NavigationMenuDemo() {
             components={components}
             brandname={brandname}
             loading={loading}
+            deletingId={deletingId}
+            handleDelete={handleDelete}
+            handleDelete2={handleDelete2}
+            handleDelete3={handleDelete3}
+            user={user}
           />
         </div>
       )}
@@ -180,7 +234,17 @@ export function NavigationMenuDemo() {
 }
 
 // Separate dropdowns into a subcomponent
-function Dropdowns({ components, brandname, loading ,loading2}) {
+function Dropdowns({
+  components,
+  brandname,
+  loading,
+  loading2,
+  deletingId,
+  handleDelete,
+  handleDelete2,
+  handleDelete3,
+  user,
+}) {
   return (
     <div className="flex flex-col mt-1 md:flex-row gap-4">
       {/* All Categories Dropdown */}
@@ -198,27 +262,56 @@ function Dropdowns({ components, brandname, loading ,loading2}) {
             components.map((category) => (
               <DropdownMenuSub key={category._id}>
                 <DropdownMenuSubTrigger>
-                  <div  className="cursor-pointer">
-                    {category.name}
-                  </div>
+                  <div className="cursor-pointer">{category.name}</div>
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent>
-                  <DropdownMenuItem asChild className="px-2 py-1 font-semibold text-gray-700 dark:text-gray-200">
-                  <Link
-                    href={`/Totalproduct/${category._id}`}
-                    className="cursor-pointer"
+                  <DropdownMenuItem
+                    asChild
+                    className="px-2 py-1 font-semibold text-gray-700 dark:text-gray-200"
                   >
-                    {category.name}
-                  </Link>
+                    <div className="w-full flex justify-between items-center gap-4">
+                      <Link
+                        href={`/Totalproduct/${category._id}`}
+                        className="cursor-pointer"
+                      >
+                        {category.name}
+                      </Link>
+                      {user?.role === "owner" ? (
+                        <button
+                          onClick={() => handleDelete3(category._id)}
+                          className="text-red-500 cursor-pointer hover:underline text-sm"
+                          disabled={deletingId === category._id}
+                        >
+                          {deletingId === category._id
+                            ? "Deleting..."
+                            : "Delete"}
+                        </button>
+                      ) : (
+                        ""
+                      )}
+                    </div>
                   </DropdownMenuItem>
                   {category.subcategory?.map((sub) => (
                     <DropdownMenuItem asChild key={sub._id}>
-                      <Link
-                        href={`/${category.name}/${sub._id}`}
-                        className="cursor-pointer"
-                      >
-                        {sub.name}
-                      </Link>
+                      <div className="w-full flex justify-between items-center gap-4">
+                        <Link
+                          href={`/${category.name}/${sub._id}`}
+                          className="cursor-pointer"
+                        >
+                          {sub.name}
+                        </Link>
+                        {user?.role === "owner" ? (
+                          <button
+                            onClick={() => handleDelete2(sub._id)}
+                            className="text-red-500 cursor-pointer hover:underline text-sm"
+                            disabled={deletingId === sub._id}
+                          >
+                            {deletingId === sub._id ? "Deleting..." : "Delete"}
+                          </button>
+                        ) : (
+                          ""
+                        )}
+                      </div>
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuSubContent>
@@ -237,17 +330,37 @@ function Dropdowns({ components, brandname, loading ,loading2}) {
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          { loading2 ? <div className="p-2">Loading...</div>:
-            (  brandname.map((brand) => (
-              <DropdownMenuItem asChild key={brand._id}>
-                <Link href={`/${brand._id}`} className="cursor-pointer">
-                  {brand.name}
-                </Link>
+          {loading2 ? (
+            <div className="p-2">Loading...</div>
+          ) : (
+            brandname.map((brand) => (
+              <DropdownMenuItem
+                asChild
+                key={brand._id}
+                className="flex justify-between items-center"
+              >
+                <div className="w-full flex justify-between items-center gap-4">
+                  <Link
+                    href={`/${brand._id}`}
+                    className="flex-1 cursor-pointer"
+                  >
+                    {brand.name}
+                  </Link>
+                  {user?.role === "owner" ? (
+                    <button
+                      onClick={() => handleDelete(brand._id)}
+                      className="text-red-500 cursor-pointer hover:underline text-sm"
+                      disabled={deletingId === brand._id}
+                    >
+                      {deletingId === brand._id ? "Deleting..." : "Delete"}
+                    </button>
+                  ) : (
+                    ""
+                  )}
+                </div>
               </DropdownMenuItem>
-            )))
-          }
-  
-
+            ))
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 
