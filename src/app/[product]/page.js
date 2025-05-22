@@ -223,7 +223,7 @@ export default function Page({ params }) {
               {specificproducts.map((p) => (
                 <div
                   key={p._id}
-                  className="border rounded-2xl shadow-lg flex flex-col justify-between p-4 h-[550px]" // fixed card height
+                  className="border rounded-2xl shadow-lg flex flex-col justify-between p-4" // fixed card height
                 >
                   <Link href={`/checkproduct/${p._id}`}>
                     <div className="flex flex-col items-center text-center h-full">

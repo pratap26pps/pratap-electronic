@@ -295,7 +295,7 @@ export default function Page({ params }) {
             <span className="loader ml-[50%] mt-36"></span>
           ) : (
             <div className="grid lg:w-[71%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
-                 {specificproducts.length === 0 && (
+                {specificproducts.length === 0 && (
                   <div className="text-center text-gray-500 text-lg">
                     No products found for this category.
                   </div>
@@ -303,7 +303,7 @@ export default function Page({ params }) {
               {specificproducts.map((p) => (
                 <div
                   key={p._id}
-                  className="border rounded-2xl shadow-lg flex flex-col justify-between p-4 h-[550px]" // fixed card height
+                  className="border rounded-2xl shadow-lg flex flex-col justify-between p-4" // fixed card height
                 >
                   <Link href={`/checkproduct/${p._id}`}>
                     <div className="flex flex-col items-center text-center h-full">
@@ -382,12 +382,12 @@ export default function Page({ params }) {
                 brand.product.map((p) => (
                   <div
                     key={p._id}
-                    className="border rounded-2xl shadow-lg flex flex-col justify-between p-4 h-[550px]" // fixed height for all cards
+                    className="border rounded-2xl shadow-lg flex flex-col justify-between p-4" // fixed height for all cards
                   >
                     <Link href={`/checkproduct/${p._id}`}>
                       <div className="flex flex-col items-center text-center h-full">
                         {/* Image */}
-                        <div className="h-44 w-44 mb-4 flex items-center justify-center overflow-hidden rounded-lg">
+                        <div className="h-44 w-44 mb-2 flex items-center justify-center overflow-hidden rounded-lg">
                           <img
                             src={p.ProductImage}
                             alt="productimage"
@@ -413,7 +413,7 @@ export default function Page({ params }) {
                             </span>
                           </div>
 
-                          <div className="w-full h-px bg-gray-200 my-2"></div>
+                          <div className="w-full h-px bg-gray-200 my-1"></div>
 
                           <div className="text-sm font-semibold text-gray-700">
                             Shipped in 24 Hours from Mumbai Warehouse
@@ -427,7 +427,7 @@ export default function Page({ params }) {
                     </Link>
 
                     {/* Buttons */}
-                    <div className="flex flex-col gap-2 mt-4">
+                    <div className="flex flex-col gap-2">
                       <button
                         onClick={() => gotocart(p._id)}
                         className="bg-orange-400 hover:bg-orange-300 text-white font-semibold py-2 rounded-lg transition shadow-md"

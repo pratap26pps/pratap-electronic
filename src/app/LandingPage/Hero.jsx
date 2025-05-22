@@ -25,8 +25,7 @@ const Hero = ({ isLoading }) => {
    const [isopen,setIsMenuOpen] = useState(false);
   const News = useSelector((state) => state.product.newsdata || []);
   const components = useSelector((state) => state.product.Categorydetails || []);
-  const products = useSelector((state) => state.product.productdetails || []);
-
+  const products = useSelector((state) => state.product.Productdetails || []);
     
   if (isLoading) {
     return (

@@ -25,6 +25,7 @@ export function CarouselSize2() {
    const user = useSelector((state) => state.auth.signupdata || null);
    console.log("user in coursespacing2",user);
    const products = useSelector((state) => state.product.NewProductdetails || []);
+  console.log("prosuct in home page",products)
  
    useEffect(() => {
     const fetchCart = async () => {

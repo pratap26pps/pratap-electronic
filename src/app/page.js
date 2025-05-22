@@ -28,6 +28,7 @@ export default function Home() {
           axios.get("/api/category"),
           axios.get("/api/product"),
         ]); 
+ 
 
         dispatch(setNewsDetails(blogRes.data));
         dispatch(setCategoryDetails(categoryRes.data));

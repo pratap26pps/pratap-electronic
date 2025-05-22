@@ -22,6 +22,7 @@ export function CarouselSize4() {
     const [loading, setloading] = useState(false);
   const user = useSelector((state) => state.auth.signupdata || null);
   const products = useSelector((state) => state.product.PopularProductdetails || []);
+  console.log("prosuct in home page",products)
   
   const [cartItems, setCartItems] = useState({});
   const dispatch = useDispatch();
