@@ -33,7 +33,7 @@ export default function SignupFormDemo() {
         headers: { "Content-Type": "application/json" },
         withCredentials: true, // 👈 include credentials for cookie auth
       });
-      router.push("/Account/profile");
+      router.push("/");
       toast.success("Login successful");
     } catch (error) {
       toast.error(error.response?.data?.error || "Login failed");
