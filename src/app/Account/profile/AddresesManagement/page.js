@@ -133,7 +133,7 @@ const AddressList = ({
             {
               loading ?<div className="loader scale-50"></div>:
               "Save Address"
-            }  
+            }
             </button>
           </form>
           <button
@@ -151,9 +151,9 @@ const AddressList = ({
 const AddressManagement = () => {
   const userdata= useSelector((state)=>state.auth.userdetail);
   console.log("userdata in address",userdata)
-  
-   const router = useRouter(); 
- 
+
+   const router = useRouter();
+
   const [addresses, setAddresses] = useState(userdata?.addresses || []);
   const [loading, setloading] = useState(false);
 
@@ -178,9 +178,9 @@ const AddressManagement = () => {
       const res = await fetch(`/api/users/address/${id}`, {
         method: "DELETE",
       });
-  
+
       const data = await res.json();
-  
+
       if (data.success) {
         setAddresses((prev) => prev.filter((addr) => addr._id !== id));
       } else {

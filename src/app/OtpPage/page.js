@@ -72,13 +72,14 @@ setLoading(false);
       {loading ? (
         "loading...."
       ) : (
-        <div className="  text-2xl flex flex-col  items-center mt-36 ">
-          <h1 className="text-orange-600 ">Verify Email</h1>
-          <p className="w-68 mx-1 my-4">
-            a verification code has been sent to you.Enter the code below
+        <div className="text-2xl flex flex-col  items-center mt-36 gap-10px mx-auto ">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-center
+           text-gray-900 dark:text-white">Verify Email</h1>
+          <p className="w-90 mx-0 my-5">
+            A verification code has been sent to you Enter the code below.
           </p>
-          <form className="scale-100 my-8" onSubmit={handleonsubmit}>
-            <div className="scale-200">
+          <form className="scale-100  my-8" onSubmit={handleonsubmit}>
+            <div className="scale-200 ml-10">
             <OTPInput
             inputStyle="border border-gray-400 rounded-md text-center text-xl focus:outline-none focus:border-blue-500"
               name="otp"
@@ -93,13 +94,14 @@ setLoading(false);
 
             <button
               type="submit"
-              className="bg-yellow-500
-                -ml-4   hover:scale-95 hover:bg-green-500 transition-all duration-200 my-9 p-2 rounded-md "
+              className="px-8 mt-10 py-4 text-lg sm:text-xl font-semibold rounded-2xl shadow-md
+               bg-blue-600 hover:bg-blue-700 text-white transition-all duration-300
+               dark:bg-blue-500 dark:hover:bg-blue-600"
             >
               Verify Email
             </button>
           </form>
-          <Link href="/Signup">
+          <Link href="Account/Signup">
             <div className="flex mt-6 -ml-6">
               <BiArrowFromRight className="mt-1" />
               <p>back to signup</p>
