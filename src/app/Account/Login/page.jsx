@@ -31,7 +31,7 @@ export default function SignupFormDemo() {
     try {
       const res = await axios.post("/api/users/login", user, {
         headers: { "Content-Type": "application/json" },
-        withCredentials: true, // 👈 include credentials for cookie auth
+        withCredentials: true,  
       });
       router.push("/");
       toast.success("Login successful");
