@@ -130,14 +130,14 @@ const Hero = ({ isLoading }) => {
 
       {/* Latest News */}
 
-      <h2 className="text-center text-2xl font-bold">Latest News</h2>
+      <h2 className="text-center text-2xl mt-12 font-bold">Latest News</h2>
     
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-1 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-3 mt-6">
         {News.slice(0, 4).map(
           (
             item  
           ) => (
-            <div key={item?._id} className="p-2 ml-8 bg-emerald-950 lg:ml-0 rounded-lg shadow-md">
+            <div key={item?._id} className="p-2 ml-8 bg-gray-300 lg:ml-0 rounded-lg shadow-md">
               <Link href={`/blog/${item?._id}`}>
               <img src={item?.image} alt="news" className="rounded-md" />
               <p className="font-semibold">{item?.date}</p>

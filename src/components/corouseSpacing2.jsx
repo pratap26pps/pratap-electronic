@@ -123,9 +123,9 @@ export function CarouselSize2() {
       <CarouselContent>
         {products.map((item, index) => (
                <CarouselItem key={item._id || index} className="md:basis-1/2 lg:basis-1/3">
-               <div className="p-1">
+               <div>
                  <Card className=" flex flex-col justify-between"> {/* Fixed total height */}
-                   <CardContent className="items-center justify-center p-4 flex-1">
+                   <CardContent className="items-center justify-center flex-1">
                    <Link href={`/checkproduct/${item._id}`}>
                      <div className="shadow shadow-neutral-300 border border-b-gray-200 flex flex-col h-full">
                        
@@ -141,21 +141,21 @@ export function CarouselSize2() {
                        </div>
              
                        {/* Text section */}
-                       <div className="flex-1 flex flex-col justify-between p-4">
+                       <div className="flex-1 flex flex-col justify-between p-2">
                          <div className="text-neutral-400 text-center text-sm truncate">
                            {item.ProductTitle}
                          </div>
              
-                         <div className="font-semibold text-center text-neutral-700 mt-2 line-clamp-2">
+                         <div className="font-semibold text-center text-neutral-700 line-clamp-2">
                            {item.ProductShortDescription}
                          </div>
              
-                         <div className="text-lg font-semibold text-red-400 text-center mt-2">
+                         <div className="text-lg font-semibold text-red-400 text-center">
                            ₹ {item.ProductPrice}
                            <span className="text-gray-500 text-sm"> ex. GST</span>
                          </div>
              
-                         <div className="w-full h-px bg-gray-100 my-3"></div>
+                         <div className="w-full h-px bg-gray-100 my-1"></div>
              
                          <div className="font-semibold text-center text-gray-700 text-sm">
                            Shipped in 24 Hours from Mumbai Warehouse
@@ -168,7 +168,7 @@ export function CarouselSize2() {
                      </div>
                    </Link>
                      {/* Buttons */}
-                     <div className="flex flex-col gap-2 mt-4">
+                     <div className="flex flex-col gap-1 mt-1">
                        <button
                          onClick={() => toggleCartItem(item._id)}
                          className="bg-orange-400 p-2 rounded-lg focus:outline-none hover:bg-orange-700 shadow-md font-semibold text-white"

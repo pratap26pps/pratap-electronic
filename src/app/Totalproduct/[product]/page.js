@@ -23,6 +23,9 @@ export default function Page() {
   const [cartItems, setCartItems] = useState({});
   const [Loading, setLoading] = useState(false);
   const [coupon, setcoupon] = useState("");
+    const [minPrice, setMinPrice] = useState("");
+    const [maxPrice, setMaxPrice] = useState("");
+    const [inStockOnly, setInStockOnly] = useState(false);
   const cart = useSelector((state) => state.cart.cart || []);
 
  
@@ -112,6 +115,16 @@ export default function Page() {
     }
   };
 
+  
+  const applyFilters = (products) => {
+    return products.filter((product) => {
+      const inStockCondition = inStockOnly ? product.productItems : true;
+      const priceCondition =
+        (!minPrice || product.ProductPrice >= parseFloat(minPrice)) &&
+        (!maxPrice || product.ProductPrice <= parseFloat(maxPrice));
+      return inStockCondition && priceCondition;
+    });
+  };
 
    const wishhandler = async (id) => {
         if (!user?.id || !id) {
@@ -186,52 +199,64 @@ export default function Page() {
           <p className="text-lg font-semibold text-gray-700 mb-1">Refine by</p>
           <p className="text-sm text-gray-400 mb-4">No filters applied</p>
 
-          <div className="mb-4">
-            <p className="text-base font-medium text-gray-600 hover:text-orange-500 cursor-pointer transition">
-              Price
-            </p>
+                 {/* Price Filter Section */}
+          <div className="mb-6">
+            <p className="font-semibold text-base mb-2">Price</p>
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                placeholder="Min"
+                className="w-20 px-2 py-1 border rounded"
+                value={minPrice}
+                onChange={(e) => setMinPrice(e.target.value)}
+              />
+              <span>–</span>
+              <input
+                type="number"
+                placeholder="Max"
+                className="w-20 px-2 py-1 border rounded"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+              />
+            </div>
           </div>
 
+          {/* Stock Status Filter Section */}
           <div>
-            <p className="text-base font-medium text-gray-600 hover:text-orange-500 cursor-pointer transition">
-              Stock Status
-            </p>
+            <p className="font-semibold text-base mb-2">Stock Status</p>
+            <label className="flex items-center gap-2 text-gray-700">
+              <input
+                type="checkbox"
+                checked={inStockOnly}
+                onChange={(e) => setInStockOnly(e.target.checked)}
+              />
+              Show only in-stock products
+            </label>
           </div>
         </div>
 
         {/* Main product content */}
         <div>
-          <div className="hidden lg:block">
-            <div className="flex ">
-              <Link href="/">
-                <h1 className="text-orange-500 mx-2">
-                  {" "}
-                  <u>Home</u>{" "}
-                </h1>
-              </Link>
-              <h1 className="mr-2">/</h1>
-              <h1>{product}/</h1>
-            </div>
-          </div>
+          
 
           {Loading ? (
             <span className="loader ml-[50%] mt-36"></span>
           ) : (
-            <div className="grid lg:w-[71%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+            <div className="grid lg:w-[91%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
                    {specificproducts.length === 0 && (
                   <div className="text-center text-gray-500 text-lg">
                     No products found for this category.
                   </div>
                 )}
-              {specificproducts.map((p) => (
+              {applyFilters(specificproducts).map((p) => (
                 <div
                   key={p._id}
-                  className="border rounded-2xl shadow-lg flex flex-col justify-between p-4 h-[550px]" // fixed card height
+                  className="border rounded-2xl shadow-lg flex flex-col justify-between p-2" // fixed card height
                 >
                   <Link href={`/checkproduct/${p._id}`}>
                     <div className="flex flex-col items-center text-center h-full">
                       {/* Image */}
-                      <div className="h-44 w-44 mb-4 flex items-center justify-center overflow-hidden rounded-lg">
+                      <div className="h-44 w-44 mb-1 flex items-center justify-center overflow-hidden rounded-lg">
                         <img
                           src={p.ProductImage}
                           alt="productimage"
@@ -240,7 +265,7 @@ export default function Page() {
                       </div>
 
                       {/* Product Texts */}
-                      <div className="flex flex-col items-center gap-2 px-2">
+                      <div className="flex flex-col items-center  px-2">
                         <div className="text-neutral-400 font-medium truncate">
                           {p.ProductTitle}
                         </div>
@@ -257,7 +282,7 @@ export default function Page() {
                           </span>
                         </div>
 
-                        <div className="w-full h-px bg-gray-200 my-2"></div>
+                        <div className="w-full bg-gray-200 my-1"></div>
 
                         <div className="text-sm font-semibold text-gray-700">
                           Shipped in 24 Hours from Mumbai Warehouse
@@ -271,7 +296,7 @@ export default function Page() {
                   </Link>
 
                   {/* Action Buttons */}
-                  <div className="flex flex-col gap-2 mt-4">
+                  <div className="flex flex-col gap-2 mt-1">
                     <button
                       onClick={() => gotocart(p._id)}
                       className="bg-orange-400 hover:bg-orange-700 text-white font-semibold py-2 rounded-lg transition shadow-md"

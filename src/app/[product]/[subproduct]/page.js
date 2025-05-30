@@ -33,6 +33,11 @@ export default function Page({ params }) {
   const [loading1, setloading1] = useState(false);
   const [coupon, setcoupon] = useState("");
 
+  const [minPrice, setMinPrice] = useState('');
+const [maxPrice, setMaxPrice] = useState('');
+const [inStockOnly, setInStockOnly] = useState(false);
+
+
   const [selectedBrands, setSelectedBrands] = useState([]);
   const handleCheckboxChange = (brandId) => {
     setSelectedBrands((prev) =>
@@ -93,6 +98,18 @@ export default function Page({ params }) {
      
        fetchCart();
      }, []);
+
+  const applyFilters = (products) => {
+  return products.filter((product) => {
+    const inStockCondition = inStockOnly ? product.productItems : true;
+    const priceCondition =
+      (!minPrice || product.ProductPrice >= parseFloat(minPrice)) &&
+      (!maxPrice || product.ProductPrice <= parseFloat(maxPrice));
+    return inStockCondition && priceCondition;
+  });
+};
+
+
 
   const gotocart = async (productId) => {
     if (user?.role === "owner") {
@@ -197,23 +214,7 @@ export default function Page({ params }) {
 
   return (
     <div>
-      <div className="mt-40 flex lg:flex-row flex-col gap-10">
-        {/* homelink and cat name */}
-        <div className="lg:hidden block">
-          <div className="flex ">
-            <Link href="/">
-              <h1 className="text-orange-500 mx-2">
-                {" "}
-                <u>Home</u>{" "}
-              </h1>
-            </Link>
-            <h1 className="mr-2">/</h1>
-            <h1>{decodedProduct}/</h1>
-            <h1>{decodedSubproduct}</h1>
-          </div>
-        </div>
-
-
+      <div className="mt-36 flex lg:flex-row flex-col gap-10">
         {/* stock status */}
         <div className="ml-10 lg:w-[17%] 
         grid  lg:grid-cols-1 grid-cols-2 lg:h-44
@@ -258,17 +259,41 @@ export default function Page({ params }) {
               ))}
             </div>
           </div>
-        {/* Add price filter sliders or ranges here */}
-          <div>
-            <p className="font-semibold text-base mb-2">Price</p>
-    
-            <p className="text-gray-400">[Price filter options]</p>
-          </div>
-       {/* Add stock status filters here */}
-          <div>
-            <p className="font-semibold text-base mb-2">Stock Status</p>  
-            <p className="text-gray-400">[Stock status options]</p>
-          </div>
+    {/* Price Filter Section */}
+<div className="mb-6">
+  <p className="font-semibold text-base mb-2">Price</p>
+  <div className="flex items-center gap-2">
+    <input
+      type="number"
+      placeholder="Min"
+      className="w-20 px-2 py-1 border rounded"
+      value={minPrice}
+      onChange={(e) => setMinPrice(e.target.value)}
+    />
+    <span>–</span>
+    <input
+      type="number"
+      placeholder="Max"
+      className="w-20 px-2 py-1 border rounded"
+      value={maxPrice}
+      onChange={(e) => setMaxPrice(e.target.value)}
+    />
+  </div>
+</div>
+
+{/* Stock Status Filter Section */}
+<div>
+  <p className="font-semibold text-base mb-2">Stock Status</p>
+  <label className="flex items-center gap-2 text-gray-700">
+    <input
+      type="checkbox"
+      checked={inStockOnly}
+      onChange={(e) => setInStockOnly(e.target.checked)}
+    />
+    Show only in-stock products
+  </label>
+</div>
+
 
         </div>
 
@@ -276,26 +301,13 @@ export default function Page({ params }) {
 
         {/* main content */}
         <div>
-          <div className="hidden lg:block">
-            <div className="flex ">
-              <Link href="/">
-                <h1 className="text-orange-500 mx-2">
-                  {" "}
-                  <u>Home</u>{" "}
-                </h1>
-              </Link>
-              <h1 className="mr-2">/</h1>
-              <h1>{decodedProduct}/</h1>
-              <h1>{decodedSubproduct}</h1>
-            </div>
-          </div>
-
+          
           {/* specific brand product  */}
           {loading1 ? (
             <span className="loader ml-[50%] mt-36"></span>
           ) : (
-            <div className="grid lg:w-[71%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
-              {specificproducts.map((p) => (
+            <div className="grid lg:w-[91%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+              {applyFilters(specificproducts).map((p) => (
                 <div
                   key={p._id}
                   className="border rounded-2xl shadow-lg flex flex-col justify-between p-4" // fixed card height
@@ -303,7 +315,7 @@ export default function Page({ params }) {
                   <Link href={`/checkproduct/${p._id}`}>
                     <div className="flex flex-col items-center text-center h-full">
                       {/* Image */}
-                      <div className="h-44 w-44 mb-4 flex items-center justify-center overflow-hidden rounded-lg">
+                      <div className="h-44 w-44 mb-2 flex items-center justify-center overflow-hidden rounded-lg">
                         <img
                           src={p.ProductImage}
                           alt="productimage"
@@ -312,7 +324,7 @@ export default function Page({ params }) {
                       </div>
 
                       {/* Product Texts */}
-                      <div className="flex flex-col items-center gap-2 px-2">
+                      <div className="flex flex-col items-center px-2">
                         <div className="text-neutral-400 font-medium truncate">
                           {p.ProductTitle}
                         </div>
@@ -329,7 +341,7 @@ export default function Page({ params }) {
                           </span>
                         </div>
 
-                        <div className="w-full h-px bg-gray-200 my-2"></div>
+                        <div className="w-full h-px bg-gray-200 my-1"></div>
 
                         <div className="text-sm font-semibold text-gray-700">
                           Shipped in 24 Hours from Mumbai Warehouse
@@ -343,7 +355,7 @@ export default function Page({ params }) {
                   </Link>
 
                   {/* Action Buttons */}
-                  <div className="flex flex-col gap-2 mt-4">
+                  <div className="flex flex-col gap-2 mt-1">
                     <button
                       onClick={() => gotocart(p._id)}
                       className="bg-orange-400 hover:bg-orange-300 text-white font-semibold py-2 rounded-lg transition shadow-md"
@@ -367,14 +379,14 @@ export default function Page({ params }) {
           {loading ? (
             <span className="loader ml-[50%] mt-36"></span>
           ) : (
-            <div className="grid lg:w-[71%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+            <div className="grid -mt-6 lg:w-[91%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
                {brandname.length === 0 && (
                 <div className="text-center text-gray-500 text-lg">
                   No products found for this Category.
                 </div>
               )}
               {brandname.map((brand) =>
-                brand.product.map((p) => (
+               applyFilters(brand.product).map((p) => (
                   <div
                     key={p._id}
                     className="border rounded-2xl shadow-lg flex flex-col justify-between p-4" // fixed height for all cards
@@ -382,7 +394,7 @@ export default function Page({ params }) {
                     <Link href={`/checkproduct/${p._id}`}>
                       <div className="flex flex-col items-center text-center h-full">
                         {/* Image */}
-                        <div className="h-44 w-44 mb-2 flex items-center justify-center overflow-hidden rounded-lg">
+                        <div className="h-44 w-44 mb-1 flex items-center justify-center overflow-hidden rounded-lg">
                           <img
                             src={p.ProductImage}
                             alt="productimage"
@@ -391,7 +403,7 @@ export default function Page({ params }) {
                         </div>
 
                         {/* Product Info */}
-                        <div className="flex flex-col items-center gap-2 px-2">
+                        <div className="flex flex-col items-center px-2">
                           <div className="text-neutral-400 font-medium truncate">
                             {p.ProductTitle}
                           </div>

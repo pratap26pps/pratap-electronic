@@ -145,8 +145,7 @@ console.log("user in checkoutproduct",user)
           <Link href="/" className="text-orange-500 underline">
             Home
           </Link>
-          <span>/</span>
-          <span>{product}</span>
+          
         </div>
 
         {loading ? (

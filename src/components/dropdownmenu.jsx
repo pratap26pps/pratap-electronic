@@ -96,11 +96,16 @@ export function NavigationMenuDemo() {
     }
   };
 
-  const goToProduct = (id) => {
-    router.push(`/checkproduct/${id}`);
-    setSearchTerm("");
-    setFilteredProducts([]);
-  };
+  // const goToProduct = (id) => {
+  //   try {
+  //     console.log("triggered");
+  //     router.push(`/checkproduct/${id}`);
+  //     setSearchTerm("");
+  //     setFilteredProducts([]);
+  //   } catch (err) {
+  //     console.error("Error navigating to product:", err);
+  //   }
+  // };
 
   const handleDelete = async (id) => {
     try {
@@ -114,24 +119,24 @@ export function NavigationMenuDemo() {
       setDeletingId(null);
     }
   };
-    const handleDelete2 = async (id) => {
+  const handleDelete2 = async (id) => {
     try {
       setDeletingId(id);
       await axios.delete(`/api/subCategory/${id}`);
       toast.success("subCategory deleted successfully");
-         setComponents((prev) =>
-      prev.map((category) => ({
-        ...category,
-        subcategory: category.subcategory?.filter((sub) => sub._id !== id),
-      }))
-    );
+      setComponents((prev) =>
+        prev.map((category) => ({
+          ...category,
+          subcategory: category.subcategory?.filter((sub) => sub._id !== id),
+        }))
+      );
     } catch (error) {
       toast.error("Delete failed", error);
     } finally {
       setDeletingId(null);
     }
   };
-      const handleDelete3 = async (id) => {
+  const handleDelete3 = async (id) => {
     try {
       setDeletingId(id);
       await axios.delete(`/api/category/${id}`);
@@ -143,7 +148,6 @@ export function NavigationMenuDemo() {
       setDeletingId(null);
     }
   };
-
 
   return (
     <div className="w-full">
@@ -180,33 +184,42 @@ export function NavigationMenuDemo() {
               value={searchTerm}
               onChange={handleSearchChange}
               type="text"
-              placeholder="Search products..."
+                placeholder="Search products..."
               className="w-full bg-gray-100 outline-none text-gray-700 placeholder-gray-500 rounded-full px-2"
             />
           </div>
 
           {filteredProducts.length > 0 && (
-            <div className="absolute mt-2 w-80 bg-white shadow-md rounded-md overflow-hidden z-10">
+            <div className="absolute mt-2 w-80 bg-gray-700 shadow-md rounded-md overflow-hidden z-10">
               {filteredProducts.map((product) => (
                 <div
                   key={product._id}
-                  onClick={() => goToProduct(product._id)}
-                  className="flex items-center p-2 hover:bg-gray-200 cursor-pointer"
+                  className="flex items-center p-2 hover:bg-gray-400 cursor-pointer"
                 >
-                  <img
-                    src={product.ProductImage}
-                    alt={product.ProductTitle}
-                    className="w-10 h-10 object-cover rounded-full mr-2"
-                  />
-                  <div>
-                    <p className="font-semibold">{product.ProductTitle}</p>
-                    <p className="text-gray-500 text-sm">
-                      {product.ProductShortDescription}
-                    </p>
-                    <p className="text-green-500 font-bold">
-                      ₹{product.ProductPrice}
-                    </p>
+                  <Link
+                    href={`/checkproduct/${product._id}`}
+                  >
+                   <div
+                
+                    className="flex items-center w-full"
+                  >
+                    <img
+                      src={product.ProductImage}
+                      alt={product.ProductTitle}
+                      className="w-10 h-10 object-cover rounded-full mr-2"
+                    />
+                    <div>
+                      <p className="font-semibold">{product.ProductTitle}</p>
+                      <p className="text-gray-500 text-sm">
+                        {product.ProductShortDescription}
+                      </p>
+                      <p className="text-green-500 font-bold">
+                        ₹{product.ProductPrice}
+                      </p>
+                    </div>
                   </div>
+                  </Link>
+                 
                 </div>
               ))}
             </div>

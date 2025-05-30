@@ -34,7 +34,7 @@ const Footer = () => {
     }
 
   return (
-    <footer className="bg-gray-900 text-white py-10">
+    <footer className=" bg-white dark:bg-gray-900 border-t-2 border-b-black text-white py-10">
       <div className="container mx-auto px-4 sm:px-8">
         <div className="flex flex-col md:flex-row md:justify-between gap-10">
 
@@ -97,31 +97,31 @@ const Footer = () => {
           <div className="w-full md:w-1/2 grid grid-cols-1 sm:grid-cols-3 gap-y-8 gap-x-6">
            
             <div>
-              <h3 className="text-lg font-semibold">Information</h3>
+              <h3 className="text-lg font-semibold text-black dark:text-white">Information</h3>
               <ul className="mt-2 space-y-2">
-                <li><a href="/order-status" className="text-gray-400 hover:text-white">Track your Order</a></li>
-                <li><a href="https://www.youtube.com/@pratap26pps" className="text-gray-400 hover:text-white">Videos</a></li>
-                <li><a href="/about-us" className="text-gray-400 hover:text-white">About Us</a></li>
+                <li><a href="/order-status" className="text-gray-400 hover:dark:text-white">Track your Order</a></li>
+                <li><a href="https://www.youtube.com/@pratap26pps" target="blank" className="text-gray-400 hover:dark:text-white">Videos</a></li>
+                <li><a href="/about-us" className="text-gray-400 hover:dark:text-white">About Us</a></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold">My Account</h3>
+              <h3 className="text-lg font-semibold text-black dark:text-white" >My Account</h3>
               <ul className="mt-2 space-y-2">
-                <li className="text-gray-400 cursor-default"><a href="/add-cart">Cart</a> </li>
+                <li className="text-gray-400 cursor-default hover:dark:text-white"><a href="/add-cart">Cart</a> </li>
                
-                <li className="text-gray-400 cursor-default"><a href="/Account/profile">My Account</a> </li>
+                <li className="text-gray-400 cursor-default hover:dark:text-white"><a href="/Account/profile">My Account</a> </li>
               </ul>
             </div>
 
          
             <div>
-              <h3 className="text-lg font-semibold">Services </h3>
+              <h3 className="text-lg font-semibold text-black dark:text-white">Services </h3>
               <div className="flex space-x-4 mt-2">
-                <Link href="https://www.facebook.com/" className="text-gray-400 hover:text-white"><FaFacebook size={24} /></Link>
-                <a href="https://twitter.com/" className="text-gray-400 hover:text-white"><FaTwitter size={24} /></a>
-                <a href="https://www.instagram.com/" className="text-gray-400 hover:text-white"><FaInstagram size={24} /></a>
-                <a href="https://www.linkedin.com/" className="text-gray-400 hover:text-white"><FaLinkedin size={24} /></a>
+                <Link href="https://www.facebook.com/" target="blank" className="text-gray-400 hover:dark:text-white"><FaFacebook size={24} /></Link>
+                <a href="https://twitter.com/" target="blank" className="text-gray-400 hover:dark:text-white"><FaTwitter size={24} /></a>
+                <a href="https://www.instagram.com/" target="blank" className="text-gray-400 hover:dark:text-white"><FaInstagram size={24} /></a>
+                <a href="https://www.linkedin.com/" target="blank" className="text-gray-400 hover:dark:text-white"><FaLinkedin size={24} /></a>
               </div>
             </div>
           </div>
