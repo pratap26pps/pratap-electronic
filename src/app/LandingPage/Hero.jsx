@@ -7,16 +7,9 @@ import Front from "./Front";
  
 import Link from "next/link";
 import {useState, useEffect } from "react";
- 
-import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
-
-const LottiePlayer = dynamic(() => import("@lottiefiles/lottie-player"), {
-  ssr: false,
-});
-
-
+ 
 const Hero = ({ isLoading }) => {
 
     useEffect(() => {
@@ -132,7 +125,7 @@ const Hero = ({ isLoading }) => {
 
       <h2 className="text-center text-2xl mt-12 font-bold">Latest News</h2>
     
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-3 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 lg:ml-0 mr-6 gap-3 mt-6">
         {News.slice(0, 4).map(
           (
             item  
