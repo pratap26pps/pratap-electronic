@@ -180,20 +180,9 @@ export default function Page() {
 
   return (
     <div>
-      <div className="mt-40 flex lg:flex-row flex-col gap-4">
+      <div className="mt-36 flex lg:flex-row flex-col gap-4">
         {/* homelink */}
-        <div className="lg:hidden block">
-          <div className="flex ">
-            <Link href="/">
-              <h1 className="text-orange-500 mx-2">
-                {" "}
-                <u>Home</u>{" "}
-              </h1>
-            </Link>
-            <h1 className="mr-2">/</h1>
-            <h1>{product}/</h1>
-          </div>
-        </div>
+        
         {/* Sidebar filters */}
         <div className="ml-10 p-4  mb-10 lg:mb-0 h-20 rounded-2xl shadow-md w-64 border border-gray-200">
           <p className="text-lg font-semibold text-gray-700 mb-1">Refine by</p>
@@ -240,7 +229,7 @@ export default function Page() {
           
 
           {Loading ? (
-            <span className="loader ml-[50%] mt-36"></span>
+            <span className="loader ml-56 mt-36"></span>
           ) : (
             <div className="grid lg:w-[91%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
                    {specificproducts.length === 0 && (
@@ -251,7 +240,7 @@ export default function Page() {
               {applyFilters(specificproducts).map((p) => (
                 <div
                   key={p._id}
-                  className="border rounded-2xl shadow-lg flex flex-col justify-between p-2" // fixed card height
+                  className="border mt-28 lg:mt-0 rounded-2xl shadow-lg flex flex-col justify-between p-2" // fixed card height
                 >
                   <Link href={`/checkproduct/${p._id}`}>
                     <div className="flex flex-col items-center text-center h-full">

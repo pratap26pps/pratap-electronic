@@ -221,7 +221,7 @@ export default function Page({ params }) {
         {/* Main product content */}
         <div>
           {Loading ? (
-            <span className="loader ml-[50%] mt-36"></span>
+            <span className="loader ml-40 mt-36"></span>
           ) : (
             <div className="grid -mt-9 lg:w-[91%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
               {specificproducts.length === 0 && (
