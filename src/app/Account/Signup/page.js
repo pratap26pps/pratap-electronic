@@ -143,10 +143,11 @@ export default function SignupFormDemo() {
 
           {/* EMAIL */}
           <LabelInputContainer className="mb-4">
-            <Label htmlFor="email">Email Address <span className="text-red-500">*</span></Label>
+            <Label htmlFor="email" >Email Address <span className="text-red-500">*</span></Label>
             <Input
               id="email"
               type="email"
+              placeholder="Enter Your Email"
               value={user.email}
               onChange={(e) => setUser({ ...user, email: e.target.value })}
               required
@@ -160,7 +161,7 @@ export default function SignupFormDemo() {
 
               <Label htmlFor="password">Password <span className="text-red-500">*</span></Label>
               <span
-                className="text-white mr-4 cursor-pointer"
+                className=" mr-4 cursor-pointer"
                 onClick={() => setshowpassword((prev) => !prev)}
               >
                 {showpassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
@@ -178,10 +179,10 @@ export default function SignupFormDemo() {
               )}
             </LabelInputContainer>
             <LabelInputContainer>
-              <div className="flex justify-between"> 
+              <div className="flex justify-between">
               <Label htmlFor="confirmpassword">Confirm Password <span className="text-red-500">*</span></Label>
               <span
-                className="text-white mr-4 cursor-pointer"
+                className=" mr-4 cursor-pointer"
                 onClick={() => setshowconfirmpassword((prev) => !prev)}
               >
                 {showconfirmpassword ? (
@@ -201,7 +202,7 @@ export default function SignupFormDemo() {
               />
             </LabelInputContainer>
           </div>
- 
+
 
           {/* GSTIN */}
           <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
@@ -217,7 +218,7 @@ export default function SignupFormDemo() {
                 onChange={(e) => setUser({ ...user, gstno: e.target.value.toUpperCase() })}
               />
             </LabelInputContainer>
-    
+
           </div>
 
           {/* ERROR MESSAGE */}
