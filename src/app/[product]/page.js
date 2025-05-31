@@ -202,6 +202,20 @@ export default function Page({ params }) {
                 onChange={(e) => setMaxPrice(e.target.value)}
               />
             </div>
+
+            {/* Range Slider */}
+            <input
+              type="range"
+              min={0}
+              max={10000}
+              step={100}
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
+              className="w-full h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-lg appearance-none cursor-pointer"
+            />
+            <div className="text-sm text-gray-500 text-right mt-1">
+              Up to ₹{maxPrice}
+            </div>
           </div>
 
           {/* Stock Status Filter Section */}
@@ -223,7 +237,7 @@ export default function Page({ params }) {
           {Loading ? (
             <span className="loader ml-40 mt-36"></span>
           ) : (
-            <div className="grid -mt-9 lg:w-[91%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+            <div className="grid mt-32 lg:-mt-9 lg:w-[91%] grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 p-6">
               {specificproducts.length === 0 && (
                 <div className="text-center text-gray-500 text-lg">
                   No products found for this brand.

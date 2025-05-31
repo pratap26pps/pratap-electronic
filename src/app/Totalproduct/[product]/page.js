@@ -208,6 +208,17 @@ export default function Page() {
                 onChange={(e) => setMaxPrice(e.target.value)}
               />
             </div>
+              {/* Range Slider */}
+  <input
+    type="range"
+    min={0}
+    max={10000}
+    step={100}
+    value={maxPrice}
+    onChange={(e) => setMaxPrice(e.target.value)}
+    className="w-full h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-lg appearance-none cursor-pointer"
+  />
+  <div className="text-sm text-gray-500 text-right mt-1">Up to ₹{maxPrice}</div>
           </div>
 
           {/* Stock Status Filter Section */}
