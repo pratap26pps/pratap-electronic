@@ -10,6 +10,9 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Footer from "@/components/Footer";
 import { addToWishlist } from "@/redux/slices/wishlist";
+import { Range } from "react-range";
+const MIN = 0;
+const MAX = 10000;
 
 export default function Page({ params }) {
   const { product } = use(params);
@@ -21,10 +24,10 @@ export default function Page({ params }) {
   const [Loading, setLoading] = useState(false);
   const [coupon, setcoupon] = useState("");
   const cart = useSelector((state) => state.cart.cart || []);
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(10000);
   const [inStockOnly, setInStockOnly] = useState(false);
-
+  const [values, setValues] = useState([0, 10000]);
   const BrandProducthandler = async () => {
     try {
       setLoading(true);
@@ -185,36 +188,73 @@ export default function Page({ params }) {
           {/* Price Filter Section */}
           <div className="mb-6">
             <p className="font-semibold text-base mb-2">Price</p>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mb-7">
               <input
                 type="number"
                 placeholder="Min"
                 className="w-20 px-2 py-1 border rounded"
-                value={minPrice}
-                onChange={(e) => setMinPrice(e.target.value)}
+                value={values[0]}
+                onChange={(e) => {
+                  const val = Number(e.target.value);
+                  const newVals = [Math.min(val, values[1]), values[1]];
+                  setValues(newVals);
+                  setMinPrice(newVals[0]);
+                }}
               />
               <span>–</span>
               <input
                 type="number"
                 placeholder="Max"
                 className="w-20 px-2 py-1 border rounded"
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(e.target.value)}
+                value={values[1]}
+                onChange={(e) => {
+                  const val = Number(e.target.value);
+                  const newVals = [values[0], Math.max(val, values[0])];
+                  setValues(newVals);
+                  setMaxPrice(newVals[1]);
+                }}
               />
             </div>
 
             {/* Range Slider */}
-            <input
-              type="range"
-              min={0}
-              max={10000}
+            <Range
               step={100}
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-              className="w-full h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-lg appearance-none cursor-pointer"
+              min={MIN}
+              max={MAX}
+              values={values}
+              onChange={(vals) => {
+                setValues(vals);
+                setMinPrice(vals[0]);
+                setMaxPrice(vals[1]);
+              }}
+              renderTrack={({ props, children }) => (
+                <div
+                  {...props}
+                  className="h-2 w-full rounded-lg bg-gray-300"
+                  style={{
+                    ...props.style,
+                    background: `linear-gradient(to right, #ccc ${
+                      ((values[0] - MIN) / (MAX - MIN)) * 100
+                    }%, #6366f1 ${
+                      ((values[0] - MIN) / (MAX - MIN)) * 100
+                    }% , #6366f1 ${
+                      ((values[1] - MIN) / (MAX - MIN)) * 100
+                    }%, #ccc ${((values[1] - MIN) / (MAX - MIN)) * 100}%)`,
+                  }}
+                >
+                  {children}
+                </div>
+              )}
+              renderThumb={({ props }) => (
+                <div
+                  {...props}
+                  className="h-5 w-5 rounded-full bg-blue-500 border-2 border-white shadow-md"
+                />
+              )}
             />
-            <div className="text-sm text-gray-500 text-right mt-1">
-              Up to ₹{maxPrice}
+            <div className="flex justify-between text-sm text-gray-600 mt-2">
+              <span>₹{values[0]}</span>
+              <span>₹{values[1]}</span>
             </div>
           </div>
 
